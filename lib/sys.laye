@@ -1,0 +1,7 @@
+fn Print(value)
+{
+}
+
+fn Error(value)
+{
+}
