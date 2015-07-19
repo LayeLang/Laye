@@ -398,13 +398,18 @@ public class FileLexer
       }
       else
       {
+         // FIXME(sekai): Make sure '_' is handled in all places.
          while ((Character.isDigit(currentChar) || currentChar == '_' ||
                 currentChar == '.' || currentChar == 'e' || currentChar == 'E') && !eof)
          {
-            lastChar = currentChar;
             // TODO(sekai): This looks like it can be put into a switch/case.
             if (currentChar == '.')
             {
+               if (lastChar == '_')
+               {
+                  logger.logError(location, ERROR_UNDERSCORE_IN_NUMBER, 
+                        "Numbers cannot contain '_' next to a decimal point.");
+               }
                isInteger = false; // now it's floating point
             }
             else if (currentChar == 'e' || currentChar == 'E')
@@ -418,9 +423,15 @@ public class FileLexer
             }
             else if (currentChar == '_')
             {
+               if (lastChar == '.')
+               {
+                  logger.logError(location, ERROR_UNDERSCORE_IN_NUMBER, 
+                        "Numbers cannot contain '_' next to a decimal point.");
+               }
                readChar();
                continue;
             }
+            lastChar = currentChar;
             putChar();
          }
       }
