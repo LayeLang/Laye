@@ -1,1 +1,0 @@
-[W:0] ./examples/hello_world.laye line 18 column 1: 'f' was used on an already floating-point value, this is unnecessary.

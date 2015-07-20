@@ -31,11 +31,13 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 
+import io.ylf.laye.ast.AST;
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.lexical.Lexer;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
+import io.ylf.laye.parse.Parser;
 
 /**
  * @author Sekai Kyoretsuna
@@ -47,14 +49,15 @@ public final class LayeTest
       // Clear our output directory:
       Arrays.asList(new File("./output").listFiles()).forEach(file -> file.delete());
       
-      ZonedDateTime time = ZonedDateTime.now();
-      
-      DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+      // Get the time as a string
+      final ZonedDateTime time = ZonedDateTime.now();
+      final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
             .appendPattern("u-M-d HH.mm.ss.SSS")
             .toFormatter();
       
       final String timeString = time.format(formatter);
       
+      // Create new files for info/errors
       File infoDest = new File(String.format("./output/info_log %s.txt", timeString));
       File errorDest = new File(String.format("./output/error_log %s.txt", timeString));
 
@@ -64,9 +67,10 @@ public final class LayeTest
       DetailLogger logger = new DetailLogger(infoPrintStream, errorPrintStream);
       
       // Create all of the objects that we'll need here.
-      ScriptFile scriptFile = ScriptFile.fromFile("./examples/hello_world.laye");
+      ScriptFile scriptFile = ScriptFile.fromFile("./examples/test.laye");
       
       Lexer lexer = new Lexer(logger);
+      Parser parser = new Parser(logger);
       
       // Do all of the things!
       TokenStream tokens = lexer.getTokens(scriptFile);
@@ -75,6 +79,17 @@ public final class LayeTest
       {
          logger.flush();
          System.err.printf("Token generation failed with %d %s and %d %s.\n",
+               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
+               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+         return;
+      }
+      
+      AST ast = parser.getAST(tokens);
+      
+      if (logger.getErrorCount() > 0)
+      {
+         logger.flush();
+         System.err.printf("Syntax tree generation failed with %d %s and %d %s.\n",
                logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;

@@ -52,6 +52,10 @@ public class TokenStream extends List<Token>
    
    public Token current()
    {
+      if (isOver())
+      {
+         return null;
+      }
       return get(internalStreamOffset);
    }
    

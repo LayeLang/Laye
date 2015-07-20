@@ -90,7 +90,7 @@ public final class LogMessageID
       this.name = name;
       this.id = id;
       
-      assert(ids.get(id) == null);
+      assert(ids.get(id) == null) : "log id already exists.";
       ids.put(id, this);
    }
 }

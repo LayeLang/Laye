@@ -52,14 +52,17 @@ public class Parser
       this.logger = logger;
    }
    
-   public AST getSyntaxTree(TokenStream tokens)
+   public AST getAST(TokenStream tokens)
    {
-      assert(tokens != null);
+      if (tokens == null)
+      {
+         throw new NullPointerException("tokens");
+      }
       this.tokens = tokens;
       
       AST result = new AST();
       
-      next();
+      token = tokens.current();
       while (token != null)
       {
          ASTNode node = parseTopLevel();
@@ -81,27 +84,28 @@ public class Parser
    
    private void next()
    {
-      assert(tokens != null);
+      assert(tokens != null) : "no token stream to read from.";
       tokens.next();
       token = tokens.current();
    }
    
    private Token peek(int offset)
    {
-      assert(tokens != null);
+      assert(tokens != null) : "no token stream to peek into.";
       return tokens.peek(offset);
    }
    
    private boolean check(Token.Type type)
    {
-      assert(token != null);
-      assert(type != null);
+      if (token == null)
+      {
+         return false;
+      }
       return token.type == type;
    }
    
    private boolean peekCheck(int offset, Token.Type type)
    {
-      assert(type != null);
       Token peeked = peek(offset);
       if (peeked == null)
       {
@@ -114,10 +118,12 @@ public class Parser
    {
       if (!check(type))
       {
+         next();
          logger.logErrorf(token.location, ERROR_UNEXPECTED_TOKEN,
                "Unexpected token '%s', expected '%s'.", token.type.toString(), type.toString());
          return false;
       }
+      next();
       return true;
    }
    
@@ -150,7 +156,7 @@ public class Parser
          // TODO(sekai): Statements
          case KEYWORD:
          {
-            switch ((String)token.data)
+            switch (((Keyword)token.data).image)
             {
                case Keyword.STR_VAR:
                {
@@ -171,6 +177,7 @@ public class Parser
    
    private NodeExpression parsePrimaryExpression()
    {
+      assert(false);
       return null;
    }
    

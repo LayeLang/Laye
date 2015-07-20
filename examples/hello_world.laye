@@ -14,5 +14,3 @@ fn Main()
    var Add5 = MakeAdder(0b101)
    Print(Add5(0xA))
 }
-
-1.0fIDENT
