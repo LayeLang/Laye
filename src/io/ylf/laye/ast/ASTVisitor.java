@@ -29,4 +29,8 @@ package io.ylf.laye.ast;
 public interface ASTVisitor
 {
    void accept(AST ast);
+
+   void accept(NodeVariableDef node);
+
+   void accept(NodeNullLiteral node);
 }

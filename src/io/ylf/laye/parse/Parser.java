@@ -27,6 +27,10 @@ import static io.ylf.laye.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 
 import io.ylf.laye.ast.AST;
 import io.ylf.laye.ast.ASTNode;
+import io.ylf.laye.ast.NodeExpression;
+import io.ylf.laye.ast.NodeNullLiteral;
+import io.ylf.laye.ast.NodeVariableDef;
+import io.ylf.laye.lexical.Location;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
@@ -58,13 +62,22 @@ public class Parser
       next();
       while (token != null)
       {
-         
+         ASTNode node = parseTopLevel();
+         if (node != null)
+         {
+            result.children.append(node);
+         }
       }
       
       return result;
    }
    
    // ===== Manage the TokenStream and current token
+   
+   private Location getLocation()
+   {
+      return token.location;
+   }
    
    private void next()
    {
@@ -135,11 +148,71 @@ public class Parser
       switch (token.type)
       {
          // TODO(sekai): Statements
+         case KEYWORD:
+         {
+            switch ((String)token.data)
+            {
+               case Keyword.STR_VAR:
+               {
+                  return parseVariableDefinition();
+               }
+               default:
+               {
+               } break;
+            }
+         } break;
          default:
          {
-            // TODO(sekai): Expression parsing
-            return null;
+         } break;
+      }
+      // TODO(sekai): Expression parsing
+      return parsePrimaryExpression();
+   }
+   
+   private NodeExpression parsePrimaryExpression()
+   {
+      return null;
+   }
+   
+   private NodeVariableDef parseVariableDefinition()
+   {
+      NodeVariableDef def = new NodeVariableDef(getLocation());
+      
+      // nom 'var'
+      next();
+      
+      do
+      {
+         Identifier varName = expectIdentifier();
+         NodeExpression varValue;
+         
+         if (check(Token.Type.ASSIGN))
+         {
+            // nom '='
+            next();
+            
+            varValue = parsePrimaryExpression();
+         }
+         else
+         {
+            varValue = new NodeNullLiteral(null);
+         }
+         
+         // TODO(sekai): Do something with null values? expect() calls already error.
+         def.addDefinition(varName, varValue);
+         
+         if (check(Token.Type.COMMA))
+         {
+            // nom ','
+            next();
+         }
+         else
+         {
+            break;
          }
       }
+      while (true);
+      
+      return def;
    }
 }

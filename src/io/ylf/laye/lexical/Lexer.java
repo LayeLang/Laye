@@ -369,8 +369,6 @@ public class Lexer
       boolean isInteger = true;
       int iRadix = 10;
       
-      // FIXME(sekai): Needs more '_' error checking.
-      
       if (currentChar == '0')
       {
          // read '0'
@@ -447,15 +445,13 @@ public class Lexer
          {
             logger.logWarningf(location, WARNING_FLOAT_DECOR,
                   "'%c' was used on an already floating-point value, "
-                  + "this is unnecessary.", currentChar);
+                  + "this is unnecessary.\n", currentChar);
          }
          readChar();
          isInteger = false;
       }
 
       String result = getTempString();
-      
-      // FIXME(sekai): Here, identifiers are now valid. (1.0fIDENT will lex), fix plz.
       
       boolean hadTrailingCharacters = false;
       while (!eof && Character.isLetterOrDigit(currentChar))

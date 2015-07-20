@@ -24,18 +24,31 @@
 package io.ylf.laye.ast;
 
 import io.ylf.laye.lexical.Location;
+import io.ylf.laye.struct.Identifier;
+import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public abstract class ASTNode
+public class NodeVariableDef extends ASTNode
 {
-   public final Location location;
+   public List<Identifier> names = new List<>();
+   public List<NodeExpression> values = new List<>();
    
-   public ASTNode(Location location)
+   public NodeVariableDef(Location location)
    {
-      this.location = location;
+      super(location);
    }
    
-   public abstract void accept(ASTVisitor visitor);
+   public void addDefinition(Identifier name, NodeExpression value)
+   {
+      names.append(name);
+      values.append(value);
+   }
+   
+   @Override
+   public void accept(ASTVisitor visitor)
+   {
+      visitor.accept(this);
+   }
 }

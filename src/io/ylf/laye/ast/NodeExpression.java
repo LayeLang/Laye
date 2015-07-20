@@ -28,14 +28,10 @@ import io.ylf.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public abstract class ASTNode
+public abstract class NodeExpression extends ASTNode
 {
-   public final Location location;
-   
-   public ASTNode(Location location)
+   public NodeExpression(Location location)
    {
-      this.location = location;
+      super(location);
    }
-   
-   public abstract void accept(ASTVisitor visitor);
 }

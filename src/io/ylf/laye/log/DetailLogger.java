@@ -23,6 +23,7 @@
  */
 package io.ylf.laye.log;
 
+import java.io.Flushable;
 import java.io.PrintStream;
 
 import io.ylf.laye.LogMessageID;
@@ -31,7 +32,7 @@ import io.ylf.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public class DetailLogger
+public class DetailLogger implements Flushable
 {
    private PrintStream out;
    private PrintStream err;
@@ -49,6 +50,13 @@ public class DetailLogger
    {
       this.out = out;
       this.err = err;
+   }
+   
+   @Override
+   public void flush()
+   {
+      out.flush();
+      err.flush();
    }
    
    public boolean hasErrors()
@@ -103,7 +111,7 @@ public class DetailLogger
    public void logWarning(Location location, LogMessageID id, String message)
    {
       warningCount++;
-      out.printf("[Warning:%d] ", id.id);
+      out.printf("[W:%d] ", id.id);
       if (location != null)
       {
          out.print(getHeader(location));
@@ -120,7 +128,7 @@ public class DetailLogger
    public void logWarningf(Location location, LogMessageID id, String format, Object... args)
    {
       warningCount++;
-      out.printf("[Warning:%d] ", id.id);
+      out.printf("[W:%d] ", id.id);
       if (location != null)
       {
          out.print(getHeader(location));
@@ -136,7 +144,7 @@ public class DetailLogger
    public void logError(Location location, LogMessageID id, String message)
    {
       errorCount++;
-      err.printf("[Error:%d] ", id.id);
+      err.printf("[E:%d] ", id.id);
       if (location != null)
       {
          err.print(getHeader(location));
@@ -153,7 +161,7 @@ public class DetailLogger
    public void logErrorf(Location location, LogMessageID id, String format, Object... args)
    {
       errorCount++;
-      err.printf("[Error:%d] ", id.id);
+      err.printf("[E:%d] ", id.id);
       if (location != null)
       {
          err.print(getHeader(location));

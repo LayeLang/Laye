@@ -23,11 +23,16 @@
  */
 package io.ylf.laye;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.PrintStream;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Arrays;
 
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.lexical.Lexer;
-import io.ylf.laye.lexical.Location;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
@@ -39,7 +44,24 @@ public final class LayeTest
 {
    public static void main(String[] args) throws IOException
    {
-      DetailLogger logger = new DetailLogger();
+      // Clear our output directory:
+      Arrays.asList(new File("./output").listFiles()).forEach(file -> file.delete());
+      
+      ZonedDateTime time = ZonedDateTime.now();
+      
+      DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("u-M-d HH.mm.ss.SSS")
+            .toFormatter();
+      
+      final String timeString = time.format(formatter);
+      
+      File infoDest = new File(String.format("./output/info_log %s.txt", timeString));
+      File errorDest = new File(String.format("./output/error_log %s.txt", timeString));
+
+      PrintStream infoPrintStream = new PrintStream(infoDest);
+      PrintStream errorPrintStream = new PrintStream(errorDest);
+      
+      DetailLogger logger = new DetailLogger(infoPrintStream, errorPrintStream);
       
       // Create all of the objects that we'll need here.
       ScriptFile scriptFile = ScriptFile.fromFile("./examples/hello_world.laye");
@@ -51,11 +73,14 @@ public final class LayeTest
       
       if (logger.getErrorCount() > 0)
       {
+         logger.flush();
          System.err.printf("Token generation failed with %d %s and %d %s.\n",
                logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
       }
+
+      logger.flush();
       
       System.out.printf("Code generation completed with %d %s and %d %s.\n",
             logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",

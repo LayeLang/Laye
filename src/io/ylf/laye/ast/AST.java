@@ -30,12 +30,13 @@ import net.fudev.faxlib.collections.List;
 /**
  * @author Sekai Kyoretsuna
  */
-public class AST implements ASTNode, Iterable<ASTNode>
+public class AST extends ASTNode implements Iterable<ASTNode>
 {
-   private final List<ASTNode> children = new List<>();
+   public List<ASTNode> children = new List<>();
    
    public AST()
    {
+      super(null);
    }
    
    @Override
