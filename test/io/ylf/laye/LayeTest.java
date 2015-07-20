@@ -46,8 +46,16 @@ public final class LayeTest
 {
    public static void main(String[] args) throws IOException
    {
+      // Create output directory
+      File outputFolder = new File("./output");
+      outputFolder.mkdir();
+      
       // Clear our output directory:
-      Arrays.asList(new File("./output").listFiles()).forEach(file -> file.delete());
+      File[] outputFiles = outputFolder.listFiles();
+      if (outputFiles != null && outputFiles.length != 0)
+      {
+         Arrays.asList(outputFiles).forEach(file -> file.delete());
+      }
       
       // Get the time as a string
       final ZonedDateTime time = ZonedDateTime.now();
