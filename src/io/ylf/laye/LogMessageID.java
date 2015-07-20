@@ -75,6 +75,10 @@ public final class LogMessageID
    public static final LogMessageID ERROR_INVALID_IDENTIFIER_START = new LogMessageID(
          "Invalid Identifier Start",
          NEXT_CODE++);
+
+   public static final LogMessageID ERROR_UNEXPECTED_TOKEN = new LogMessageID(
+         "Unexpected Token",
+         NEXT_CODE++);
    
    // ===== Instance
    
