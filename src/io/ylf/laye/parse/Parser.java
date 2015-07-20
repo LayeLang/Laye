@@ -26,6 +26,7 @@ package io.ylf.laye.parse;
 import static io.ylf.laye.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 
 import io.ylf.laye.ast.AST;
+import io.ylf.laye.ast.ASTNode;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
@@ -53,6 +54,13 @@ public class Parser
       this.tokens = tokens;
       
       AST result = new AST();
+      
+      next();
+      while (token != null)
+      {
+         
+      }
+      
       return result;
    }
    
@@ -118,5 +126,20 @@ public class Parser
          return false;
       }
       return last.data == keyword;
+   }
+   
+   // ===== Actual parser stuff
+   
+   private ASTNode parseTopLevel()
+   {
+      switch (token.type)
+      {
+         // TODO(sekai): Statements
+         default:
+         {
+            // TODO(sekai): Expression parsing
+            return null;
+         }
+      }
    }
 }
