@@ -21,23 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.parse;
-
-import io.ylf.laye.ast.AST;
-import io.ylf.laye.lexical.TokenStream;
+package io.ylf.laye.ast;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class Parser
+public interface ASTNode
 {
-   public Parser()
-   {
-   }
-   
-   public AST getSyntaxTree(TokenStream tokens)
-   {
-      AST result = new AST();
-      return result;
-   }
+   void accept(ASTVisitor visitor);
 }

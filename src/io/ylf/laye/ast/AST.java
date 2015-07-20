@@ -21,23 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.parse;
+package io.ylf.laye.ast;
 
-import io.ylf.laye.ast.AST;
-import io.ylf.laye.lexical.TokenStream;
+import java.util.Iterator;
+
+import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class Parser
+public class AST implements ASTNode, Iterable<ASTNode>
 {
-   public Parser()
+   private final List<ASTNode> children = new List<>();
+   
+   public AST()
    {
    }
    
-   public AST getSyntaxTree(TokenStream tokens)
+   @Override
+   public void accept(ASTVisitor visitor)
    {
-      AST result = new AST();
-      return result;
+      visitor.accept(this);
+   }
+
+   @Override
+   public Iterator<ASTNode> iterator()
+   {
+      return children.iterator();
    }
 }
