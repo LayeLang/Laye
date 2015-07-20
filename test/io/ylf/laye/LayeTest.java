@@ -81,6 +81,9 @@ public final class LayeTest
       Parser parser = new Parser(logger);
       
       // Do all of the things!
+      
+      // ==== Lex the input file
+      
       TokenStream tokens = lexer.getTokens(scriptFile);
       
       if (logger.getErrorCount() > 0)
@@ -92,6 +95,8 @@ public final class LayeTest
          return;
       }
       
+      // ===== Parse the tokens
+      
       AST ast = parser.getAST(tokens);
       
       if (logger.getErrorCount() > 0)
@@ -102,6 +107,8 @@ public final class LayeTest
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
       }
+      
+      // Finished! :D
 
       logger.flush();
       
