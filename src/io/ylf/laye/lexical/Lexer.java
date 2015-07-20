@@ -86,7 +86,7 @@ public class Lexer
       this.file = file;
       this.input = file.read();
       
-      TokenStream result = new TokenStream(logger);
+      TokenStream result = new TokenStream();
       
       readChar();
       

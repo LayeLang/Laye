@@ -23,7 +23,6 @@
  */
 package io.ylf.laye.lexical;
 
-import io.ylf.laye.log.DetailLogger;
 import net.fudev.faxlib.collections.List;
 
 /**
@@ -33,11 +32,8 @@ public class TokenStream extends List<Token>
 {
    private int internalStreamOffset = 0;
    
-   private final DetailLogger logger;
-   
-   public TokenStream(DetailLogger logger)
+   public TokenStream()
    {
-      this.logger = logger;
    }
    
    public void reset()
