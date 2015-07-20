@@ -40,7 +40,7 @@ import io.ylf.laye.vm.LayeString;
 /**
  * @author Sekai Kyoretsuna
  */
-public class FileLexer
+public class Lexer
 {
    /**
     * @author Sekai Kyoretsuna
@@ -76,7 +76,7 @@ public class FileLexer
    private int line = 1, column = 0;
    private boolean eof;
    
-   public FileLexer(DetailLogger logger)
+   public Lexer(DetailLogger logger)
    {
       this.logger = logger;
    }
@@ -381,18 +381,18 @@ public class FileLexer
             {
                iRadix = 16;
                readChar();
-               lastChar = lexIntegerDigits(FileLexer::isHexadecimalCharacter);
+               lastChar = lexIntegerDigits(Lexer::isHexadecimalCharacter);
             } break;
             case 'b': case 'B': // binary
             {
                iRadix = 2;
                readChar();
-               lastChar = lexIntegerDigits(FileLexer::isBinaryCharacter);
+               lastChar = lexIntegerDigits(Lexer::isBinaryCharacter);
             } break;
             default: // octal
             {
                iRadix = 8;
-               lastChar = lexIntegerDigits(FileLexer::isOctalCharacter);
+               lastChar = lexIntegerDigits(Lexer::isOctalCharacter);
             } break;
          }
       }

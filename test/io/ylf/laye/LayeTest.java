@@ -26,7 +26,7 @@ package io.ylf.laye;
 import java.io.IOException;
 
 import io.ylf.laye.file.ScriptFile;
-import io.ylf.laye.lexical.FileLexer;
+import io.ylf.laye.lexical.Lexer;
 import io.ylf.laye.lexical.Location;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
@@ -44,7 +44,7 @@ public final class LayeTest
       // Create all of the objects that we'll need here.
       ScriptFile scriptFile = ScriptFile.fromFile("./examples/hello_world.laye");
       
-      FileLexer lexer = new FileLexer(logger);
+      Lexer lexer = new Lexer(logger);
       
       // Do all of the things!
       TokenStream tokens = lexer.getTokens(scriptFile);
