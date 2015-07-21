@@ -1,1 +1,1 @@
-var A, B
+var A = null, B

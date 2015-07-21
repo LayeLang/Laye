@@ -23,7 +23,7 @@
  */
 package io.ylf.laye.parse;
 
-import static io.ylf.laye.LogMessageID.ERROR_UNEXPECTED_TOKEN;
+import static io.ylf.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 
 import io.ylf.laye.ast.AST;
 import io.ylf.laye.ast.ASTNode;
@@ -177,7 +177,29 @@ public class Parser
    
    private NodeExpression parsePrimaryExpression()
    {
-      assert(false);
+      final Location location = getLocation();
+      switch (token.type)
+      {
+         case KEYWORD:
+         {
+            switch (((Keyword)token.data).image)
+            {
+               case Keyword.STR_NULL:
+               {
+                  // nom 'null'
+                  next();
+                  return(new NodeNullLiteral(location));
+               }
+               default:
+               {
+               } break;
+            }
+         } break;
+         default:
+         {
+         } break;
+      }
+      // TODO log an error plz
       return null;
    }
    

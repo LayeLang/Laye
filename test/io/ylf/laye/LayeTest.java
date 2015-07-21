@@ -32,6 +32,7 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 
 import io.ylf.laye.ast.AST;
+import io.ylf.laye.debug.ASTViewer;
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.lexical.Lexer;
 import io.ylf.laye.lexical.Token;
@@ -79,6 +80,7 @@ public final class LayeTest
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
+      ASTViewer viewer = new ASTViewer(System.out);
       
       // Do all of the things!
       
@@ -117,11 +119,7 @@ public final class LayeTest
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
       
       System.out.println();
-      
-      for (Token token : tokens)
-      {
-         System.out.println(token);
-      }
+      viewer.accept(ast);
    }
    
    private LayeTest()

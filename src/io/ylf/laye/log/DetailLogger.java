@@ -26,7 +26,6 @@ package io.ylf.laye.log;
 import java.io.Flushable;
 import java.io.PrintStream;
 
-import io.ylf.laye.LogMessageID;
 import io.ylf.laye.lexical.Location;
 
 /**

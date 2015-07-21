@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye;
+package io.ylf.laye.log;
 
 import java.util.HashMap;
 

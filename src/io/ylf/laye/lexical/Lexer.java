@@ -23,10 +23,10 @@
  */
 package io.ylf.laye.lexical;
 
+import static io.ylf.laye.log.LogMessageID.*;
+
 import java.io.IOException;
 import java.io.InputStream;
-
-import static io.ylf.laye.LogMessageID.*;
 
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.log.DetailLogger;
