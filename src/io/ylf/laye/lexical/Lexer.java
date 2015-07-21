@@ -52,17 +52,17 @@ public class Lexer
    
    private static boolean isHexadecimalCharacter(char c)
    {
-      return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+      return((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
    }
    
    private static boolean isBinaryCharacter(char c)
    {
-      return c == '0' || c == '1';
+      return(c == '0' || c == '1');
    }
    
    private static boolean isOctalCharacter(char c)
    {
-      return c >= '0' && c <= '7';
+      return(c >= '0' && c <= '7');
    }
 
    private final DetailLogger logger;
@@ -98,12 +98,12 @@ public class Lexer
       
       input.close();
       
-      return result;
+      return(result);
    }
    
    private Location getLocation()
    {
-      return new Location(file, line, column);
+      return(new Location(file, line, column));
    }
    
    private String getTempString()
@@ -111,13 +111,13 @@ public class Lexer
       String result = builder.toString();
       builder.setLength(0);
       builder.trimToSize();
-      return result;
+      return(result);
    }
    
    private boolean putChar()
    {
       builder.append(currentChar);
-      return readChar();
+      return(readChar());
    }
    
    private void putChar(char c)
@@ -136,13 +136,13 @@ public class Lexer
       {
          eof = true;
          currentChar = '\u0000';
-         return false;
+         return(false);
       }
       if (next == -1)
       {
          eof = true;
          currentChar = '\u0000';
-         return false;
+         return(false);
       }
       currentChar = (char) next;
       if (currentChar == '\n')
@@ -161,7 +161,7 @@ public class Lexer
                column++;
          }
       }
-      return true;
+      return(true);
    }
    
    private Token lex()
@@ -178,54 +178,54 @@ public class Lexer
          {
             case '#':
                lexOutLineComment();
-               return lex();
+               return(lex());
             case '(':
                readChar();
-               return new Token(Token.Type.OPEN_BRACE, location);
+               return(new Token(Token.Type.OPEN_BRACE, location));
             case ')':
                readChar();
-               return new Token(Token.Type.CLOSE_BRACE, location);
+               return(new Token(Token.Type.CLOSE_BRACE, location));
             case '[':
                readChar();
-               return new Token(Token.Type.OPEN_SQUARE_BRACE, location);
+               return(new Token(Token.Type.OPEN_SQUARE_BRACE, location));
             case ']':
                readChar();
-               return new Token(Token.Type.CLOSE_SQUARE_BRACE, location);
+               return(new Token(Token.Type.CLOSE_SQUARE_BRACE, location));
             case '{':
                readChar();
-               return new Token(Token.Type.OPEN_CURLY_BRACE, location);
+               return(new Token(Token.Type.OPEN_CURLY_BRACE, location));
             case '}':
                readChar();
-               return new Token(Token.Type.CLOSE_CURLY_BRACE, location);
+               return(new Token(Token.Type.CLOSE_CURLY_BRACE, location));
             case ';':
                readChar();
-               return new Token(Token.Type.SEMI_COLON, location);
+               return(new Token(Token.Type.SEMI_COLON, location));
             case ':':
                readChar();
-               return new Token(Token.Type.COLON, location);
+               return(new Token(Token.Type.COLON, location));
             case ',':
                readChar();
-               return new Token(Token.Type.COMMA, location);
+               return(new Token(Token.Type.COMMA, location));
             case '.':
                readChar();
-               return new Token(Token.Type.DOT, location);
+               return(new Token(Token.Type.DOT, location));
             case '\'':
             case '"':
-               return lexStringLiteral();
+               return(lexStringLiteral());
             default:
                if (Operator.isOperatorChar(currentChar))
                {
-                  return lexOperatorToken();
+                  return(lexOperatorToken());
                }
                if (Character.isDigit(currentChar))
                {
-                  return lexNumericToken();
+                  return(lexNumericToken());
                }
-               return lexOtherTokens();
+               return(lexOtherTokens());
          }
       }
       
-      return null;
+      return(null);
    }
    
    private void lexOutLineComment()
@@ -265,7 +265,7 @@ public class Lexer
          readChar();
       }
       String result = getTempString();
-      return new Token(Token.Type.STRING_LITERAL, new LayeString(result), location);
+      return(new Token(Token.Type.STRING_LITERAL, new LayeString(result), location));
    }
    
    private char lexEscapedCharacter()
@@ -293,35 +293,35 @@ public class Lexer
                                 "4 hexadecimal digits are expected when "
                                 + "defining a unicode char, %d given.\n",
                                 idx);
-               return '\u0000';
+               return('\u0000');
             }
-            return (char) Integer.parseInt(sb.toString(), 16);
+            return((char) Integer.parseInt(sb.toString(), 16));
          }
          case 'r':
             readChar();
-            return '\r';
+            return('\r');
          case 'n':
             readChar();
-            return '\n';
+            return('\n');
          case 't':
             readChar();
-            return '\t';
+            return('\t');
          case '0':
             readChar();
-            return '\0';
+            return('\0');
          case '"':
             readChar();
-            return '\"';
+            return('\"');
          case '\'':
             readChar();
-            return '\'';
+            return('\'');
          case '\\':
             readChar();
-            return '\\';
+            return('\\');
          default:
             logger.logErrorf(location, ERROR_ILLEGAL_ESCAPE,
                              "escape character '%c' not recognized.\n", currentChar);
-            return '\u0000';
+            return('\u0000');
       }
    }
    
@@ -336,9 +336,9 @@ public class Lexer
       String image = getTempString();
       if (image.equals("="))
       {
-         return new Token(Token.Type.ASSIGN, location);
+         return(new Token(Token.Type.ASSIGN, location));
       }
-      return new Token(Token.Type.OPERATOR, Operator.get(image), location);
+      return(new Token(Token.Type.OPERATOR, Operator.get(image), location));
    }
    
    private char lexIntegerDigits(CharacterMatcher matcher)
@@ -356,7 +356,7 @@ public class Lexer
             readChar();
          }
       }
-      return lastChar;
+      return(lastChar);
    }
    
    private Token lexNumericToken()
@@ -482,15 +482,15 @@ public class Lexer
       {
          if (isInteger)
          {
-            return new Token(Token.Type.INT_LITERAL, 
+            return(new Token(Token.Type.INT_LITERAL, 
                              LayeInt.valueOf(Long.parseLong(result, iRadix)), 
-                             location);
+                             location));
          }
          else
          {
-            return new Token(Token.Type.FLOAT_LITERAL,
+            return(new Token(Token.Type.FLOAT_LITERAL,
                              new LayeFloat(Double.parseDouble(result)), 
-                             location);
+                             location));
          }
       }
       catch (NumberFormatException e)
@@ -499,11 +499,11 @@ public class Lexer
                          "Number format: " + e.getMessage());
          if (isInteger)
          {
-            return new Token(Token.Type.INT_LITERAL, LayeInt.valueOf(0L), location);
+            return(new Token(Token.Type.INT_LITERAL, LayeInt.valueOf(0L), location));
          }
          else
          {
-            return new Token(Token.Type.FLOAT_LITERAL, new LayeFloat(0D), location);
+            return(new Token(Token.Type.FLOAT_LITERAL, new LayeFloat(0D), location));
          }
       }
    }
@@ -515,7 +515,7 @@ public class Lexer
       {
          logger.logErrorf(location, ERROR_INVALID_IDENTIFIER_START,
                "token '%c' is not a valid identifier start.\n", currentChar);
-         return null;
+         return(null);
       }
       do
       {
@@ -525,12 +525,12 @@ public class Lexer
       String image = getTempString();
       if (image.equals("_"))
       {
-         return new Token(Token.Type.WILDCARD, location);
+         return(new Token(Token.Type.WILDCARD, location));
       }
       else if (Keyword.exists(image))
       {
-         return new Token(Token.Type.KEYWORD, Keyword.get(image), location);
+         return(new Token(Token.Type.KEYWORD, Keyword.get(image), location));
       }
-      return new Token(Token.Type.IDENTIFIER, Identifier.get(image), location);
+      return(new Token(Token.Type.IDENTIFIER, Identifier.get(image), location));
    }
 }

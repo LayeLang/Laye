@@ -35,12 +35,12 @@ public class ScriptFile
 {
    public static ScriptFile fromResource(String resourcePath)
    {
-      return new ScriptFile(resourcePath, true);
+      return(new ScriptFile(resourcePath, true));
    }
 
    public static ScriptFile fromFile(String filePath)
    {
-      return new ScriptFile(filePath, false);
+      return(new ScriptFile(filePath, false));
    }
    
    public final String path;
@@ -57,9 +57,9 @@ public class ScriptFile
    {
       if (isResource)
       {
-         return ScriptFile.class.getResourceAsStream(path);
+         return(ScriptFile.class.getResourceAsStream(path));
       }
-      return new FileInputStream(new File(path));
+      return(new FileInputStream(new File(path)));
    }
 
    @Override
@@ -69,7 +69,7 @@ public class ScriptFile
       int result = 1;
       result = prime * result + (isResource ? 1231 : 1237);
       result = prime * result + ((path == null) ? 0 : path.hashCode());
-      return result;
+      return(result);
    }
 
    @Override
@@ -77,32 +77,32 @@ public class ScriptFile
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof ScriptFile))
       {
-         return false;
+         return(false);
       }
       ScriptFile other = (ScriptFile) obj;
       if (isResource != other.isResource)
       {
-         return false;
+         return(false);
       }
       if (path == null)
       {
          if (other.path != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!path.equals(other.path))
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }

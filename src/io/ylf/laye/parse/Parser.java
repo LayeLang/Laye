@@ -72,14 +72,14 @@ public class Parser
          }
       }
       
-      return result;
+      return(result);
    }
    
    // ===== Manage the TokenStream and current token
    
    private Location getLocation()
    {
-      return token.location;
+      return(token.location);
    }
    
    private void next()
@@ -92,16 +92,16 @@ public class Parser
    private Token peek(int offset)
    {
       assert(tokens != null) : "no token stream to peek into.";
-      return tokens.peek(offset);
+      return(tokens.peek(offset));
    }
    
    private boolean check(Token.Type type)
    {
       if (token == null)
       {
-         return false;
+         return(false);
       }
-      return token.type == type;
+      return(token.type == type);
    }
    
    private boolean peekCheck(int offset, Token.Type type)
@@ -109,9 +109,9 @@ public class Parser
       Token peeked = peek(offset);
       if (peeked == null)
       {
-         return false;
+         return(false);
       }
-      return peeked.type == type;
+      return(peeked.type == type);
    }
    
    private boolean expect(Token.Type type)
@@ -121,10 +121,10 @@ public class Parser
          next();
          logger.logErrorf(token.location, ERROR_UNEXPECTED_TOKEN,
                "Unexpected token '%s', expected '%s'.", token.type.toString(), type.toString());
-         return false;
+         return(false);
       }
       next();
-      return true;
+      return(true);
    }
    
    private Identifier expectIdentifier()
@@ -132,9 +132,9 @@ public class Parser
       Token last = token;
       if (!expect(Token.Type.IDENTIFIER))
       {
-         return null;
+         return(null);
       }
-      return (Identifier)last.data;
+      return((Identifier)last.data);
    }
    
    private boolean expectKeyword(Keyword keyword)
@@ -142,9 +142,9 @@ public class Parser
       Token last = token;
       if (!expect(Token.Type.KEYWORD))
       {
-         return false;
+         return(false);
       }
-      return last.data == keyword;
+      return(last.data == keyword);
    }
    
    // ===== Actual parser stuff
@@ -160,7 +160,7 @@ public class Parser
             {
                case Keyword.STR_VAR:
                {
-                  return parseVariableDefinition();
+                  return(parseVariableDefinition());
                }
                default:
                {
@@ -172,7 +172,7 @@ public class Parser
          } break;
       }
       // TODO(sekai): Expression parsing
-      return parsePrimaryExpression();
+      return(parsePrimaryExpression());
    }
    
    private NodeExpression parsePrimaryExpression()
@@ -200,7 +200,7 @@ public class Parser
          } break;
       }
       // TODO log an error plz
-      return null;
+      return(null);
    }
    
    private NodeVariableDef parseVariableDefinition()
@@ -242,6 +242,6 @@ public class Parser
       }
       while (true);
       
-      return def;
+      return(def);
    }
 }

@@ -30,7 +30,7 @@ public final class LayeFloat extends LayeObject
 {
    public static LayeFloat valueOf(double value)
    {
-      return new LayeFloat(value);
+      return(new LayeFloat(value));
    }
    
    public final double value;
@@ -43,6 +43,6 @@ public final class LayeFloat extends LayeObject
    @Override
    public String toString()
    {
-      return Double.toString(value);
+      return(Double.toString(value));
    }
 }

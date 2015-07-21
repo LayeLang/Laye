@@ -48,6 +48,6 @@ public class AST extends ASTNode implements Iterable<ASTNode>
    @Override
    public Iterator<ASTNode> iterator()
    {
-      return children.iterator();
+      return(children.iterator());
    }
 }

@@ -71,7 +71,7 @@ public class Location
          result.append(" column ").append(column);
       }
       
-      return result.toString();
+      return(result.toString());
    }
    
    @Override
@@ -82,7 +82,7 @@ public class Location
       result = prime * result + column;
       result = prime * result + ((file == null) ? 0 : file.hashCode());
       result = prime * result + line;
-      return result;
+      return(result);
    }
 
    @Override
@@ -90,36 +90,36 @@ public class Location
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof Location))
       {
-         return false;
+         return(false);
       }
       Location other = (Location) obj;
       if (column != other.column)
       {
-         return false;
+         return(false);
       }
       if (file == null)
       {
          if (other.file != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!file.equals(other.file))
       {
-         return false;
+         return(false);
       }
       if (line != other.line)
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }

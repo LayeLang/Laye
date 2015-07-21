@@ -98,7 +98,7 @@ public class Token
    @Override
    public String toString()
    {
-      return data.toString();
+      return(data.toString());
    }
 
    @Override
@@ -109,7 +109,7 @@ public class Token
       result = prime * result + ((data == null) ? 0 : data.hashCode());
       result = prime * result + ((location == null) ? 0 : location.hashCode());
       result = prime * result + ((type == null) ? 0 : type.hashCode());
-      return result;
+      return(result);
    }
 
    @Override
@@ -117,43 +117,43 @@ public class Token
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof Token))
       {
-         return false;
+         return(false);
       }
       Token other = (Token) obj;
       if (data == null)
       {
          if (other.data != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!data.equals(other.data))
       {
-         return false;
+         return(false);
       }
       if (location == null)
       {
          if (other.location != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!location.equals(other.location))
       {
-         return false;
+         return(false);
       }
       if (type != other.type)
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }

@@ -43,16 +43,16 @@ public class TokenStream extends List<Token>
    
    public boolean isOver()
    {
-      return internalStreamOffset >= size();
+      return(internalStreamOffset >= size());
    }
    
    public Token current()
    {
       if (isOver())
       {
-         return null;
+         return(null);
       }
-      return get(internalStreamOffset);
+      return(get(internalStreamOffset));
    }
    
    public void next()
@@ -62,6 +62,6 @@ public class TokenStream extends List<Token>
    
    public Token peek(int offset)
    {
-      return get(internalStreamOffset + offset);
+      return(get(internalStreamOffset + offset));
    }
 }

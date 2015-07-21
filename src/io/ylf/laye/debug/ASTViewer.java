@@ -54,7 +54,7 @@ public class ASTViewer implements ASTVisitor
       assert(tabs >= 0);
       if (tabs == 0)
       {
-         return "";
+         return("");
       }
       StringBuilder builder = new StringBuilder();
       for (int i = 0; i < tabs; i++)

@@ -58,7 +58,7 @@ public class NodeVariableDef extends ASTNode implements Iterable<Pair<Identifier
    @Override
    public Iterator<Pair<Identifier, NodeExpression>> iterator()
    {
-      return new Iterator<Pair<Identifier,NodeExpression>>()
+      return(new Iterator<Pair<Identifier,NodeExpression>>()
       {
          private final List<Identifier> names = new List<>(NodeVariableDef.this.names);
          private final List<NodeExpression> values = new List<>(NodeVariableDef.this.values);
@@ -69,14 +69,14 @@ public class NodeVariableDef extends ASTNode implements Iterable<Pair<Identifier
          @Override
          public boolean hasNext()
          {
-            return index < length;
+            return(index < length);
          }
 
          @Override
          public Pair<Identifier, NodeExpression> next()
          {
-            return new Pair<>(names.get(index), values.get(index++));
+            return(new Pair<>(names.get(index), values.get(index++)));
          }
-      };
+      });
    }
 }

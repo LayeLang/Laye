@@ -60,29 +60,29 @@ public class DetailLogger implements Flushable
    
    public boolean hasErrors()
    {
-      return errorCount > 0;
+      return(errorCount > 0);
    }
    
    public int getErrorCount()
    {
-      return errorCount;
+      return(errorCount);
    }
    
    public boolean hasWarnings()
    {
-      return warningCount > 0;
+      return(warningCount > 0);
    }
    
    public int getWarningCount()
    {
-      return warningCount;
+      return(warningCount);
    }
    
    private String getHeader(Location location)
    {
       StringBuilder result = new StringBuilder();
       result.append(location.toString());
-      return result.append(": ").toString();
+      return(result.append(": ").toString());
    }
    
    /**

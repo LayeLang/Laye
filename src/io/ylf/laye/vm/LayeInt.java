@@ -46,9 +46,9 @@ public final class LayeInt extends LayeObject
    {
       if (value >= CACHE_LOW && value <= CACHE_HIGH)
       {
-         return CACHE[(int) value - CACHE_LOW];
+         return(CACHE[(int) value - CACHE_LOW]);
       }
-      return new LayeInt(value);
+      return(new LayeInt(value));
    }
    
    public final long value;
@@ -67,6 +67,6 @@ public final class LayeInt extends LayeObject
    @Override
    public String toString()
    {
-      return Long.toString(value);
+      return(Long.toString(value));
    }
 }

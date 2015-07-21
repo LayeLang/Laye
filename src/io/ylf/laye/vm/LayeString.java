@@ -38,7 +38,7 @@ public class LayeString extends LayeObject
    @Override
    public String toString()
    {
-      return value;
+      return(value);
    }
    
 }

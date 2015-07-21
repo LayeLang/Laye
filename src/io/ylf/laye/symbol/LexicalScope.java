@@ -58,7 +58,7 @@ public class LexicalScope
     */
    public List<LexicalScope> getChildren()
    {
-      return new List<LexicalScope>(children);
+      return(new List<LexicalScope>(children));
    }
    
    public void addSymbol(Symbol.Type type, Identifier name, int index)
@@ -75,11 +75,11 @@ public class LexicalScope
          {
             if (symbol.name == name)
             {
-               return symbol;
+               return(symbol);
             }
          }
          scope = scope.parent;
       }
-      return null;
+      return(null);
    }
 }

@@ -117,13 +117,13 @@ public class Keyword
    public static boolean exists(String image)
    {
       assert(image != null);
-      return keywords.containsKey(image);
+      return(keywords.containsKey(image));
    }
    
    public static Keyword get(String image)
    {
       assert(image != null);
-      return keywords.get(image);
+      return(keywords.get(image));
    }
    
    public final String image;
@@ -138,7 +138,7 @@ public class Keyword
    @Override
    public String toString()
    {
-      return image;
+      return(image);
    }
 
    @Override
@@ -147,7 +147,7 @@ public class Keyword
       final int prime = 31;
       int result = 1;
       result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return result;
+      return(result);
    }
 
    @Override
@@ -155,28 +155,28 @@ public class Keyword
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof Keyword))
       {
-         return false;
+         return(false);
       }
       Keyword other = (Keyword) obj;
       if (image == null)
       {
          if (other.image != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!image.equals(other.image))
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }

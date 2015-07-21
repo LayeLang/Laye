@@ -36,7 +36,7 @@ public final class Identifier
    {
       if (!isIdentifier(image))
       {
-         return null;
+         return(null);
       }
       Identifier result = idents.get(image);
       if (result == null)
@@ -44,37 +44,37 @@ public final class Identifier
          result = new Identifier(image);
          idents.put(image, result);
       }
-      return result;
+      return(result);
    }
    
    public static boolean isIdentifier(String image)
    {
       if (image == null || image.length() == 0 || image.equals("_"))
       {
-         return false;
+         return(false);
       }
       if (!isIdentifierStart(image.charAt(0)))
       {
-         return false;
+         return(false);
       }
       for (int i = 1; i < image.length(); i++)
       {
          if (!isIdentifierPart(image.charAt(i)))
          {
-            return false;
+            return(false);
          }
       }
-      return true;
+      return(true);
    }
    
    public static boolean isIdentifierStart(char c)
    {
-      return c == '_' || Character.isLetter(c);
+      return(c == '_' || Character.isLetter(c));
    }
    
    public static boolean isIdentifierPart(char c)
    {
-      return isIdentifierStart(c) || Character.isDigit(c);
+      return(isIdentifierStart(c) || Character.isDigit(c));
    }
    
    public final String image;
@@ -89,7 +89,7 @@ public final class Identifier
    @Override
    public String toString()
    {
-      return image;
+      return(image);
    }
 
    @Override
@@ -98,7 +98,7 @@ public final class Identifier
       final int prime = 31;
       int result = 1;
       result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return result;
+      return(result);
    }
 
    @Override
@@ -106,28 +106,28 @@ public final class Identifier
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof Identifier))
       {
-         return false;
+         return(false);
       }
       Identifier other = (Identifier) obj;
       if (image == null)
       {
          if (other.image != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!image.equals(other.image))
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }

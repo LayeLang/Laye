@@ -59,7 +59,7 @@ public final class Operator
    
    public static Operator get(String image)
    {
-      return get(image, DEFAULT_PRECEDENCE);
+      return(get(image, DEFAULT_PRECEDENCE));
    }
    
    /**
@@ -73,7 +73,7 @@ public final class Operator
       assert(precedence > 0);
       if (!isOperatorImage(image))
       {
-         return null;
+         return(null);
       }
       Operator result = operators.get(image);
       if (result == null)
@@ -81,28 +81,28 @@ public final class Operator
          result = new Operator(image, precedence);
          operators.put(image, result);
       }
-      return result;
+      return(result);
    }
    
    public static boolean isOperatorImage(String image)
    {
       if (image == null || image.equals("="))
       {
-         return false;
+         return(false);
       }
       for (char c : image.toCharArray())
       {
          if (!isOperatorChar(c))
          {
-            return false;
+            return(false);
          }
       }
-      return true;
+      return(true);
    }
    
    public static boolean isOperatorChar(char c)
    {
-      return "~!@$%^&*-+=\\|<>/?".indexOf(c) != -1;
+      return("~!@$%^&*-+=\\|<>/?".indexOf(c) != -1);
    }
    
    public final String image;
@@ -121,7 +121,7 @@ public final class Operator
    @Override
    public String toString()
    {
-      return image;
+      return(image);
    }
 
    @Override
@@ -130,7 +130,7 @@ public final class Operator
       final int prime = 31;
       int result = 1;
       result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return result;
+      return(result);
    }
 
    @Override
@@ -138,28 +138,28 @@ public final class Operator
    {
       if (this == obj)
       {
-         return true;
+         return(true);
       }
       if (obj == null)
       {
-         return false;
+         return(false);
       }
       if (!(obj instanceof Operator))
       {
-         return false;
+         return(false);
       }
       Operator other = (Operator) obj;
       if (image == null)
       {
          if (other.image != null)
          {
-            return false;
+            return(false);
          }
       }
       else if (!image.equals(other.image))
       {
-         return false;
+         return(false);
       }
-      return true;
+      return(true);
    }
 }
