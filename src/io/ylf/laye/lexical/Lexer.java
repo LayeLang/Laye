@@ -50,6 +50,11 @@ public class Lexer
       boolean apply(char c);
    }
    
+   private static boolean doesCharacterDefineInteger(char c)
+   {
+      return(c == 'x' || c == 'X' || c == 'b' || c == 'B' || c == 'c' || c == 'C');
+   }
+   
    private static boolean isHexadecimalCharacter(char c)
    {
       return((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
@@ -362,48 +367,43 @@ public class Lexer
    private Token lexNumericToken()
    {
       final Location location = getLocation();
-      // TODO(sekai): this only handles ints. Needs fp and sci-note.
 
       char lastChar = currentChar;
+      readChar();
       
       boolean isInteger = true;
       int iRadix = 10;
-      
-      boolean isDecimal = true;
-      
-      if (currentChar == '0')
+
+      if (lastChar == '0' && doesCharacterDefineInteger(currentChar))
       {
-         // read '0'
+         char defChar = currentChar;
          readChar();
-         switch (currentChar)
+         switch (defChar)
          {
             case 'x': case 'X': // hexadecimal
             {
-               isDecimal = false;
                iRadix = 16;
-               readChar();
                lastChar = lexIntegerDigits(Lexer::isHexadecimalCharacter);
             } break;
             case 'b': case 'B': // binary
             {
-               isDecimal = false;
                iRadix = 2;
-               readChar();
                lastChar = lexIntegerDigits(Lexer::isBinaryCharacter);
             } break;
-            default: // octal
+            case 'c': case 'C': // octal
             {
-               // FIXME(sekai): So, things like 0.0 end up here... fix!
-               isDecimal = false;
                iRadix = 8;
                lastChar = lexIntegerDigits(Lexer::isOctalCharacter);
             } break;
+            default:
+            {
+            } break;
          }
       }
-      
-      if (isDecimal)
+      else
       {
-         // FIXME(sekai): Make sure '_' is handled in all places.
+         putChar(lastChar);
+         // TODO(sekai): Make sure '_' is handled in all places.
          while ((Character.isDigit(currentChar) || currentChar == '_' ||
                 currentChar == '.' || currentChar == 'e' || currentChar == 'E') && !eof)
          {
@@ -462,7 +462,6 @@ public class Lexer
       }
 
       String result = getTempString();
-      System.out.println(result);
       
       boolean hadTrailingCharacters = false;
       while (!eof && Character.isLetterOrDigit(currentChar))
