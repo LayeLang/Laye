@@ -23,18 +23,25 @@
  */
 package io.ylf.laye.ast;
 
+import io.ylf.laye.lexical.Location;
+import io.ylf.laye.vm.LayeInt;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public interface ASTVisitor
+public class NodeIntLiteral extends NodeExpression
 {
-   void accept(AST ast);
-
-   void accept(NodeVariableDef node);
-
-   void accept(NodeNullLiteral node);
-
-   void accept(NodeIntLiteral node);
-
-   void accept(NodeFloatLiteral node);
+   public LayeInt value;
+   
+   public NodeIntLiteral(Location location, LayeInt value)
+   {
+      super(location);
+      this.value = value;
+   }
+   
+   @Override
+   public void accept(ASTVisitor visitor)
+   {
+      visitor.accept(this);
+   }
 }

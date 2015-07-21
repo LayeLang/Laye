@@ -369,6 +369,8 @@ public class Lexer
       boolean isInteger = true;
       int iRadix = 10;
       
+      boolean isDecimal = true;
+      
       if (currentChar == '0')
       {
          // read '0'
@@ -377,24 +379,29 @@ public class Lexer
          {
             case 'x': case 'X': // hexadecimal
             {
+               isDecimal = false;
                iRadix = 16;
                readChar();
                lastChar = lexIntegerDigits(Lexer::isHexadecimalCharacter);
             } break;
             case 'b': case 'B': // binary
             {
+               isDecimal = false;
                iRadix = 2;
                readChar();
                lastChar = lexIntegerDigits(Lexer::isBinaryCharacter);
             } break;
             default: // octal
             {
+               // FIXME(sekai): So, things like 0.0 end up here... fix!
+               isDecimal = false;
                iRadix = 8;
                lastChar = lexIntegerDigits(Lexer::isOctalCharacter);
             } break;
          }
       }
-      else
+      
+      if (isDecimal)
       {
          // FIXME(sekai): Make sure '_' is handled in all places.
          while ((Character.isDigit(currentChar) || currentChar == '_' ||
@@ -413,14 +420,17 @@ public class Lexer
             else if (currentChar == 'e' || currentChar == 'E')
             {
                putChar();
+               lastChar = currentChar;
                if (currentChar == '-')
                {
                   putChar();
                }
+               isInteger = false;
                continue;
             }
             else if (currentChar == '_')
             {
+               lastChar = currentChar;
                if (lastChar == '.')
                {
                   logger.logError(location, ERROR_UNDERSCORE_IN_NUMBER, 
@@ -452,6 +462,7 @@ public class Lexer
       }
 
       String result = getTempString();
+      System.out.println(result);
       
       boolean hadTrailingCharacters = false;
       while (!eof && Character.isLetterOrDigit(currentChar))
@@ -496,7 +507,7 @@ public class Lexer
       catch (NumberFormatException e)
       {
          logger.logError(location, ERROR_NUMBER_FORMAT,
-                         "Number format: " + e.getMessage());
+                         (isInteger ? "Int" : "Float") + " format: " + e.getMessage());
          if (isInteger)
          {
             return(new Token(Token.Type.INT_LITERAL, LayeInt.valueOf(0L), location));

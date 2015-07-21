@@ -28,6 +28,8 @@ import java.util.Objects;
 
 import io.ylf.laye.ast.AST;
 import io.ylf.laye.ast.ASTVisitor;
+import io.ylf.laye.ast.NodeFloatLiteral;
+import io.ylf.laye.ast.NodeIntLiteral;
 import io.ylf.laye.ast.NodeNullLiteral;
 import io.ylf.laye.ast.NodeVariableDef;
 
@@ -149,5 +151,17 @@ public class ASTViewer implements ASTVisitor
    public void accept(NodeNullLiteral node)
    {
       print("null");
+   }
+
+   @Override
+   public void accept(NodeIntLiteral node)
+   {
+      print(node.value);
+   }
+
+   @Override
+   public void accept(NodeFloatLiteral node)
+   {
+      print(node.value);
    }
 }

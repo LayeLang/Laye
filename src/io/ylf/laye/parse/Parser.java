@@ -28,6 +28,8 @@ import static io.ylf.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 import io.ylf.laye.ast.AST;
 import io.ylf.laye.ast.ASTNode;
 import io.ylf.laye.ast.NodeExpression;
+import io.ylf.laye.ast.NodeFloatLiteral;
+import io.ylf.laye.ast.NodeIntLiteral;
 import io.ylf.laye.ast.NodeNullLiteral;
 import io.ylf.laye.ast.NodeVariableDef;
 import io.ylf.laye.lexical.Location;
@@ -36,6 +38,8 @@ import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
 import io.ylf.laye.struct.Identifier;
 import io.ylf.laye.struct.Keyword;
+import io.ylf.laye.vm.LayeFloat;
+import io.ylf.laye.vm.LayeInt;
 
 /**
  * @author Sekai Kyoretsuna
@@ -177,7 +181,7 @@ public class Parser
    
    private NodeExpression parsePrimaryExpression()
    {
-      final Location location = getLocation();
+      Location location = getLocation();
       switch (token.type)
       {
          case KEYWORD:
@@ -195,6 +199,20 @@ public class Parser
                } break;
             }
          } break;
+         case INT_LITERAL:
+         {
+            LayeInt value = (LayeInt)token.data;
+            // nom int
+            next();
+            return(new NodeIntLiteral(location, value));
+         }
+         case FLOAT_LITERAL:
+         {
+            LayeFloat value = (LayeFloat)token.data;
+            // nom int
+            next();
+            return(new NodeFloatLiteral(location, value));
+         }
          default:
          {
          } break;
