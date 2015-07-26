@@ -25,10 +25,9 @@ package io.ylf.laye.vm;
 
 import static io.ylf.laye.vm.Instruction.*;
 
-import java.util.HashMap;
-
+import io.ylf.laye.struct.FunctionPrototype;
+import io.ylf.laye.struct.OuterValueInfo;
 import lombok.EqualsAndHashCode;
-import lombok.val;
 
 /**
  * @author Sekai Kyoretsuna
@@ -36,6 +35,26 @@ import lombok.val;
 public @EqualsAndHashCode(callSuper = false)
 class LayeVM extends LayeObject
 {
+   private static OuterValue findOuterValue(LayeObject[] locals, int idx, OuterValue[] openUps)
+   {
+      final int n = openUps.length;
+      for (int i = 0; i < n; i++)
+      {
+         if (openUps[i] != null && openUps[i].getIndex() == idx)
+         {
+            return openUps[i];
+         }
+      }
+      for (int i = 0; i < n; i++)
+      {
+         if (openUps[i] == null)
+         {
+            return openUps[i] = new OuterValue(locals, idx);
+         }
+      }
+      throw new IllegalArgumentException("no space for new upvalue.");
+   }
+   
    private final CallStack stack = new CallStack();
    private final SharedState state;
    
@@ -68,17 +87,32 @@ class LayeVM extends LayeObject
    {
       stack.pushFrame(closure, thisValue);
       
-      int argc = closure.argc;
-      boolean vargs = closure.vargs;
+      final OuterValue[] openOuters = closure.proto.containsClosures ? 
+            new OuterValue[closure.proto.maxStackSize] : null;
+      
+      int argc = closure.proto.argc;
+      boolean vargs = closure.proto.vargs;
       
       StackFrame top = stack.getTop();
-      int[] code = closure.code;
+      int[] code = closure.proto.code;
       int codeLength = code.length;
-      Object[] consts = closure.consts;
+      OuterValue[] captures = closure.captures;
+      Object[] consts = closure.proto.consts;
       
       while (top.ip++ < codeLength)
       {
-         executeInstruction(code[top.ip], top, consts);
+         executeInstruction(code[top.ip], openOuters, captures, top, consts);
+      }
+      
+      if (openOuters != null)
+      {
+         for (int u = openOuters.length; --u >= 0;)
+         {
+            if (openOuters[u] != null)
+            {
+               openOuters[u].close();
+            }
+         }
       }
       
       LayeObject result = top.pop();
@@ -87,7 +121,8 @@ class LayeVM extends LayeObject
       return(result);
    }
    
-   private void executeInstruction(int insn, StackFrame top, Object[] consts)
+   private void executeInstruction(int insn, OuterValue[] openOuters, OuterValue[] captures,
+         StackFrame top, Object[] consts)
    {
       switch (insn & 0xFF)
       {
@@ -115,9 +150,11 @@ class LayeVM extends LayeObject
          } return;
          case OP_LOAD_OUTER:
          {
+            top.push(captures[(insn >>> POS_A) & MAX_A].getValue());
          } return;
          case OP_STORE_OUTER:
          {
+            captures[(insn >>> POS_A) & MAX_A].setValue(top.pop());
          } return;
          case OP_LOAD_GLOBAL:
          {
@@ -195,6 +232,20 @@ class LayeVM extends LayeObject
 
          case OP_CLOSURE:
          {
+            FunctionPrototype proto = (FunctionPrototype)consts[(insn >>> POS_A) & MAX_A];
+            LayeClosure closure = new LayeClosure(proto);
+            OuterValueInfo[] protoOuters = proto.outerValues;
+            for (int i = 0; i < protoOuters.length; i++)
+            {
+               if (protoOuters[i].type == OuterValueInfo.LOCAL)
+               {
+                  closure.captures[i] = findOuterValue(top.getLocals(), protoOuters[i].pos, openOuters);
+               }
+               else
+               {
+                  closure.captures[i] = top.closure.captures[protoOuters[i].pos];
+               }
+            }
          } return;
          case OP_TYPE:
          {
@@ -202,6 +253,14 @@ class LayeVM extends LayeObject
 
          case OP_CLOSE_OUTERS:
          {
+            for (int i = openOuters.length, a = (insn >>> POS_A) & MAX_A; --i >= a;)
+            {
+               if (openOuters[i] != null)
+               {
+                  openOuters[i].close();
+                  openOuters[i] = null;
+               }
+            }
          } return;
          case OP_INVOKE:
          {

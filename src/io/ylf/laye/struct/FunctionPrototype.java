@@ -21,24 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.vm;
-
-import io.ylf.laye.struct.FunctionPrototype;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+package io.ylf.laye.struct;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
-class LayeClosure extends LayeObject
+public
+class FunctionPrototype
 {
-   public final FunctionPrototype proto;
-   public OuterValue[] captures = null;
-
-   @Override
-   public String toString()
-   {
-      return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
-   }
+   public int[] code = {};
+   public int argc = 0;
+   public boolean vargs = false;
+   public int maxLocals = 0;
+   public int maxStackSize = 0;
+   public Object[] consts = null;
+   public OuterValueInfo[] outerValues = null;
+   public boolean containsClosures = false;
 }

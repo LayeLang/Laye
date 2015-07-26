@@ -46,8 +46,13 @@ class StackFrame
       this.previous = previous;
       this.closure = closure;
       this.thisValue = thisValue;
-      this.locals = new LayeObject[closure.maxLocals];
-      this.stack = new LayeObject[closure.maxStackSize];
+      this.locals = new LayeObject[closure.proto.maxLocals];
+      this.stack = new LayeObject[closure.proto.maxStackSize];
+   }
+   
+   public LayeObject[] getLocals()
+   {
+      return(locals);
    }
    
    // ===== Local Operations

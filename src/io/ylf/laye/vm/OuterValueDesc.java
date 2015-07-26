@@ -23,22 +23,18 @@
  */
 package io.ylf.laye.vm;
 
-import io.ylf.laye.struct.FunctionPrototype;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
-class LayeClosure extends LayeObject
+public final
+class OuterValueDesc
 {
-   public final FunctionPrototype proto;
-   public OuterValue[] captures = null;
-
-   @Override
-   public String toString()
+   public final boolean inStack;
+   public final int pos;
+   
+   public OuterValueDesc(final boolean inStack, final int pos)
    {
-      return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
+      this.inStack = inStack;
+      this.pos = pos;
    }
 }
