@@ -23,13 +23,23 @@
  */
 package io.ylf.laye.vm;
 
+import lombok.Getter;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
 class CallStack
 {
-   public CallStack()
+   private @Getter StackFrame top = null;
+   
+   public void pushFrame(LayeClosure closure, LayeObject thisValue)
    {
+      top = new StackFrame(top, closure, thisValue);
+   }
+   
+   public void popFrame()
+   {
+      top = top.previous;
    }
 }

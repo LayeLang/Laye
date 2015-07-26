@@ -23,7 +23,8 @@
  */
 package io.ylf.laye.parse;
 
-import static io.ylf.laye.log.LogMessageID.*;
+import static io.ylf.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
+import static io.ylf.laye.log.LogMessageID.ERROR_UNFINISHED_SCOPE;
 
 import io.ylf.laye.ast.*;
 import io.ylf.laye.lexical.Location;

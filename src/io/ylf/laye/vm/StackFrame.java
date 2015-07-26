@@ -29,6 +29,8 @@ package io.ylf.laye.vm;
 public
 class StackFrame
 {
+   public final StackFrame previous;
+   
    public final LayeClosure closure;
    public final LayeObject thisValue;
    
@@ -37,8 +39,11 @@ class StackFrame
    
    private int stackPointer = 0;
    
-   public StackFrame(LayeClosure closure, LayeObject thisValue)
+   public int ip = 0;
+   
+   public StackFrame(StackFrame previous, LayeClosure closure, LayeObject thisValue)
    {
+      this.previous = previous;
       this.closure = closure;
       this.thisValue = thisValue;
       this.locals = new LayeObject[closure.maxLocals];

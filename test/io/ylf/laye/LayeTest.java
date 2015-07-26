@@ -35,7 +35,6 @@ import io.ylf.laye.ast.AST;
 import io.ylf.laye.debug.ASTViewer;
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.lexical.Lexer;
-import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
 import io.ylf.laye.parse.Parser;
@@ -43,7 +42,8 @@ import io.ylf.laye.parse.Parser;
 /**
  * @author Sekai Kyoretsuna
  */
-public final class LayeTest
+public final 
+class LayeTest
 {
    public static void main(String[] args) throws IOException
    {

@@ -23,7 +23,7 @@
  */
 package io.ylf.laye.vm;
 
-import java.util.*;
+import java.util.HashMap;
 
 /**
  * @author Sekai Kyoretsuna
@@ -33,15 +33,11 @@ class SharedState
 {
    private final HashMap<String, LayeObject> shared = new HashMap<>();
    
-   public SharedState()
-   {
-   }
-   
    public LayeObject load(String key)
    {
       return(shared.get(key));
    }
-   
+
    public void store(String key, LayeObject object)
    {
       shared.put(key, object);

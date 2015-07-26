@@ -23,7 +23,15 @@
  */
 package io.ylf.laye.lexical;
 
-import static io.ylf.laye.log.LogMessageID.*;
+import static io.ylf.laye.log.LogMessageID.ERROR_DOT_AFTER_NUMBER;
+import static io.ylf.laye.log.LogMessageID.ERROR_ESCAPED_UNICODE_SIZE;
+import static io.ylf.laye.log.LogMessageID.ERROR_ILLEGAL_ESCAPE;
+import static io.ylf.laye.log.LogMessageID.ERROR_INVALID_IDENTIFIER_START;
+import static io.ylf.laye.log.LogMessageID.ERROR_NUMBER_FORMAT;
+import static io.ylf.laye.log.LogMessageID.ERROR_TRAILING_CHARS_IN_NUMBER;
+import static io.ylf.laye.log.LogMessageID.ERROR_UNDERSCORE_IN_NUMBER;
+import static io.ylf.laye.log.LogMessageID.ERROR_UNFINISHED_STRING;
+import static io.ylf.laye.log.LogMessageID.WARNING_FLOAT_DECOR;
 
 import java.io.IOException;
 import java.io.InputStream;

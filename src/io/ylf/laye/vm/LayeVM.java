@@ -28,18 +28,14 @@ import static io.ylf.laye.vm.Instruction.*;
 import java.util.HashMap;
 
 import lombok.EqualsAndHashCode;
+import lombok.val;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) 
+public @EqualsAndHashCode(callSuper = false)
 class LayeVM extends LayeObject
 {
-   /**
-    * All kits currently loaded by this VM only.
-    */
-   private final HashMap<String, LayeKit> kitCache = new HashMap<>();
-   
    private final CallStack stack = new CallStack();
    private final SharedState state;
    
@@ -57,6 +53,38 @@ class LayeVM extends LayeObject
    public String toString()
    {
       return "LayeVM:TODO"; // FIXME(sekai): Add a toString to LayeVM.
+   }
+   
+   public LayeObject invoke(LayeObject target, LayeObject thisValue, LayeObject... args)
+   {
+      if (target instanceof LayeClosure)
+      {
+         return(invoke((LayeClosure)target, thisValue, args));
+      }
+      return(null);
+   }
+   
+   public LayeObject invoke(LayeClosure closure, LayeObject thisValue, LayeObject... args)
+   {
+      stack.pushFrame(closure, thisValue);
+      
+      int argc = closure.argc;
+      boolean vargs = closure.vargs;
+      
+      StackFrame top = stack.getTop();
+      int[] code = closure.code;
+      int codeLength = code.length;
+      Object[] consts = closure.consts;
+      
+      while (top.ip++ < codeLength)
+      {
+         executeInstruction(code[top.ip], top, consts);
+      }
+      
+      LayeObject result = top.pop();
+      stack.popFrame();
+      
+      return(result);
    }
    
    private void executeInstruction(int insn, StackFrame top, Object[] consts)
@@ -163,6 +191,30 @@ class LayeVM extends LayeObject
          case OP_FLOAD2:
          {
             top.push(LayeFloat.F2);
+         } return;
+
+         case OP_CLOSURE:
+         {
+         } return;
+         case OP_TYPE:
+         {
+         } return;
+
+         case OP_CLOSE_OUTERS:
+         {
+         } return;
+         case OP_INVOKE:
+         {
+            LayeObject[] args = top.popCount((insn >>> POS_A) & MAX_A);
+            top.push(invoke(top.pop(), null, args));
+         } return;
+         case OP_INVOKE_METHOD:
+         {
+            LayeObject args[] = top.popCount((insn >>> POS_A) & MAX_A), target = top.pop();
+            top.push(invoke(target, top.pop(), args));
+         } return;
+         case OP_INVOKE_SUPER:
+         {
          } return;
       }
    }

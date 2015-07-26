@@ -29,13 +29,22 @@ import lombok.EqualsAndHashCode;
  * @author Sekai Kyoretsuna
  */
 public @EqualsAndHashCode(callSuper = false) 
-class LayeClosure
+class LayeClosure extends LayeObject
 {
    public int[] code = {};
+   public int argc = 0;
+   public boolean vargs = false;
    public int maxLocals = 0;
    public int maxStackSize = 0;
+   public Object[] consts = null;
    
    public LayeClosure()
    {
+   }
+
+   @Override
+   public String toString()
+   {
+      return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
    }
 }
