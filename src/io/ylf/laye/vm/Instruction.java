@@ -26,9 +26,69 @@ package io.ylf.laye.vm;
 /**
  * @author Sekai Kyoretsuna
  */
-public class Instruction
+public final
+class Instruction
 {
-   public Instruction()
+   // OP = 8 bits
+   // A = 12 bits
+   // B = 12 bits
+   // C = 24 bits
+
+   public static final int SIZE_OP = 8;
+   public static final int SIZE_A  = 12;
+   public static final int SIZE_B  = 12;
+   public static final int SIZE_C  = SIZE_A + SIZE_B;
+
+   public static final int POS_OP = 0;
+   public static final int POS_A  = SIZE_OP;
+   public static final int POS_B  = POS_A + SIZE_A;
+
+   public static final int MAX_OP = (1 << SIZE_OP) - 1;
+   public static final int MAX_A  = (1 << SIZE_A) - 1;
+   public static final int MAX_B  = (1 << SIZE_B) - 1;
+   public static final int MAX_C  = (1 << SIZE_C) - 1;
+   
+   // ===== Op Codes
+   
+   public static final byte OP_HALT             = 0x00;
+
+   public static final byte OP_POP              = 0x01;
+   public static final byte OP_DUP              = 0x02;
+
+   public static final byte OP_LOAD_LOCAL       = 0x03;
+   public static final byte OP_STORE_LOCAL      = 0x04;
+   public static final byte OP_LOAD_OUTER       = 0x05;
+   public static final byte OP_STORE_OUTER      = 0x06;
+   public static final byte OP_LOAD_GLOBAL      = 0x07;
+   public static final byte OP_STORE_GLOBAL     = 0x08;
+   public static final byte OP_LOAD_INDEX       = 0x09;
+   public static final byte OP_STORE_INDEX      = 0x0A;
+
+   public static final byte OP_NLOAD            = 0x0B;
+   public static final byte OP_CLOAD            = 0x0C;
+   
+   public static final byte OP_ILOADM1          = 0x0D;
+   public static final byte OP_ILOAD0           = 0x0E;
+   public static final byte OP_ILOAD1           = 0x0F;
+   public static final byte OP_ILOAD2           = 0x10;
+   public static final byte OP_ILOAD3           = 0x11;
+   public static final byte OP_ILOAD4           = 0x12;
+   public static final byte OP_ILOAD5           = 0x13;
+   
+   public static final byte OP_FLOADM1          = 0x14;
+   public static final byte OP_FLOAD0           = 0x15;
+   public static final byte OP_FLOAD1           = 0x16;
+   public static final byte OP_FLOAD2           = 0x17;
+
+   public static final byte OP_CLOSURE          = 0x18;
+   public static final byte OP_TYPE             = 0x19;
+   
+   public static final byte OP_CLOSE_OUTERS     = 0x1A;
+   public static final byte OP_INVOKE           = 0x1B;
+   public static final byte OP_INVOKE_METHOD    = 0x1C;
+   public static final byte OP_INVOKE_SUPER     = 0x1D;
+   
+   private Instruction()
    {
    }
 }

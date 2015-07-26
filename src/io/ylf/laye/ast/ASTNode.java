@@ -28,7 +28,8 @@ import io.ylf.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public abstract class ASTNode
+public abstract
+class ASTNode
 {
    public final Location location;
    

@@ -21,19 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.vm;
+package io.ylf.laye.ast;
+
+import io.ylf.laye.lexical.Location;
+import io.ylf.laye.vm.LayeString;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class VirtualMachine
+public
+class NodeStringLiteral extends NodeExpression
 {
-   public VirtualMachine()
+   public LayeString value;
+   
+   public NodeStringLiteral(Location location, LayeString value)
    {
+      super(location);
+      this.value = value;
    }
    
-   private void executeInstruction(Instruction insn)
+   @Override
+   public void accept(ASTVisitor visitor)
    {
-      assert(insn != null);
+      visitor.visit(this);
    }
 }

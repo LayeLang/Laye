@@ -21,28 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.ast;
+package io.ylf.laye.vm;
 
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-class NodeFloatLiteral extends NodeExpression
+public @EqualsAndHashCode(callSuper = false) 
+class LayeClosure
 {
-   public LayeFloat value;
+   public int[] code = {};
+   public int maxLocals = 0;
+   public int maxStackSize = 0;
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public LayeClosure()
    {
-      super(location);
-      this.value = value;
-   }
-   
-   @Override
-   public void accept(ASTVisitor visitor)
-   {
-      visitor.visit(this);
    }
 }

@@ -28,7 +28,8 @@ import net.fudev.faxlib.collections.List;
 /**
  * @author Sekai Kyoretsuna
  */
-public class ProcesserOptions
+public final
+class ProcesserOptions
 {
    /**
     * When this is <code>true</code>, compilation will fail when warnings are present.
@@ -39,8 +40,4 @@ public class ProcesserOptions
     * Any warning with an ID in this list is ignored.
     */
    public List<Integer> ignoredWarnings = new List<Integer>();
-   
-   public ProcesserOptions()
-   {
-   }
 }

@@ -26,15 +26,28 @@ package io.ylf.laye.ast;
 /**
  * @author Sekai Kyoretsuna
  */
-public interface ASTVisitor
+public
+interface ASTVisitor
 {
-   void accept(AST ast);
+   void visit(AST ast);
 
-   void accept(NodeVariableDef node);
+   void visit(NodeVariableDef node);
 
-   void accept(NodeNullLiteral node);
+   void visit(NodeNullLiteral node);
 
-   void accept(NodeIntLiteral node);
+   void visit(NodeIntLiteral node);
 
-   void accept(NodeFloatLiteral node);
+   void visit(NodeFloatLiteral node);
+
+   void visit(NodeStringLiteral node);
+
+   void visit(NodePrefixExpression node);
+
+   void visit(NodePostfixExpression node);
+
+   void visit(NodeInfixExpression node);
+
+   void visit(NodeScope node);
+
+   void visit(NodeFunctionDef node);
 }

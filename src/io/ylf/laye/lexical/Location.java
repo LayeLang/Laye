@@ -24,11 +24,14 @@
 package io.ylf.laye.lexical;
 
 import io.ylf.laye.file.ScriptFile;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class Location
+public @EqualsAndHashCode
+class Location
 {
    /**
     * The file.
@@ -45,15 +48,11 @@ public class Location
     */
    public final int column;
    
-   public Location(ScriptFile file, int line, int column)
+   public Location(@NonNull ScriptFile file, int line, int column)
    {
       this.file = file;
       this.line = line;
       this.column = column;
-      
-      assert(file != null);
-      assert(line >= 1);
-      assert(column >= 1);
    }
    
    @Override
@@ -72,54 +71,5 @@ public class Location
       }
       
       return(result.toString());
-   }
-   
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + column;
-      result = prime * result + ((file == null) ? 0 : file.hashCode());
-      result = prime * result + line;
-      return(result);
-   }
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return(true);
-      }
-      if (obj == null)
-      {
-         return(false);
-      }
-      if (!(obj instanceof Location))
-      {
-         return(false);
-      }
-      Location other = (Location) obj;
-      if (column != other.column)
-      {
-         return(false);
-      }
-      if (file == null)
-      {
-         if (other.file != null)
-         {
-            return(false);
-         }
-      }
-      else if (!file.equals(other.file))
-      {
-         return(false);
-      }
-      if (line != other.line)
-      {
-         return(false);
-      }
-      return(true);
    }
 }

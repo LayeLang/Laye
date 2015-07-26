@@ -29,7 +29,8 @@ import io.ylf.laye.vm.LayeInt;
 /**
  * @author Sekai Kyoretsuna
  */
-public class NodeIntLiteral extends NodeExpression
+public
+class NodeIntLiteral extends NodeExpression
 {
    public LayeInt value;
    
@@ -42,6 +43,6 @@ public class NodeIntLiteral extends NodeExpression
    @Override
    public void accept(ASTVisitor visitor)
    {
-      visitor.accept(this);
+      visitor.visit(this);
    }
 }

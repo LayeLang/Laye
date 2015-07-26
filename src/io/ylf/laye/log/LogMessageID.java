@@ -28,7 +28,8 @@ import java.util.HashMap;
 /**
  * @author Sekai Kyoretsuna
  */
-public final class LogMessageID
+public final
+class LogMessageID
 {
    // TODO(sekai): I think this should take descriptions, for user help.
    
@@ -50,6 +51,10 @@ public final class LogMessageID
 
    public static final LogMessageID ERROR_UNFINISHED_STRING = new LogMessageID(
          "Unfinished String Literal",
+         NEXT_CODE++);
+
+   public static final LogMessageID ERROR_UNFINISHED_SCOPE = new LogMessageID(
+         "Unfinished Scope",
          NEXT_CODE++);
 
    public static final LogMessageID ERROR_ILLEGAL_ESCAPE = new LogMessageID(

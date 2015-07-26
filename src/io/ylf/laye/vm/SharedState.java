@@ -21,28 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.ast;
+package io.ylf.laye.vm;
 
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+import java.util.*;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class SharedState
 {
-   public LayeFloat value;
+   private final HashMap<String, LayeObject> shared = new HashMap<>();
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public SharedState()
    {
-      super(location);
-      this.value = value;
    }
    
-   @Override
-   public void accept(ASTVisitor visitor)
+   public LayeObject load(String key)
    {
-      visitor.visit(this);
+      return(shared.get(key));
+   }
+   
+   public void store(String key, LayeObject object)
+   {
+      shared.put(key, object);
    }
 }

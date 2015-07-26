@@ -24,22 +24,22 @@
 package io.ylf.laye.ast;
 
 import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+import io.ylf.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class NodeFunctionDef extends ASTNode
 {
-   public LayeFloat value;
+   public Identifier name = null;
+   public FunctionData data = new FunctionData();
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public NodeFunctionDef(Location location)
    {
       super(location);
-      this.value = value;
    }
-   
+
    @Override
    public void accept(ASTVisitor visitor)
    {

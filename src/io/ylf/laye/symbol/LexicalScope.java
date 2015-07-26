@@ -31,7 +31,8 @@ import net.fudev.faxlib.collections.List;
  * 
  * @author Sekai Kyoretsuna
  */
-public class LexicalScope
+public
+class LexicalScope
 {
    public final LexicalScope parent;
    private final List<LexicalScope> children = new List<LexicalScope>();

@@ -23,17 +23,20 @@
  */
 package io.ylf.laye.util;
 
+import lombok.Data;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public class Pair<A, B>
+public @Data
+class Pair<A, B>
 {
    public final A a;
    public final B b;
    
-   public Pair(A a, B b)
+   @Override
+   public String toString()
    {
-      this.a = a;
-      this.b = b;
+      return "(" + a + ", " + b + ")";
    }
 }

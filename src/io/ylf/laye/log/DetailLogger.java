@@ -31,7 +31,8 @@ import io.ylf.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public class DetailLogger implements Flushable
+public
+class DetailLogger implements Flushable
 {
    private PrintStream out;
    private PrintStream err;

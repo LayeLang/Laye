@@ -26,17 +26,13 @@ package io.ylf.laye.debug;
 import java.io.PrintStream;
 import java.util.Objects;
 
-import io.ylf.laye.ast.AST;
-import io.ylf.laye.ast.ASTVisitor;
-import io.ylf.laye.ast.NodeFloatLiteral;
-import io.ylf.laye.ast.NodeIntLiteral;
-import io.ylf.laye.ast.NodeNullLiteral;
-import io.ylf.laye.ast.NodeVariableDef;
+import io.ylf.laye.ast.*;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class ASTViewer implements ASTVisitor
+public
+class ASTViewer implements ASTVisitor
 {
    private PrintStream out;
    
@@ -121,7 +117,7 @@ public class ASTViewer implements ASTVisitor
    }
 
    @Override
-   public void accept(AST ast)
+   public void visit(AST ast)
    {
       ast.forEach(node ->
       {
@@ -132,7 +128,7 @@ public class ASTViewer implements ASTVisitor
    }
    
    @Override
-   public void accept(NodeVariableDef node)
+   public void visit(NodeVariableDef node)
    {
       println("VAR {");
       tabs++;
@@ -148,20 +144,83 @@ public class ASTViewer implements ASTVisitor
    }
    
    @Override
-   public void accept(NodeNullLiteral node)
+   public void visit(NodeNullLiteral node)
    {
       print("null");
    }
 
    @Override
-   public void accept(NodeIntLiteral node)
+   public void visit(NodeIntLiteral node)
    {
       print(node.value);
    }
 
    @Override
-   public void accept(NodeFloatLiteral node)
+   public void visit(NodeFloatLiteral node)
    {
       print(node.value);
+   }
+
+   @Override
+   public void visit(NodeStringLiteral node)
+   {
+      print("\"");
+      print(node.value);
+      print("\"");
+   }
+
+   @Override
+   public void visit(NodePrefixExpression node)
+   {
+      print("PREFIX ");
+      print(node.operator.image);
+      print("(");
+      node.expression.accept(this);
+      print(")");
+   }
+
+   @Override
+   public void visit(NodePostfixExpression node)
+   {
+      print("POSTFIX (");
+      node.expression.accept(this);
+      print(")");
+      print(node.operator.image);
+   }
+
+   @Override
+   public void visit(NodeInfixExpression node)
+   {
+      print("INFIX (");
+      node.left.accept(this);
+      print(")");
+      print(node.operator.image);
+      print("(");
+      node.right.accept(this);
+      print(")");
+   }
+
+   @Override
+   public void visit(NodeScope node)
+   {
+      println("{");
+      tabs++;
+      node.body.forEach(child -> {
+         tprint();
+         child.accept(this);
+         println();
+      });
+      tabs--;
+      tprint("}");
+   }
+
+   @Override
+   public void visit(NodeFunctionDef node)
+   {
+      print("FUNCTION ");
+      print(node.name.image);
+      print(" ");
+      node.data.body.accept(this);
+      
    }
 }

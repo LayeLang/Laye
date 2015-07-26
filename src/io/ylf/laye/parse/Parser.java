@@ -23,28 +23,25 @@
  */
 package io.ylf.laye.parse;
 
-import static io.ylf.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
+import static io.ylf.laye.log.LogMessageID.*;
 
-import io.ylf.laye.ast.AST;
-import io.ylf.laye.ast.ASTNode;
-import io.ylf.laye.ast.NodeExpression;
-import io.ylf.laye.ast.NodeFloatLiteral;
-import io.ylf.laye.ast.NodeIntLiteral;
-import io.ylf.laye.ast.NodeNullLiteral;
-import io.ylf.laye.ast.NodeVariableDef;
+import io.ylf.laye.ast.*;
 import io.ylf.laye.lexical.Location;
 import io.ylf.laye.lexical.Token;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
 import io.ylf.laye.struct.Identifier;
 import io.ylf.laye.struct.Keyword;
+import io.ylf.laye.struct.Operator;
 import io.ylf.laye.vm.LayeFloat;
 import io.ylf.laye.vm.LayeInt;
+import io.ylf.laye.vm.LayeString;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public class Parser
+public
+class Parser
 {
    private final DetailLogger logger;
    
@@ -124,7 +121,7 @@ public class Parser
       {
          next();
          logger.logErrorf(token.location, ERROR_UNEXPECTED_TOKEN,
-               "Unexpected token '%s', expected '%s'.", token.type.toString(), type.toString());
+               "Unexpected token '%s', expected '%s'.\n", token.type.toString(), type.toString());
          return(false);
       }
       next();
@@ -162,6 +159,10 @@ public class Parser
          {
             switch (((Keyword)token.data).image)
             {
+               case Keyword.STR_FN:
+               {
+                  return(parseFunctionDefinition());
+               }
                case Keyword.STR_VAR:
                {
                   return(parseVariableDefinition());
@@ -175,10 +176,19 @@ public class Parser
          {
          } break;
       }
-      // TODO(sekai): Expression parsing
-      return(parsePrimaryExpression());
+      NodeExpression result = factor();
+      if (result == null)
+      {
+         // Attempt to fix the situation, should already have errored.
+         next();
+      }
+      return(result);
    }
    
+   /**
+    * DON'T call this directly, use {@link #factor()}
+    * @return
+    */
    private NodeExpression parsePrimaryExpression()
    {
       Location location = getLocation();
@@ -209,16 +219,117 @@ public class Parser
          case FLOAT_LITERAL:
          {
             LayeFloat value = (LayeFloat)token.data;
-            // nom int
+            // nom float
             next();
             return(new NodeFloatLiteral(location, value));
+         }
+         case STRING_LITERAL:
+         {
+            LayeString value = (LayeString)token.data;
+            // nom string
+            next();
+            return(new NodeStringLiteral(location, value));
+         }
+         case OPEN_CURLY_BRACE:
+         {
+            NodeScope scope = new NodeScope(getLocation());
+            // nom '{'
+            next();
+            while (!check(Token.Type.CLOSE_CURLY_BRACE))
+            {
+               if (tokens.isOver())
+               {
+                  logger.logError(getLocation(), ERROR_UNFINISHED_SCOPE, "Unfinished scope.");
+                  break;
+               }
+               scope.body.append(parseTopLevel());
+            }
+            // nom '}'
+            expect(Token.Type.CLOSE_CURLY_BRACE);
+            return(scope);
          }
          default:
          {
          } break;
       }
-      // TODO log an error plz
+      logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
+            "Failed to parse expression on token '%s'\n", token.toString());
       return(null);
+   }
+   
+   private NodeExpression factor()
+   {
+       final NodeExpression left;
+       if ((left = parsePrimaryExpression()) == null)
+       {
+          return(null);
+       }
+       return(factorRHS(left, 0));
+   }
+   
+   // TODO add precedence
+   private NodeExpression factorRHS(NodeExpression left, int minp)
+   {
+      while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence >= minp)
+      {
+         final Operator op = (Operator)token.data;
+         // Lex Operator
+         next();
+         // Load up the right hand side, if one exists
+         NodeExpression right;
+         if ((right = parsePrimaryExpression()) != null)
+         {
+            while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence > op.precedence)
+            {
+               right = factorRHS(right, ((Operator)token.data).precedence);
+            }
+            left = new NodeInfixExpression(left.location, left, right, op);
+         }
+         else
+         {
+            return(new NodePostfixExpression(left.location, left, op));
+         }
+      }
+      return(left);
+   }
+   
+   private NodeFunctionDef parseFunctionDefinition()
+   {
+      NodeFunctionDef def = new NodeFunctionDef(getLocation());
+      
+      // nom 'fn'
+      next();
+      
+      def.name = expectIdentifier();
+
+      // nom '('
+      expect(Token.Type.OPEN_BRACE);
+      
+      while (!check(Token.Type.CLOSE_BRACE))
+      {
+         Identifier param = expectIdentifier();
+         // TODO(sekai): check defaults and vargs
+         
+         def.data.params.append(param);
+         def.data.defaults.append(null);
+         
+         if (check(Token.Type.COMMA))
+         {
+            // nom ','
+            next();
+         }
+         else
+         {
+            break;
+         }
+      }
+      
+      // nom ')'
+      expect(Token.Type.CLOSE_BRACE);
+      
+      def.data.body = factor();
+      
+      return(def);
    }
    
    private NodeVariableDef parseVariableDefinition()
@@ -238,7 +349,12 @@ public class Parser
             // nom '='
             next();
             
-            varValue = parsePrimaryExpression();
+            varValue = factor();
+            if (varValue == null)
+            {
+               // Should already have errored, just try to fix the issue.
+               next();
+            }
          }
          else
          {

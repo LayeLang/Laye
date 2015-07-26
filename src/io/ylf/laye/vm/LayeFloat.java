@@ -23,11 +23,19 @@
  */
 package io.ylf.laye.vm;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public final class LayeFloat extends LayeObject
+public final @EqualsAndHashCode(callSuper = false) 
+class LayeFloat extends LayeObject
 {
+   public static final LayeFloat FM1 = valueOf(-1.0);
+   public static final LayeFloat F0  = valueOf(0.0);
+   public static final LayeFloat F1  = valueOf(1.0);
+   public static final LayeFloat F2  = valueOf(2.0);
+   
    public static LayeFloat valueOf(double value)
    {
       return(new LayeFloat(value));

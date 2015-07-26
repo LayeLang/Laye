@@ -21,28 +21,66 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.ast;
-
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+package io.ylf.laye.vm;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class StackFrame
 {
-   public LayeFloat value;
+   public final LayeClosure closure;
+   public final LayeObject thisValue;
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   private final LayeObject[] locals;
+   private final LayeObject[] stack;
+   
+   private int stackPointer = 0;
+   
+   public StackFrame(LayeClosure closure, LayeObject thisValue)
    {
-      super(location);
-      this.value = value;
+      this.closure = closure;
+      this.thisValue = thisValue;
+      this.locals = new LayeObject[closure.maxLocals];
+      this.stack = new LayeObject[closure.maxStackSize];
    }
    
-   @Override
-   public void accept(ASTVisitor visitor)
+   // ===== Local Operations
+   
+   public void store(int index, LayeObject value)
    {
-      visitor.visit(this);
+      locals[index] = value;
+   }
+   
+   public LayeObject load(int index)
+   {
+      return locals[index];
+   }
+   
+   // ===== Stack Operations
+   
+   public void push(LayeObject value)
+   {
+      stack[stackPointer++] = value;
+   }
+   
+   public void dup()
+   {
+      stack[stackPointer++] = stack[stackPointer - 2];
+   }
+   
+   public LayeObject pop()
+   {
+      return stack[--stackPointer];
+   }
+   
+   public LayeObject[] popCount(int count)
+   {
+      LayeObject[] result = new LayeObject[count];
+      while (--count >= 0)
+      {
+         result[count] = pop();
+      }
+      return result;
    }
 }

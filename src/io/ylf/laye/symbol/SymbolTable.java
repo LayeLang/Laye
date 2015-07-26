@@ -26,7 +26,8 @@ package io.ylf.laye.symbol;
 /**
  * @author Sekai Kyoretsuna
  */
-public class SymbolTable
+public
+class SymbolTable
 {
    public SymbolTable()
    {

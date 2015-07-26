@@ -24,20 +24,22 @@
 package io.ylf.laye.ast;
 
 import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+import io.ylf.laye.struct.Operator;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class NodePostfixExpression extends NodeExpression
 {
-   public LayeFloat value;
+   public NodeExpression expression = null;
+   public Operator operator;
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public NodePostfixExpression(Location location, NodeExpression expression, Operator operator)
    {
       super(location);
-      this.value = value;
+      this.expression = expression;
+      this.operator = operator;
    }
    
    @Override

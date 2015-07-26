@@ -23,10 +23,13 @@
  */
 package io.ylf.laye.vm;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public final class LayeInt extends LayeObject
+public final @EqualsAndHashCode(callSuper = false) 
+class LayeInt extends LayeObject
 {
    private static final int CACHE_LOW = -128;
    private static final int CACHE_HIGH = 127;
@@ -41,6 +44,14 @@ public final class LayeInt extends LayeObject
          CACHE[i] = new LayeInt(value++);
       }
    }
+
+   public static final LayeInt IM1 = valueOf(-1L);
+   public static final LayeInt I0  = valueOf(0L);
+   public static final LayeInt I1  = valueOf(1L);
+   public static final LayeInt I2  = valueOf(2L);
+   public static final LayeInt I3  = valueOf(3L);
+   public static final LayeInt I4  = valueOf(4L);
+   public static final LayeInt I5  = valueOf(5L);
    
    public static LayeInt valueOf(long value)
    {

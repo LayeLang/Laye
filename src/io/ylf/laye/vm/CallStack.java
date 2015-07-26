@@ -21,28 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.ast;
-
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+package io.ylf.laye.vm;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class CallStack
 {
-   public LayeFloat value;
-   
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public CallStack()
    {
-      super(location);
-      this.value = value;
-   }
-   
-   @Override
-   public void accept(ASTVisitor visitor)
-   {
-      visitor.visit(this);
    }
 }

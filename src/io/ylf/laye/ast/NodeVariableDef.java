@@ -33,7 +33,8 @@ import net.fudev.faxlib.collections.List;
 /**
  * @author Sekai Kyoretsuna
  */
-public class NodeVariableDef extends ASTNode implements Iterable<Pair<Identifier, NodeExpression>>
+public
+class NodeVariableDef extends ASTNode implements Iterable<Pair<Identifier, NodeExpression>>
 {
    public List<Identifier> names = new List<>();
    public List<NodeExpression> values = new List<>();
@@ -52,7 +53,7 @@ public class NodeVariableDef extends ASTNode implements Iterable<Pair<Identifier
    @Override
    public void accept(ASTVisitor visitor)
    {
-      visitor.accept(this);
+      visitor.visit(this);
    }
 
    @Override

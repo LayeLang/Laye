@@ -25,10 +25,14 @@ package io.ylf.laye.struct;
 
 import java.util.HashMap;
 
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public class Keyword
+public @EqualsAndHashCode
+class Keyword
 {
    private static final HashMap<String, Keyword> keywords = new HashMap<String, Keyword>();
    
@@ -116,13 +120,11 @@ public class Keyword
 
    public static boolean exists(String image)
    {
-      assert(image != null);
       return(keywords.containsKey(image));
    }
    
-   public static Keyword get(String image)
+   public static Keyword get(@NonNull String image)
    {
-      assert(image != null);
       return(keywords.get(image));
    }
    
@@ -139,44 +141,5 @@ public class Keyword
    public String toString()
    {
       return(image);
-   }
-
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return(result);
-   }
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return(true);
-      }
-      if (obj == null)
-      {
-         return(false);
-      }
-      if (!(obj instanceof Keyword))
-      {
-         return(false);
-      }
-      Keyword other = (Keyword) obj;
-      if (image == null)
-      {
-         if (other.image != null)
-         {
-            return(false);
-         }
-      }
-      else if (!image.equals(other.image))
-      {
-         return(false);
-      }
-      return(true);
    }
 }

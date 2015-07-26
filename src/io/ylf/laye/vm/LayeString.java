@@ -23,10 +23,13 @@
  */
 package io.ylf.laye.vm;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public class LayeString extends LayeObject
+public @EqualsAndHashCode(callSuper = false) 
+class LayeString extends LayeObject
 {
    public final String value;
    
@@ -40,5 +43,4 @@ public class LayeString extends LayeObject
    {
       return(value);
    }
-   
 }

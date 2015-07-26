@@ -76,7 +76,7 @@ public class Lexer
    private ScriptFile file = null;
    
    private StringBuilder builder = new StringBuilder();
-   private char currentChar = '\u0000';
+   private char currentChar = '\u0000', lastChar = currentChar;
    
    private int line = 1, column = 0;
    private boolean eof;
@@ -132,6 +132,7 @@ public class Lexer
    
    private boolean readChar()
    {
+      lastChar = currentChar;
       int next;
       try
       {
@@ -285,9 +286,7 @@ public class Lexer
             readChar();
             final StringBuilder sb = new StringBuilder();
             int idx = 0;
-            for (; !eof && idx < 4 && (Character.isDigit(currentChar) ||
-                           (currentChar >= 'a' && currentChar <= 'f') ||
-                           (currentChar >= 'A' && currentChar <= 'F')); idx++)
+            for (; !eof && idx < 4 && isHexadecimalCharacter(currentChar); idx++)
             {
                sb.append(currentChar);
                readChar();
@@ -346,12 +345,10 @@ public class Lexer
       return(new Token(Token.Type.OPERATOR, Operator.get(image), location));
    }
    
-   private char lexIntegerDigits(CharacterMatcher matcher)
+   private void lexIntegerDigits(CharacterMatcher matcher)
    {
-      char lastChar = currentChar;
       while ((matcher.apply(currentChar) || currentChar == '_') && !eof)
       {
-         lastChar = currentChar;
          if (currentChar != '_')
          {
             putChar();
@@ -361,14 +358,12 @@ public class Lexer
             readChar();
          }
       }
-      return(lastChar);
    }
    
    private Token lexNumericToken()
    {
       final Location location = getLocation();
 
-      char lastChar = currentChar;
       readChar();
       
       boolean isInteger = true;
@@ -376,24 +371,23 @@ public class Lexer
 
       if (lastChar == '0' && doesCharacterDefineInteger(currentChar))
       {
-         char defChar = currentChar;
          readChar();
-         switch (defChar)
+         switch (lastChar)
          {
             case 'x': case 'X': // hexadecimal
             {
                iRadix = 16;
-               lastChar = lexIntegerDigits(Lexer::isHexadecimalCharacter);
+               lexIntegerDigits(Lexer::isHexadecimalCharacter);
             } break;
             case 'b': case 'B': // binary
             {
                iRadix = 2;
-               lastChar = lexIntegerDigits(Lexer::isBinaryCharacter);
+               lexIntegerDigits(Lexer::isBinaryCharacter);
             } break;
             case 'c': case 'C': // octal
             {
                iRadix = 8;
-               lastChar = lexIntegerDigits(Lexer::isOctalCharacter);
+               lexIntegerDigits(Lexer::isOctalCharacter);
             } break;
             default:
             {
@@ -420,7 +414,6 @@ public class Lexer
             else if (currentChar == 'e' || currentChar == 'E')
             {
                putChar();
-               lastChar = currentChar;
                if (currentChar == '-')
                {
                   putChar();
@@ -430,7 +423,6 @@ public class Lexer
             }
             else if (currentChar == '_')
             {
-               lastChar = currentChar;
                if (lastChar == '.')
                {
                   logger.logError(location, ERROR_UNDERSCORE_IN_NUMBER, 
@@ -439,7 +431,6 @@ public class Lexer
                readChar();
                continue;
             }
-            lastChar = currentChar;
             putChar();
          }
       }

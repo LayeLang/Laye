@@ -25,10 +25,13 @@ package io.ylf.laye.struct;
 
 import java.util.HashMap;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public final class Identifier
+public final @EqualsAndHashCode
+class Identifier
 {
    private static final HashMap<String, Identifier> idents = new HashMap<>();
    
@@ -84,50 +87,9 @@ public final class Identifier
       this.image = image;
    }
    
-   // ===== toString, hashCode, and equals
-
    @Override
    public String toString()
    {
       return(image);
-   }
-
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return(result);
-   }
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return(true);
-      }
-      if (obj == null)
-      {
-         return(false);
-      }
-      if (!(obj instanceof Identifier))
-      {
-         return(false);
-      }
-      Identifier other = (Identifier) obj;
-      if (image == null)
-      {
-         if (other.image != null)
-         {
-            return(false);
-         }
-      }
-      else if (!image.equals(other.image))
-      {
-         return(false);
-      }
-      return(true);
    }
 }

@@ -23,26 +23,21 @@
  */
 package io.ylf.laye.ast;
 
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+import io.ylf.laye.struct.Identifier;
+import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class FunctionData
 {
-   public LayeFloat value;
+   public List<Identifier> params = new List<>();
+   public List<NodeExpression> defaults = new List<>();
+   public NodeExpression body = null;
+   public boolean vargs = false;
    
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   public FunctionData()
    {
-      super(location);
-      this.value = value;
-   }
-   
-   @Override
-   public void accept(ASTVisitor visitor)
-   {
-      visitor.visit(this);
    }
 }

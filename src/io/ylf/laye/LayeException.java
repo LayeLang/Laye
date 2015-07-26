@@ -21,28 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.ylf.laye.ast;
-
-import io.ylf.laye.lexical.Location;
-import io.ylf.laye.vm.LayeFloat;
+package io.ylf.laye;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class LayeException extends RuntimeException
 {
-   public LayeFloat value;
-   
-   public NodeFloatLiteral(Location location, LayeFloat value)
+   private static final long serialVersionUID = -5918678362546476679L;
+
+   public LayeException(String message)
    {
-      super(location);
-      this.value = value;
+      super(message);
    }
-   
-   @Override
-   public void accept(ASTVisitor visitor)
+
+   public LayeException(String format, Object... args)
    {
-      visitor.visit(this);
+      super(String.format(format, args));
    }
 }

@@ -30,7 +30,8 @@ import net.fudev.faxlib.collections.List;
 /**
  * @author Sekai Kyoretsuna
  */
-public class AST extends ASTNode implements Iterable<ASTNode>
+public
+class AST extends ASTNode implements Iterable<ASTNode>
 {
    public List<ASTNode> children = new List<>();
    
@@ -42,7 +43,7 @@ public class AST extends ASTNode implements Iterable<ASTNode>
    @Override
    public void accept(ASTVisitor visitor)
    {
-      visitor.accept(this);
+      visitor.visit(this);
    }
 
    @Override

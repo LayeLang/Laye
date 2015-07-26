@@ -28,10 +28,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public class ScriptFile
+public @EqualsAndHashCode
+class ScriptFile
 {
    public static ScriptFile fromResource(String resourcePath)
    {
@@ -60,49 +63,5 @@ public class ScriptFile
          return(ScriptFile.class.getResourceAsStream(path));
       }
       return(new FileInputStream(new File(path)));
-   }
-
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + (isResource ? 1231 : 1237);
-      result = prime * result + ((path == null) ? 0 : path.hashCode());
-      return(result);
-   }
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return(true);
-      }
-      if (obj == null)
-      {
-         return(false);
-      }
-      if (!(obj instanceof ScriptFile))
-      {
-         return(false);
-      }
-      ScriptFile other = (ScriptFile) obj;
-      if (isResource != other.isResource)
-      {
-         return(false);
-      }
-      if (path == null)
-      {
-         if (other.path != null)
-         {
-            return(false);
-         }
-      }
-      else if (!path.equals(other.path))
-      {
-         return(false);
-      }
-      return(true);
    }
 }

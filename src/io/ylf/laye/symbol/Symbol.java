@@ -28,7 +28,8 @@ import io.ylf.laye.struct.Identifier;
 /**
  * @author Sekai Kyoretsuna
  */
-public class Symbol
+public
+class Symbol
 {
    public static enum Type
    {

@@ -28,7 +28,8 @@ import io.ylf.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public class NodeNullLiteral extends NodeExpression
+public
+class NodeNullLiteral extends NodeExpression
 {
    public NodeNullLiteral(Location location)
    {
@@ -38,6 +39,6 @@ public class NodeNullLiteral extends NodeExpression
    @Override
    public void accept(ASTVisitor visitor)
    {
-      visitor.accept(this);
+      visitor.visit(this);
    }
 }

@@ -23,14 +23,40 @@
  */
 package io.ylf.laye.vm;
 
+import java.util.HashMap;
+
+import lombok.val;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public abstract class LayeObject
+public abstract
+class LayeObject
 {
+   private final HashMap<LayeObject, LayeObject> fields = new HashMap<>();
+   
    public LayeObject()
    {
    }
    
    public abstract String toString();
+   
+   public abstract int hashCode();
+   
+   public abstract boolean equals(Object obj);
+   
+   public LayeObject load(LayeObject key)
+   {
+      val result = fields.get(key);
+      if (result == null)
+      {
+         return(LayeNull.INSTANCE);
+      }
+      return(result);
+   }
+   
+   public void store(LayeObject key, LayeObject object)
+   {
+      fields.put(key, object);
+   }
 }

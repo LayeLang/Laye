@@ -119,7 +119,7 @@ public final class LayeTest
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
       
       System.out.println();
-      viewer.accept(ast);
+      viewer.visit(ast);
    }
    
    private LayeTest()
