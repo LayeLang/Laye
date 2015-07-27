@@ -86,4 +86,14 @@ class LayeInt extends LayeObject
    {
       return(value != 0);
    }
+   
+   @Override
+   public boolean compareEquals(LayeObject that)
+   {
+      if (!(that instanceof LayeInt))
+      {
+         return(false);
+      }
+      return(this.value == ((LayeInt)that).value);
+   }
 }

@@ -55,6 +55,11 @@ class LayeObject
       return(true);
    }
    
+   public boolean compareEquals(LayeObject that)
+   {
+      return(this == that);
+   }
+   
    public LayeObject load(LayeObject key)
    {
       val result = fields.get(key);

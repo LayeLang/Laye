@@ -59,4 +59,14 @@ class LayeFloat extends LayeObject
    {
       return(value != 0.0f);
    }
+   
+   @Override
+   public boolean compareEquals(LayeObject that)
+   {
+      if (!(that instanceof LayeFloat))
+      {
+         return(false);
+      }
+      return(this.value == ((LayeFloat)that).value);
+   }
 }

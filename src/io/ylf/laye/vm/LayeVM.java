@@ -312,14 +312,14 @@ class LayeVM extends LayeObject
          } return;
          case OP_JUMP_EQ:
          {
-            if (top.pop().equals(top.pop()))
+            if (top.pop().compareEquals(top.pop()))
             {
                top.ip = insn >>> POS_C;
             }
          } return;
          case OP_JUMP_NEQ:
          {
-            if (!top.pop().equals(top.pop()))
+            if (!top.pop().compareEquals(top.pop()))
             {
                top.ip = insn >>> POS_C;
             }
