@@ -24,14 +24,21 @@
 package io.ylf.laye.vm;
 
 import java.util.HashMap;
+import java.util.function.Consumer;
+
+import lombok.RequiredArgsConstructor;
+import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
+public @RequiredArgsConstructor
 class SharedState
 {
+   final LayeVM mainThread;
+   
    private final HashMap<String, LayeObject> shared = new HashMap<>();
+   private final List<LayeVM> sideThreads = new List<>();
    
    public LayeObject load(String key)
    {
@@ -41,5 +48,15 @@ class SharedState
    public void store(String key, LayeObject object)
    {
       shared.put(key, object);
+   }
+   
+   public void addSideThread(LayeVM thread)
+   {
+      sideThreads.append(thread);
+   }
+   
+   public void eachSideThread(Consumer<? super LayeVM> consumer)
+   {
+      sideThreads.forEach(consumer);
    }
 }

@@ -55,17 +55,23 @@ class LayeVM extends LayeObject
       throw new IllegalArgumentException("no space for new upvalue.");
    }
    
+   private final LayeVM parent;
+   
    private final CallStack stack = new CallStack();
    private final SharedState state;
    
+   private LayeObject haltValue;
+   
    public LayeVM()
    {
-      state = new SharedState();
+      this.parent = null;
+      state = new SharedState(this);
    }
    
    private LayeVM(LayeVM parent)
    {
-      state = parent.state;
+      state = (this.parent = parent).state;
+      state.addSideThread(this);
    }
    
    @Override
@@ -94,6 +100,29 @@ class LayeVM extends LayeObject
       boolean vargs = closure.proto.vargs;
       
       StackFrame top = stack.getTop();
+      
+      for (int c = 0; c < args.length; c++)
+      {
+         LayeObject arg;
+         if (c < argc)
+         {
+            if (c == args.length - 1 && vargs)
+            {
+               // FIXME(sekai): create a vargs list
+               arg = null;
+            }
+            else
+            {
+               arg = args[c];
+            }
+         }
+         else
+         {
+            arg = LayeNull.INSTANCE;
+         }
+         top.store(c, arg);
+      }
+      
       int[] code = closure.proto.code;
       int codeLength = code.length;
       OuterValue[] captures = closure.captures;
@@ -126,11 +155,6 @@ class LayeVM extends LayeObject
    {
       switch (insn & 0xFF)
       {
-         case OP_HALT:
-         {
-            // FIXME(sekai): halt the VM and all threads.
-         } return;
-         
          case OP_POP:
          {
             top.pop();

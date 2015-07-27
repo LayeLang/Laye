@@ -50,8 +50,6 @@ class Instruction
    
    // ===== Op Codes
    
-   public static final byte OP_HALT             = 0x00;
-
    public static final byte OP_POP              = 0x01;
    public static final byte OP_DUP              = 0x02;
 
