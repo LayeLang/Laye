@@ -273,6 +273,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_TYPE:
          {
+            // TODO(sekai): create types in the vm
          } return;
 
          case OP_CLOSE_OUTERS:
@@ -296,8 +297,9 @@ class LayeVM extends LayeObject
             LayeObject args[] = top.popCount((insn >>> POS_A) & MAX_A), target = top.pop();
             top.push(invoke(target, top.pop(), args));
          } return;
-         case OP_INVOKE_SUPER:
+         case OP_INVOKE_BASE:
          {
+            // TODO(sekai): invoke base in the vm
          } return;
       }
    }

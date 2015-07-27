@@ -84,7 +84,7 @@ class Instruction
    public static final byte OP_CLOSE_OUTERS     = 0x1A;
    public static final byte OP_INVOKE           = 0x1B;
    public static final byte OP_INVOKE_METHOD    = 0x1C;
-   public static final byte OP_INVOKE_SUPER     = 0x1D;
+   public static final byte OP_INVOKE_BASE      = 0x1D;
    
    private Instruction()
    {
