@@ -153,7 +153,7 @@ class LayeVM extends LayeObject
    private void executeInstruction(int insn, OuterValue[] openOuters, OuterValue[] captures,
          StackFrame top, Object[] consts)
    {
-      switch (insn & 0xFF)
+      switch (insn & MAX_OP)
       {
          case OP_POP:
          {
