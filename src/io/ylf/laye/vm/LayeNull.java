@@ -52,4 +52,10 @@ class LayeNull extends LayeObject
    {
       return(obj == this);
    }
+   
+   @Override
+   public boolean toBool()
+   {
+      return(false);
+   }
 }

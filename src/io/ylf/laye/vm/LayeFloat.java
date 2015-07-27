@@ -53,4 +53,10 @@ class LayeFloat extends LayeObject
    {
       return(Double.toString(value));
    }
+   
+   @Override
+   public boolean toBool()
+   {
+      return(value != 0.0f);
+   }
 }

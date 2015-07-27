@@ -80,4 +80,10 @@ class LayeInt extends LayeObject
    {
       return(Long.toString(value));
    }
+   
+   @Override
+   public boolean toBool()
+   {
+      return(value != 0);
+   }
 }

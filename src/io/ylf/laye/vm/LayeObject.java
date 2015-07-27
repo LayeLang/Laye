@@ -50,6 +50,11 @@ class LayeObject
    
    public abstract boolean equals(Object obj);
    
+   public boolean toBool()
+   {
+      return(true);
+   }
+   
    public LayeObject load(LayeObject key)
    {
       val result = fields.get(key);

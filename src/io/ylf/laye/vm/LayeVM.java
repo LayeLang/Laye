@@ -128,9 +128,9 @@ class LayeVM extends LayeObject
       OuterValue[] captures = closure.captures;
       Object[] consts = closure.proto.consts;
       
-      while (top.ip++ < codeLength)
+      while (top.ip < codeLength)
       {
-         executeInstruction(code[top.ip], openOuters, captures, top, consts);
+         executeInstruction(code[top.ip++], openOuters, captures, top, consts);
       }
       
       if (openOuters != null)
@@ -304,6 +304,39 @@ class LayeVM extends LayeObject
          case OP_INVOKE_BASE:
          {
             // TODO(sekai): invoke base in the vm
+         } return;
+         
+         case OP_JUMP:
+         {
+            top.ip = insn >>> POS_C;
+         } return;
+         case OP_JUMP_EQ:
+         {
+            if (top.pop().equals(top.pop()))
+            {
+               top.ip = insn >>> POS_C;
+            }
+         } return;
+         case OP_JUMP_NEQ:
+         {
+            if (!top.pop().equals(top.pop()))
+            {
+               top.ip = insn >>> POS_C;
+            }
+         } return;
+         case OP_JUMP_TRUE:
+         {
+            if (top.pop().toBool())
+            {
+               top.ip = insn >>> POS_C;
+            }
+         } return;
+         case OP_JUMP_FALSE:
+         {
+            if (!top.pop().toBool())
+            {
+               top.ip = insn >>> POS_C;
+            }
          } return;
       }
    }

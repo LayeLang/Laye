@@ -42,6 +42,7 @@ class Instruction
    public static final int POS_OP = 0;
    public static final int POS_A  = SIZE_OP;
    public static final int POS_B  = POS_A + SIZE_A;
+   public static final int POS_C  = POS_A;
 
    public static final int MAX_OP = (1 << SIZE_OP) - 1;
    public static final int MAX_A  = (1 << SIZE_A) - 1;
@@ -87,6 +88,12 @@ class Instruction
    public static final byte OP_INVOKE           = 0x1B;
    public static final byte OP_INVOKE_METHOD    = 0x1C;
    public static final byte OP_INVOKE_BASE      = 0x1D;
+
+   public static final byte OP_JUMP             = 0x1E;
+   public static final byte OP_JUMP_EQ          = 0x1F;
+   public static final byte OP_JUMP_NEQ         = 0x20;
+   public static final byte OP_JUMP_TRUE        = 0x21;
+   public static final byte OP_JUMP_FALSE       = 0x22;
    
    private Instruction()
    {
