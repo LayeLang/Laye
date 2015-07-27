@@ -155,6 +155,10 @@ class LayeVM extends LayeObject
    {
       switch (insn & MAX_OP)
       {
+         case OP_NOP:
+         {
+         } return;
+         
          case OP_POP:
          {
             top.pop();
