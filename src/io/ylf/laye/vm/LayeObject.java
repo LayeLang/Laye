@@ -33,6 +33,11 @@ import lombok.val;
 public abstract
 class LayeObject
 {
+   public static final LayeNull NULL = LayeNull.INSTANCE;
+
+   public static final LayeInt TRUE  = LayeInt.IM1;
+   public static final LayeInt FALSE = LayeInt.I0;
+   
    private final HashMap<LayeObject, LayeObject> fields = new HashMap<>();
    
    public LayeObject()
