@@ -312,8 +312,8 @@ class LayeVM extends LayeObject
          } return;
          case OP_INVOKE_METHOD:
          {
-            LayeObject args[] = top.popCount((insn >>> POS_A) & MAX_A), target = top.pop();
-            top.push(invoke(target, top.pop(), args));
+            LayeObject args[] = top.popCount((insn >>> POS_A) & MAX_A), index = top.pop();
+            top.push(top.pop().invokeMethod(this, index, args));
          } return;
          case OP_INVOKE_BASE:
          {

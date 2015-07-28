@@ -75,6 +75,11 @@ class LayeObject
    {
       fields.put(key, object);
    }
+   
+   public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
+   {
+      return vm.invoke(fields.get(methodIndex), this, args);
+   }
 
    public LayeObject prefix(String op)
    {
