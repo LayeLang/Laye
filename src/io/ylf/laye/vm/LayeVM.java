@@ -161,7 +161,7 @@ class LayeVM extends LayeObject
          } return;
          
          case OP_NOP:
-         {
+         { // Do nothing... This is nice, I like breaks<3
          } return;
          
          case OP_POP:
