@@ -31,6 +31,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 
+import io.ylf.laye.analyze.SemanticAnalyzer;
 import io.ylf.laye.ast.AST;
 import io.ylf.laye.debug.ASTViewer;
 import io.ylf.laye.file.ScriptFile;
@@ -38,6 +39,7 @@ import io.ylf.laye.lexical.Lexer;
 import io.ylf.laye.lexical.TokenStream;
 import io.ylf.laye.log.DetailLogger;
 import io.ylf.laye.parse.Parser;
+import io.ylf.laye.symbol.SymbolTable;
 
 /**
  * @author Sekai Kyoretsuna
@@ -80,6 +82,8 @@ class LayeTest
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
+      SemanticAnalyzer analyzer = new SemanticAnalyzer(logger);
+
       ASTViewer viewer = new ASTViewer(System.out);
       
       // Do all of the things!
@@ -105,6 +109,19 @@ class LayeTest
       {
          logger.flush();
          System.err.printf("Syntax tree generation failed with %d %s and %d %s.\n",
+               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
+               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+         return;
+      }
+      
+      // ===== Perform semantic analysis
+      
+      SymbolTable symbols = analyzer.analyze(ast);
+      
+      if (logger.getErrorCount() > 0)
+      {
+         logger.flush();
+         System.err.printf("Semantic analysis failed with %d %s and %d %s.\n",
                logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
