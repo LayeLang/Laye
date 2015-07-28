@@ -29,6 +29,15 @@ import lombok.EqualsAndHashCode;
 public @EqualsAndHashCode
 class Token
 {
+   public static final boolean isReservedCharacter(int codepoint)
+   {
+      return (codepoint == '(' || codepoint == ')' ||
+              codepoint == '[' || codepoint == ']' ||
+              codepoint == '{' || codepoint == '}' ||
+              codepoint == ':' || codepoint == ';' ||
+              codepoint == ',' || codepoint == '.');
+   }
+   
    public static enum Type
    {
       KEYWORD,

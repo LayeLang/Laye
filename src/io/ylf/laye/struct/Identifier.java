@@ -25,6 +25,7 @@ package io.ylf.laye.struct;
 
 import java.util.HashMap;
 
+import io.ylf.laye.lexical.Token;
 import lombok.EqualsAndHashCode;
 
 /**
@@ -69,15 +70,17 @@ class Identifier
       }
       return(true);
    }
-   
-   public static boolean isIdentifierStart(char c)
+ 
+   public static boolean isIdentifierStart(int codepoint)
    {
-      return(c == '_' || Character.isLetter(c));
+      return(codepoint == '_' || !(Character.isWhitespace(codepoint) || 
+             Token.isReservedCharacter(codepoint) || Operator.isOperatorChar(codepoint) ||
+             Character.isDigit(codepoint)));
    }
    
-   public static boolean isIdentifierPart(char c)
+   public static boolean isIdentifierPart(int c)
    {
-      return(isIdentifierStart(c) || Character.isDigit(c));
+      return(Character.isDigit(c) || isIdentifierStart(c));
    }
    
    public final String image;

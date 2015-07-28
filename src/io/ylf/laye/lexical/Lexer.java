@@ -34,7 +34,8 @@ import static io.ylf.laye.log.LogMessageID.ERROR_UNFINISHED_STRING;
 import static io.ylf.laye.log.LogMessageID.WARNING_FLOAT_DECOR;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.log.DetailLogger;
@@ -46,6 +47,8 @@ import io.ylf.laye.vm.LayeInt;
 import io.ylf.laye.vm.LayeString;
 
 /**
+ * TODO(sekai): all unicode characters should eventually be supported in here, plz.
+ * 
  * @author Sekai Kyoretsuna
  */
 public class Lexer
@@ -55,36 +58,36 @@ public class Lexer
     */
    private static interface CharacterMatcher
    {
-      boolean apply(char c);
+      boolean apply(int c);
    }
    
-   private static boolean doesCharacterDefineInteger(char c)
+   private static boolean doesCharacterDefineInteger(int c)
    {
       return(c == 'x' || c == 'X' || c == 'b' || c == 'B' || c == 'c' || c == 'C');
    }
    
-   private static boolean isHexadecimalCharacter(char c)
+   private static boolean isHexadecimalCharacter(int c)
    {
       return((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F'));
    }
    
-   private static boolean isBinaryCharacter(char c)
+   private static boolean isBinaryCharacter(int c)
    {
       return(c == '0' || c == '1');
    }
    
-   private static boolean isOctalCharacter(char c)
+   private static boolean isOctalCharacter(int c)
    {
       return(c >= '0' && c <= '7');
    }
 
    private final DetailLogger logger;
    
-   private InputStream input = null;
+   private InputStreamReader input = null;
    private ScriptFile file = null;
    
    private StringBuilder builder = new StringBuilder();
-   private char currentChar = '\u0000', lastChar = currentChar;
+   private int currentChar = 0, lastChar = currentChar;
    
    private int line = 1, column = 0;
    private boolean eof;
@@ -97,7 +100,7 @@ public class Lexer
    public TokenStream getTokens(ScriptFile file) throws IOException
    {
       this.file = file;
-      this.input = file.read();
+      this.input = new InputStreamReader(file.read(), "UTF-16");
       
       TokenStream result = new TokenStream();
       
@@ -129,13 +132,13 @@ public class Lexer
    
    private boolean putChar()
    {
-      builder.append(currentChar);
+      builder.appendCodePoint(currentChar);
       return(readChar());
    }
    
-   private void putChar(char c)
+   private void putChar(int c)
    {
-      builder.append(c);
+      builder.appendCodePoint(c);
    }
    
    private boolean readChar()
@@ -255,7 +258,7 @@ public class Lexer
    private Token lexStringLiteral()
    {
       final Location location = getLocation();
-      final char quoteChar = currentChar;
+      final int quoteChar = currentChar;
       // Read quote
       readChar();
       while (currentChar != quoteChar && !eof)
@@ -287,7 +290,7 @@ public class Lexer
       final Location location = getLocation();
       // Read '\'
       readChar();
-      switch (currentChar)
+      switch ((char)currentChar)
       {
          case 'u':
          {

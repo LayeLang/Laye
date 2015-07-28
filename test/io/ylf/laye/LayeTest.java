@@ -100,6 +100,8 @@ class LayeTest
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
       }
+      System.out.println();
+      tokens.forEach(node -> System.out.println(node + ": " + node.type));
       
       // ===== Parse the tokens
       
