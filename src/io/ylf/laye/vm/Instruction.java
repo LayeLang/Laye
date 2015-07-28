@@ -81,19 +81,25 @@ class Instruction
    public static final byte OP_FLOAD1           = 0x16;
    public static final byte OP_FLOAD2           = 0x17;
 
-   public static final byte OP_CLOSURE          = 0x18;
-   public static final byte OP_TYPE             = 0x19;
-   
-   public static final byte OP_CLOSE_OUTERS     = 0x1A;
-   public static final byte OP_INVOKE           = 0x1B;
-   public static final byte OP_INVOKE_METHOD    = 0x1C;
-   public static final byte OP_INVOKE_BASE      = 0x1D;
+   public static final byte OP_BLOADT           = 0x18;
+   public static final byte OP_BLOADF           = 0x19;
 
-   public static final byte OP_JUMP             = 0x1E;
-   public static final byte OP_JUMP_EQ          = 0x1F;
-   public static final byte OP_JUMP_NEQ         = 0x20;
-   public static final byte OP_JUMP_TRUE        = 0x21;
-   public static final byte OP_JUMP_FALSE       = 0x22;
+   public static final byte OP_CLOSURE          = 0x1A;
+   public static final byte OP_TYPE             = 0x1B;
+   
+   public static final byte OP_CLOSE_OUTERS     = 0x1C;
+   public static final byte OP_INVOKE           = 0x1D;
+   public static final byte OP_INVOKE_METHOD    = 0x1E;
+   public static final byte OP_INVOKE_BASE      = 0x1F;
+
+   public static final byte OP_JUMP             = 0x20;
+   public static final byte OP_JUMP_EQ          = 0x21;
+   public static final byte OP_JUMP_NEQ         = 0x22;
+   public static final byte OP_JUMP_TRUE        = 0x23;
+   public static final byte OP_JUMP_FALSE       = 0x24;
+
+   public static final byte OP_COMP_EQ          = 0x25;
+   public static final byte OP_COMP_NEQ         = 0x26;
    
    private Instruction()
    {

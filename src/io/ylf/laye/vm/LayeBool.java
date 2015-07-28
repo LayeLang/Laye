@@ -27,35 +27,39 @@ package io.ylf.laye.vm;
  * @author Sekai Kyoretsuna
  */
 public
-class LayeNull extends LayeObject
+class LayeBool extends LayeObject
 {
-   static final LayeNull INSTANCE = new LayeNull();
+   static final LayeBool BOOL_TRUE  = new LayeBool(true);
+   static final LayeBool BOOL_FALSE = new LayeBool(false);
    
-   private LayeNull()
+   public final boolean value;
+   
+   private LayeBool(boolean value)
    {
+      this.value = value;
    }
    
    @Override
    public String toString()
    {
-      return "null";
+      return(value ? "true" : "false");
    }
-
+   
    @Override
    public int hashCode()
    {
-      return(0);
+      return(value ? 1231 : 1237);
    }
-
+   
    @Override
    public boolean equals(Object obj)
    {
-      return(obj == this);
+      return(this == obj);
    }
    
    @Override
    public boolean toBool()
    {
-      return(false);
+      return(value);
    }
 }

@@ -35,8 +35,8 @@ class LayeObject
 {
    public static final LayeNull NULL = LayeNull.INSTANCE;
 
-   public static final LayeInt TRUE  = LayeInt.IM1;
-   public static final LayeInt FALSE = LayeInt.I0;
+   public static final LayeBool TRUE  = LayeBool.BOOL_TRUE;
+   public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
    private final HashMap<LayeObject, LayeObject> fields = new HashMap<>();
    
@@ -45,9 +45,9 @@ class LayeObject
    }
    
    public abstract String toString();
-   
+
    public abstract int hashCode();
-   
+
    public abstract boolean equals(Object obj);
    
    public boolean toBool()

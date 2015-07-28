@@ -155,6 +155,11 @@ class LayeVM extends LayeObject
    {
       switch (insn & MAX_OP)
       {
+         default:
+         {
+            // FIXME(sekai): errors of some kind plz
+         } return;
+         
          case OP_NOP:
          {
          } return;
@@ -258,6 +263,15 @@ class LayeVM extends LayeObject
             top.push(LayeFloat.F2);
          } return;
 
+         case OP_BLOADT:
+         {
+            top.push(LayeBool.BOOL_TRUE);
+         } return;
+         case OP_BLOADF:
+         {
+            top.push(LayeBool.BOOL_FALSE);
+         } return;
+         
          case OP_CLOSURE:
          {
             FunctionPrototype proto = (FunctionPrototype)consts[(insn >>> POS_A) & MAX_A];
@@ -337,6 +351,15 @@ class LayeVM extends LayeObject
             {
                top.ip = insn >>> POS_C;
             }
+         } return;
+
+         case OP_COMP_EQ:
+         {
+            top.push(top.pop().compareEquals(top.pop()) ? LayeBool.BOOL_TRUE : LayeBool.BOOL_FALSE);
+         } return;
+         case OP_COMP_NEQ:
+         {
+            top.push(top.pop().compareEquals(top.pop()) ? LayeBool.BOOL_FALSE : LayeBool.BOOL_TRUE);
          } return;
       }
    }
