@@ -355,11 +355,13 @@ class LayeVM extends LayeObject
 
          case OP_COMP_EQ:
          {
-            top.push(top.pop().compareEquals(top.pop()) ? LayeBool.BOOL_TRUE : LayeBool.BOOL_FALSE);
+            top.push(top.pop().compareEquals(top.pop()) ?
+                  LayeBool.BOOL_TRUE : LayeBool.BOOL_FALSE);
          } return;
          case OP_COMP_NEQ:
          {
-            top.push(top.pop().compareEquals(top.pop()) ? LayeBool.BOOL_FALSE : LayeBool.BOOL_TRUE);
+            top.push(top.pop().compareEquals(top.pop()) ?
+                  LayeBool.BOOL_FALSE : LayeBool.BOOL_TRUE);
          } return;
 
          case OP_PREFIX:
