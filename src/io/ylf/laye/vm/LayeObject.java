@@ -82,12 +82,6 @@ class LayeObject
       throw new LayeException("Attempt to perform prefix operation '%s' on type.", op);
    }
 
-   public LayeObject postfix(String op)
-   {
-      // FIXME(sekai): add type name
-      throw new LayeException("Attempt to perform postfix operation '%s' on type.", op);
-   }
-
    public LayeObject infix(String op, LayeObject that)
    {
       // FIXME(sekai): add type name

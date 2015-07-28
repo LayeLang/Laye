@@ -111,7 +111,7 @@ class LayeTest
       }
       
       // Finished! :D
-
+      
       logger.flush();
       
       System.out.printf("Code generation completed with %d %s and %d %s.\n",

@@ -366,10 +366,6 @@ class LayeVM extends LayeObject
          {
             top.push(top.pop().prefix((String)consts[(insn >>> POS_A) & MAX_A]));
          } return;
-         case OP_POSTFIX:
-         {
-            top.push(top.pop().postfix((String)consts[(insn >>> POS_A) & MAX_A]));
-         } return;
          case OP_INFIX:
          {
             LayeObject right = top.pop();
