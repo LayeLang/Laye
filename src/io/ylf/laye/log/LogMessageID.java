@@ -84,6 +84,10 @@ class LogMessageID
    public static final LogMessageID ERROR_UNEXPECTED_TOKEN = new LogMessageID(
          "Unexpected Token",
          NEXT_CODE++);
+
+   public static final LogMessageID ERROR_UNFINISHED_INFIX = new LogMessageID(
+         "Unexpected Token",
+         NEXT_CODE++);
    
    // ===== Instance
    

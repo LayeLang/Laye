@@ -23,8 +23,7 @@
  */
 package io.ylf.laye.parse;
 
-import static io.ylf.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
-import static io.ylf.laye.log.LogMessageID.ERROR_UNFINISHED_SCOPE;
+import static io.ylf.laye.log.LogMessageID.*;
 
 import io.ylf.laye.ast.*;
 import io.ylf.laye.lexical.Location;
@@ -273,6 +272,7 @@ class Parser
    {
       while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence >= minp)
       {
+         final Location location = token.location;
          final Operator op = (Operator)token.data;
          // Lex Operator
          next();
@@ -288,7 +288,9 @@ class Parser
          }
          else
          {
-            return(new NodePostfixExpression(left.location, left, op));
+            logger.logError(location, ERROR_UNFINISHED_INFIX,
+                  "expected expression to complete infix expression");
+            return(null);
          }
       }
       return(left);

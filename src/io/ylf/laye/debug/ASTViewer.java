@@ -180,15 +180,6 @@ class ASTViewer implements ASTVisitor
    }
 
    @Override
-   public void visit(NodePostfixExpression node)
-   {
-      print("POSTFIX (");
-      node.expression.accept(this);
-      print(")");
-      print(node.operator.image);
-   }
-
-   @Override
    public void visit(NodeInfixExpression node)
    {
       print("INFIX (");

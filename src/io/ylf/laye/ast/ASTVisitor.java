@@ -43,8 +43,6 @@ interface ASTVisitor
 
    void visit(NodePrefixExpression node);
 
-   void visit(NodePostfixExpression node);
-
    void visit(NodeInfixExpression node);
 
    void visit(NodeScope node);
