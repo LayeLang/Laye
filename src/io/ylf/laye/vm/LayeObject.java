@@ -25,6 +25,7 @@ package io.ylf.laye.vm;
 
 import java.util.HashMap;
 
+import io.ylf.laye.LayeException;
 import lombok.val;
 
 /**
@@ -73,5 +74,23 @@ class LayeObject
    public void store(LayeObject key, LayeObject object)
    {
       fields.put(key, object);
+   }
+
+   public LayeObject prefix(String op)
+   {
+      // FIXME(sekai): add type name
+      throw new LayeException("Attempt to perform prefix operation '%s' on type.", op);
+   }
+
+   public LayeObject postfix(String op)
+   {
+      // FIXME(sekai): add type name
+      throw new LayeException("Attempt to perform postfix operation '%s' on type.", op);
+   }
+
+   public LayeObject infix(String op, LayeObject that)
+   {
+      // FIXME(sekai): add type name
+      throw new LayeException("Attempt to perform infix operation '%s' on type.", op);
    }
 }

@@ -361,6 +361,20 @@ class LayeVM extends LayeObject
          {
             top.push(top.pop().compareEquals(top.pop()) ? LayeBool.BOOL_FALSE : LayeBool.BOOL_TRUE);
          } return;
+
+         case OP_PREFIX:
+         {
+            top.push(top.pop().prefix((String)consts[(insn >>> POS_A) & MAX_A]));
+         } return;
+         case OP_POSTFIX:
+         {
+            top.push(top.pop().postfix((String)consts[(insn >>> POS_A) & MAX_A]));
+         } return;
+         case OP_INFIX:
+         {
+            LayeObject right = top.pop();
+            top.push(top.pop().infix((String)consts[(insn >>> POS_A) & MAX_A], right));
+         } return;
       }
    }
 }

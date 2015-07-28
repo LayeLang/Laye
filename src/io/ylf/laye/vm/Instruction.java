@@ -100,6 +100,10 @@ class Instruction
 
    public static final byte OP_COMP_EQ          = 0x25;
    public static final byte OP_COMP_NEQ         = 0x26;
+
+   public static final byte OP_PREFIX           = 0x27;
+   public static final byte OP_POSTFIX          = 0x28;
+   public static final byte OP_INFIX            = 0x29;
    
    private Instruction()
    {
