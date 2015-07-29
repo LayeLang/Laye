@@ -228,4 +228,27 @@ class ASTViewer implements ASTVisitor
    {
       print(node.value.image);
    }
+   
+   @Override
+   public void visit(NodeInvoke node)
+   {
+      node.target.accept(this);
+      if (node.args.size() > 0)
+      {
+         println(" (");
+         tabs++;
+         node.args.forEach(arg ->
+         {
+            tprint();
+            arg.accept(this);
+            println();
+         });
+         tabs--;
+         tprint(")");
+      }
+      else
+      {
+         println(" ()");
+      }
+   }
 }

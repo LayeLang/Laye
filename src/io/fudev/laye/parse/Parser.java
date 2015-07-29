@@ -23,7 +23,9 @@
  */
 package io.fudev.laye.parse;
 
-import static io.fudev.laye.log.LogMessageID.*;
+import static io.fudev.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
+import static io.fudev.laye.log.LogMessageID.ERROR_UNFINISHED_INFIX;
+import static io.fudev.laye.log.LogMessageID.ERROR_UNFINISHED_SCOPE;
 
 import io.fudev.laye.ast.*;
 import io.fudev.laye.lexical.Location;
@@ -36,6 +38,7 @@ import io.fudev.laye.struct.Operator;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
 import io.fudev.laye.vm.LayeString;
+import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
@@ -268,7 +271,7 @@ class Parser
             Identifier ident = (Identifier)token.data;
             // nom ident
             next();
-            return(new NodeIdentifier(location, ident));
+            return(postfix(new NodeIdentifier(location, ident)));
          }
          default:
          {
@@ -277,6 +280,45 @@ class Parser
       logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
             "Failed to parse expression on token '%s'\n", token.toString());
       return(null);
+   }
+   
+   private NodeExpression postfix(NodeExpression node)
+   {
+      return(postfix(node, true));
+   }
+   
+   private NodeExpression postfix(NodeExpression node, boolean allowCall)
+   {
+      switch (token.type)
+      {
+         case OPEN_BRACE:
+         {
+            // nom '('
+            next();
+            List<NodeExpression> args = new List<>();
+            while (!check(Token.Type.CLOSE_BRACE))
+            {
+               NodeExpression arg = factor();
+               if (arg == null)
+               {
+                  // TODO(sekai): error
+               }
+               args.append(arg);
+               if (!check(Token.Type.COMMA))
+               {
+                  break;
+               }
+               // nom ','
+               next();
+            }
+            expect(Token.Type.CLOSE_BRACE);
+            node = new NodeInvoke(node.location, node, args);
+         } break;
+         default:
+         {
+         } break;
+      }
+      return(node);
    }
    
    private NodeExpression factor()
