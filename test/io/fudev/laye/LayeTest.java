@@ -82,7 +82,6 @@ class LayeTest
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
-      SemanticAnalyzer analyzer = new SemanticAnalyzer(logger);
 
       ASTViewer viewer = new ASTViewer(System.out);
       
@@ -109,19 +108,6 @@ class LayeTest
       {
          logger.flush();
          System.err.printf("Syntax tree generation failed with %d %s and %d %s.\n",
-               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
-               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-         return;
-      }
-      
-      // ===== Perform semantic analysis
-      
-      SymbolTable symbols = analyzer.analyze(ast);
-      
-      if (logger.getErrorCount() > 0)
-      {
-         logger.flush();
-         System.err.printf("Semantic analysis failed with %d %s and %d %s.\n",
                logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
