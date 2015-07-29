@@ -199,8 +199,7 @@ class Parser
             Operator op = (Operator)token.data;
             // nom operator
             next();
-            NodeExpression expression = parsePrimaryExpression();
-            return(new NodePrefixExpression(location, expression, op));
+            return(new NodePrefixExpression(location, parsePrimaryExpression(), op));
          }
          case KEYWORD:
          {
