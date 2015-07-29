@@ -15,7 +15,6 @@ type Stack
 
    fn Push(value)
       _top = new StackElement(_top, value)
-      null
 
    fn Dup()
    {
@@ -39,7 +38,7 @@ type Stack
    fn PopCount(outValues, count)
    {
       outValues = [] outValues.length = count
-      var temp var tempRef = ref temp
+      var tempRef = ref var temp
       while count > 0
       {
          count -= 1
