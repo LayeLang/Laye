@@ -29,11 +29,6 @@ package io.ylf.laye.vm;
 public final
 class Instruction
 {
-   // OP = 8 bits
-   // A = 12 bits
-   // B = 12 bits
-   // C = 24 bits
-
    public static final int SIZE_OP = 8;
    public static final int SIZE_A  = 12;
    public static final int SIZE_B  = 12;
