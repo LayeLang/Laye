@@ -41,7 +41,7 @@ type Stack
       var tempRef = ref var temp
       while count > 0
       {
-         count -= 1
+         count - = 1
          if not Pop(tempRef)
             ret false
          outValues[count] = temp
