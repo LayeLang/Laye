@@ -31,11 +31,12 @@ class Token
 {
    public static final boolean isReservedCharacter(int codepoint)
    {
-      return (codepoint == '(' || codepoint == ')' ||
-              codepoint == '[' || codepoint == ']' ||
-              codepoint == '{' || codepoint == '}' ||
-              codepoint == ':' || codepoint == ';' ||
-              codepoint == ',' || codepoint == '.');
+      return (codepoint == '('  || codepoint == ')' ||
+              codepoint == '['  || codepoint == ']' ||
+              codepoint == '{'  || codepoint == '}' ||
+              codepoint == ':'  || codepoint == ';' ||
+              codepoint == ','  || codepoint == '.' ||
+              codepoint == '\'' || codepoint == '"');
    }
    
    public static enum Type
