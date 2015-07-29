@@ -26,42 +26,59 @@ package io.ylf.laye.file;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode
+public @EqualsAndHashCode @RequiredArgsConstructor
 class ScriptFile
 {
    public static ScriptFile fromResource(String resourcePath)
    {
-      return(new ScriptFile(resourcePath, true));
+      return(new ScriptFile(resourcePath, true, Charset.defaultCharset()));
+   }
+
+   public static ScriptFile fromResource(String resourcePath, String encodingName)
+   {
+      return(new ScriptFile(resourcePath, true, Charset.forName(encodingName)));
+   }
+
+   public static ScriptFile fromResource(String resourcePath, Charset encoding)
+   {
+      return(new ScriptFile(resourcePath, true, encoding));
    }
 
    public static ScriptFile fromFile(String filePath)
    {
-      return(new ScriptFile(filePath, false));
+      return(new ScriptFile(filePath, false, Charset.defaultCharset()));
+   }
+
+   public static ScriptFile fromFile(String filePath, String encodingName)
+   {
+      return(new ScriptFile(filePath, false, Charset.forName(encodingName)));
+   }
+
+   public static ScriptFile fromFile(String filePath, Charset encoding)
+   {
+      return(new ScriptFile(filePath, false, encoding));
    }
    
    public final String path;
    // TODO(sekai): enums? I don't like having a bool here.
    private final boolean isResource;
+   public final Charset encoding;
    
-   private ScriptFile(String path, boolean isResource)
-   {
-      this.path = path;
-      this.isResource = isResource;
-   }
-   
-   public InputStream read() throws IOException
+   public InputStreamReader read() throws IOException
    {
       if (isResource)
       {
-         return(ScriptFile.class.getResourceAsStream(path));
+         return(new InputStreamReader(ScriptFile.class.getResourceAsStream(path), encoding));
       }
-      return(new FileInputStream(new File(path)));
+      return(new InputStreamReader(new FileInputStream(new File(path)), encoding));
    }
 }

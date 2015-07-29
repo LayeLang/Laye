@@ -35,7 +35,6 @@ import static io.ylf.laye.log.LogMessageID.WARNING_FLOAT_DECOR;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 
 import io.ylf.laye.file.ScriptFile;
 import io.ylf.laye.log.DetailLogger;
@@ -100,7 +99,7 @@ public class Lexer
    public TokenStream getTokens(ScriptFile file) throws IOException
    {
       this.file = file;
-      this.input = new InputStreamReader(file.read(), "UTF-16");
+      this.input = file.read();
       
       TokenStream result = new TokenStream();
       

@@ -78,7 +78,7 @@ class LayeTest
       DetailLogger logger = new DetailLogger(infoPrintStream, errorPrintStream);
       
       // Create all of the objects that we'll need here.
-      ScriptFile scriptFile = ScriptFile.fromFile("./examples/test.laye");
+      ScriptFile scriptFile = ScriptFile.fromFile("./examples/test.laye", "UTF-16");
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
