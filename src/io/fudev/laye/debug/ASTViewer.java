@@ -132,7 +132,7 @@ class ASTViewer implements ASTVisitor
    {
       if (node.names.size() > 1)
       {
-         println("VAR {");
+         println("VAR (");
          tabs++;
          node.forEach(pair ->
          {
@@ -142,15 +142,14 @@ class ASTViewer implements ASTVisitor
             println("");
          });
          tabs--;
-         tprint("}");
+         tprint(")");
       }
       else
       {
-         print("VAR { ");
+         print("VAR ");
          print(node.names.get(0).image);
          print(" = ");
          node.values.get(0).accept(this);
-         print(" }");
       }
    }
    
@@ -220,14 +219,26 @@ class ASTViewer implements ASTVisitor
    {
       print("FUNCTION ");
       print(node.name.image);
-      print(" ");
+      print(" (");
+      for (int i = 0; i < node.data.params.size(); i++)
+      {
+         if (i > 0)
+         {
+            print(", ");
+         }
+         print(node.data.params.get(i).image);
+      }
+      if (node.data.vargs)
+      {
+         print("..");
+      }
+      print(") ");
       node.data.body.accept(this);
    }
 
    @Override
    public void visit(NodeAssignment node)
    {
-      print("ASSIGN ");
       node.left.accept(this);
       print(" = ");
       node.right.accept(this);
