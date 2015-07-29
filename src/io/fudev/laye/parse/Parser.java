@@ -194,6 +194,14 @@ class Parser
       Location location = getLocation();
       switch (token.type)
       {
+         case OPEN_BRACE:
+         {
+            // nom '('
+            next();
+            NodeExpression value = factor();
+            expect(Token.Type.CLOSE_BRACE);
+            return(value);
+         }
          case OPERATOR:
          {
             Operator op = (Operator)token.data;
