@@ -166,10 +166,6 @@ class Parser
                {
                   return(parseFunctionDefinition());
                }
-               case Keyword.STR_VAR:
-               {
-                  return(parseVariableDefinition());
-               }
                default:
                {
                } break;
@@ -216,6 +212,10 @@ class Parser
          {
             switch (((Keyword)token.data).image)
             {
+               case Keyword.STR_VAR:
+               {
+                  return(parseVariableDefinition());
+               }
                case Keyword.STR_NULL:
                {
                   // nom 'null'

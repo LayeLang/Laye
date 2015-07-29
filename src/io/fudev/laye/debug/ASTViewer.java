@@ -130,17 +130,28 @@ class ASTViewer implements ASTVisitor
    @Override
    public void visit(NodeVariableDef node)
    {
-      println("VAR {");
-      tabs++;
-      node.forEach(pair ->
+      if (node.names.size() > 1)
       {
-         tprint(pair.a);
+         println("VAR {");
+         tabs++;
+         node.forEach(pair ->
+         {
+            tprint(pair.a);
+            print(" = ");
+            pair.b.accept(this);
+            println("");
+         });
+         tabs--;
+         tprint("}");
+      }
+      else
+      {
+         print("VAR { ");
+         print(node.names.get(0).image);
          print(" = ");
-         pair.b.accept(this);
-         println("");
-      });
-      tabs--;
-      tprint("}");
+         node.values.get(0).accept(this);
+         print(" }");
+      }
    }
    
    @Override
