@@ -164,15 +164,14 @@ class ASTViewer implements ASTVisitor
    @Override
    public void visit(NodeStringLiteral node)
    {
-      print("\"");
+      print("'");
       print(node.value);
-      print("\"");
+      print("'");
    }
 
    @Override
    public void visit(NodePrefixExpression node)
    {
-      print("PREFIX ");
       print(node.operator.image);
       print("(");
       node.expression.accept(this);
@@ -182,11 +181,11 @@ class ASTViewer implements ASTVisitor
    @Override
    public void visit(NodeInfixExpression node)
    {
-      print("INFIX (");
-      node.left.accept(this);
-      print(")");
-      print(node.operator.image);
       print("(");
+      node.left.accept(this);
+      print(") ");
+      print(node.operator.image);
+      print(" (");
       node.right.accept(this);
       print(")");
    }
@@ -212,6 +211,21 @@ class ASTViewer implements ASTVisitor
       print(node.name.image);
       print(" ");
       node.data.body.accept(this);
-      
+   }
+
+   @Override
+   public void visit(NodeAssignment node)
+   {
+      print("ASSIGN ");
+      node.left.accept(this);
+      print(" = ");
+      node.right.accept(this);
+      print("");
+   }
+
+   @Override
+   public void visit(NodeIdentifier node)
+   {
+      print(node.value.image);
    }
 }

@@ -21,69 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.analyze;
+package io.fudev.laye.ast;
 
-import io.fudev.laye.ast.*;
-import io.fudev.laye.log.DetailLogger;
-import io.fudev.laye.symbol.SymbolTable;
-import lombok.RequiredArgsConstructor;
+import io.fudev.laye.lexical.Location;
+import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @RequiredArgsConstructor
-class FunctionVisitor implements ASTVisitor
+public
+class NodeIdentifier extends NodeExpression
 {
-   private final DetailLogger logger;
-   private final SymbolTable symbols;
+   public Identifier value;
    
-   @Override
-   public void visit(AST ast)
+   public NodeIdentifier(Location location, Identifier value)
    {
+      super(location);
+      this.value = value;
    }
    
    @Override
-   public void visit(NodeVariableDef node)
+   public void accept(ASTVisitor visitor)
    {
-   }
-   
-   @Override
-   public void visit(NodeNullLiteral node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeIntLiteral node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeFloatLiteral node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeStringLiteral node)
-   {
-   }
-   
-   @Override
-   public void visit(NodePrefixExpression node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeInfixExpression node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeScope node)
-   {
-   }
-   
-   @Override
-   public void visit(NodeFunctionDef node)
-   {
+      visitor.visit(this);
    }
 }

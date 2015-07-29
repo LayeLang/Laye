@@ -21,26 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.analyze;
+package io.fudev.laye.ast;
 
-import io.fudev.laye.ast.AST;
-import io.fudev.laye.ast.ASTVisitor;
-import io.fudev.laye.log.DetailLogger;
-import io.fudev.laye.symbol.SymbolTable;
-import lombok.AllArgsConstructor;
+import io.fudev.laye.lexical.Location;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @AllArgsConstructor
-class SemanticAnalyzer
+public
+class NodeAssignment extends NodeExpression
 {
-   public DetailLogger logger;
+   public NodeExpression left = null, right = null;
    
-   public SymbolTable analyze(AST ast)
+   public NodeAssignment(Location location, NodeExpression left, NodeExpression right)
    {
-      SymbolTable result = new SymbolTable();
-      new RootVisitor(logger, result).visit(ast);
-      return result;
+      super(location);
+      this.left = left;
+      this.right = right;
+   }
+   
+   @Override
+   public void accept(ASTVisitor visitor)
+   {
+      visitor.visit(this);
    }
 }

@@ -194,6 +194,14 @@ class Parser
       Location location = getLocation();
       switch (token.type)
       {
+         case OPERATOR:
+         {
+            Operator op = (Operator)token.data;
+            // nom operator
+            next();
+            NodeExpression expression = parsePrimaryExpression();
+            return(new NodePrefixExpression(location, expression, op));
+         }
          case KEYWORD:
          {
             switch (((Keyword)token.data).image)
@@ -239,7 +247,7 @@ class Parser
             {
                if (tokens.isOver())
                {
-                  logger.logError(getLocation(), ERROR_UNFINISHED_SCOPE, "Unfinished scope.");
+                  logger.logError(location, ERROR_UNFINISHED_SCOPE, "Unfinished scope.");
                   break;
                }
                scope.body.append(parseTopLevel());
@@ -247,6 +255,13 @@ class Parser
             // nom '}'
             expect(Token.Type.CLOSE_CURLY_BRACE);
             return(scope);
+         }
+         case IDENTIFIER:
+         {
+            Identifier ident = (Identifier)token.data;
+            // nom ident
+            next();
+            return(new NodeIdentifier(location, ident));
          }
          default:
          {
@@ -274,23 +289,35 @@ class Parser
       {
          final Location location = token.location;
          final Operator op = (Operator)token.data;
-         // Lex Operator
+         // nom Operator
          next();
-         // Load up the right hand side, if one exists
+         // first, is this an assignment operator?
          NodeExpression right;
-         if ((right = parsePrimaryExpression()) != null)
+         if (check(Token.Type.ASSIGN))
          {
-            while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence > op.precedence)
-            {
-               right = factorRHS(right, ((Operator)token.data).precedence);
-            }
-            left = new NodeInfixExpression(left.location, left, right, op);
+            // nom '='
+            next();
+            right = factor();
+            return(new NodeAssignment(left.location, left,
+                  new NodeInfixExpression(left.location, left, right, op)));
          }
          else
          {
-            logger.logError(location, ERROR_UNFINISHED_INFIX,
-                  "expected expression to complete infix expression");
-            return(null);
+            // Load up the right hand side, if one exists
+            if ((right = parsePrimaryExpression()) != null)
+            {
+               while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence > op.precedence)
+               {
+                  right = factorRHS(right, ((Operator)token.data).precedence);
+               }
+               left = new NodeInfixExpression(left.location, left, right, op);
+            }
+            else
+            {
+               logger.logError(location, ERROR_UNFINISHED_INFIX,
+                     "expected expression to complete infix expression");
+               return(null);
+            }
          }
       }
       return(left);

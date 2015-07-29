@@ -48,4 +48,8 @@ interface ASTVisitor
    void visit(NodeScope node);
 
    void visit(NodeFunctionDef node);
+
+   void visit(NodeAssignment node);
+
+   void visit(NodeIdentifier node);
 }

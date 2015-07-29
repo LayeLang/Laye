@@ -31,7 +31,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 
-import io.fudev.laye.analyze.SemanticAnalyzer;
 import io.fudev.laye.ast.AST;
 import io.fudev.laye.debug.ASTViewer;
 import io.fudev.laye.file.ScriptFile;
@@ -39,7 +38,6 @@ import io.fudev.laye.lexical.Lexer;
 import io.fudev.laye.lexical.TokenStream;
 import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.parse.Parser;
-import io.fudev.laye.symbol.SymbolTable;
 
 /**
  * @author Sekai Kyoretsuna
@@ -99,6 +97,9 @@ class LayeTest
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;
       }
+      
+      tokens.forEach(System.out::println);
+      System.out.println();
       
       // ===== Parse the tokens
       
