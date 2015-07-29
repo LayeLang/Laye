@@ -386,13 +386,21 @@ class Parser
       
       while (!check(Token.Type.CLOSE_BRACE))
       {
+         // TODO(sekai): smarter error handling, check for args after a varg.
          Identifier param = expectIdentifier();
-         // TODO(sekai): check defaults and vargs
+         if (check(Token.Type.VARGS))
+         {
+            // nom '..'
+            next();
+            def.data.vargs = true;
+         }
+         
+         // TODO(sekai): check defaults
          
          def.data.params.append(param);
          def.data.defaults.append(null);
          
-         if (check(Token.Type.COMMA))
+         if (!def.data.vargs && check(Token.Type.COMMA))
          {
             // nom ','
             next();

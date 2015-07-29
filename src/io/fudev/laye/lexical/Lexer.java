@@ -224,6 +224,11 @@ public class Lexer
                return(new Token(Token.Type.COMMA, location));
             case '.':
                readChar();
+               if (currentChar == '.')
+               {
+                  readChar();
+                  return(new Token(Token.Type.VARGS, location));
+               }
                return(new Token(Token.Type.DOT, location));
             case '\'':
             case '"':

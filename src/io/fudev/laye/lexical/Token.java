@@ -59,7 +59,8 @@ class Token
       SEMI_COLON(";"),
       COLON(":"),
       COMMA(","),
-      DOT(".");
+      DOT("."),
+      VARGS("..");
       
       public final String image;
       
