@@ -18,38 +18,38 @@
  */
 package io.fudev.laye.struct;
 
+import lombok.AllArgsConstructor;
+
 /**
  * @author Sekai Kyoretsuna
  */
-public
+public @AllArgsConstructor
 class LocalValueInfo
 {
-   public static final int IS_UP_VALUE = -1;
+   private static final int IS_OUTER_VALUE = -1;
    
-   public String name;
+   public Identifier name;
    public int location;
    public int startOp = 0, endOp = 0;
-   public boolean isConst;
    
-   public LocalValueInfo(final String name, final int location, final boolean isConst)
+   public LocalValueInfo(Identifier name, int location)
    {
       this.location = location;
       this.name = name;
-      this.isConst = isConst;
    }
    
-   private LocalValueInfo(final String name, final int location, final int startOp, final int endOp,
-         final boolean isConst)
+   public LocalValueInfo(LocalValueInfo that)
    {
-      this.location = location;
-      this.name = name;
-      this.startOp = startOp;
-      this.endOp = endOp;
-      this.isConst = isConst;
+      this(that.name, that.location, that.startOp, that.endOp);
    }
    
-   public LocalValueInfo copy()
+   public void markAsOuterValue()
    {
-      return new LocalValueInfo(name, location, startOp, endOp, isConst);
+      endOp = IS_OUTER_VALUE;
+   }
+   
+   public boolean isOuterValue()
+   {
+      return(endOp == IS_OUTER_VALUE);
    }
 }

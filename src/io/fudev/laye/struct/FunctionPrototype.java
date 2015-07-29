@@ -30,11 +30,11 @@ public
 class FunctionPrototype
 {
    public int[] code = {};
-   public int argc = 0;
+   public int numParams = 0;
    public boolean vargs = false;
    public int maxLocals = 0;
    public int maxStackSize = 0;
    public Object[] consts = null;
    public OuterValueInfo[] outerValues = null;
-   public boolean containsClosures = false;
+   public FunctionPrototype[] nestedClosures = null;
 }

@@ -93,10 +93,10 @@ class LayeVM extends LayeObject
    {
       stack.pushFrame(closure, thisValue);
       
-      final OuterValue[] openOuters = closure.proto.containsClosures ? 
+      final OuterValue[] openOuters = closure.proto.nestedClosures.length != 0 ? 
             new OuterValue[closure.proto.maxStackSize] : null;
       
-      int argc = closure.proto.argc;
+      int argc = closure.proto.numParams;
       boolean vargs = closure.proto.vargs;
       
       StackFrame top = stack.getTop();
@@ -127,10 +127,11 @@ class LayeVM extends LayeObject
       int codeLength = code.length;
       OuterValue[] captures = closure.captures;
       Object[] consts = closure.proto.consts;
+      FunctionPrototype[] nested = closure.proto.nestedClosures;
       
       while (top.ip < codeLength)
       {
-         executeInstruction(code[top.ip++], openOuters, captures, top, consts);
+         executeInstruction(code[top.ip++], openOuters, captures, top, consts, nested);
       }
       
       if (openOuters != null)
@@ -151,7 +152,7 @@ class LayeVM extends LayeObject
    }
    
    private void executeInstruction(int insn, OuterValue[] openOuters, OuterValue[] captures,
-         StackFrame top, Object[] consts)
+         StackFrame top, Object[] consts, FunctionPrototype[] nested)
    {
       switch (insn & MAX_OP)
       {
@@ -274,12 +275,12 @@ class LayeVM extends LayeObject
          
          case OP_CLOSURE:
          {
-            FunctionPrototype proto = (FunctionPrototype)consts[(insn >>> POS_A) & MAX_A];
+            FunctionPrototype proto = nested[(insn >>> POS_A) & MAX_A];
             LayeClosure closure = new LayeClosure(proto);
             OuterValueInfo[] protoOuters = proto.outerValues;
             for (int i = 0; i < protoOuters.length; i++)
             {
-               if (protoOuters[i].type == OuterValueInfo.LOCAL)
+               if (protoOuters[i].type == OuterValueInfo.Type.LOCAL)
                {
                   closure.captures[i] = findOuterValue(top.getLocals(), protoOuters[i].pos, openOuters);
                }
