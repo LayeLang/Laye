@@ -18,7 +18,7 @@ fn VMExecute(code)
          0x07: stack.Pop(tempRef)
                stack.Pop(yRef) stack.Pop(xRef)
                if y == x ip = temp
-         0x18: stack.Push(code[ip += 1])
+         0x18: stack.Push(code[ip + = 1])
          0x40: stack.Pop(yRef) stack.Pop(xRef) stack.Push(x + y)
          0x41: stack.Pop(yRef) stack.Pop(xRef) stack.Push(x - y)
          0x42: stack.Pop(yRef) stack.Pop(xRef) stack.Push(x * y)
@@ -30,7 +30,7 @@ fn VMExecute(code)
             _: ret false
          }
       }
-      ip += 1
+      ip + = 1
    }
    true
 }
