@@ -58,7 +58,7 @@ class LayeVM extends LayeObject
    private final LayeVM parent;
    
    private final CallStack stack = new CallStack();
-   private final SharedState state;
+   public final SharedState state;
    
    private LayeObject haltValue;
    
@@ -80,18 +80,22 @@ class LayeVM extends LayeObject
       return "LayeVM:TODO"; // FIXME(sekai): Add a toString to LayeVM.
    }
    
-   public LayeObject invoke(LayeObject target, LayeObject thisValue, LayeObject... args)
+   public LayeObject invoke(LayeObject target, LayeObject thisObject, LayeObject... args)
    {
       if (target instanceof LayeClosure)
       {
-         return(invoke((LayeClosure)target, thisValue, args));
+         return(invoke((LayeClosure)target, thisObject, args));
       }
-      return(null);
+      else if (target instanceof LayeFunction)
+      {
+         return(((LayeFunction)target).invoke(this, thisObject, args));
+      }
+      throw new IllegalArgumentException("target (" + target.getClass().getSimpleName() + ")");
    }
    
-   public LayeObject invoke(LayeClosure closure, LayeObject thisValue, LayeObject... args)
+   public LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
    {
-      stack.pushFrame(closure, thisValue);
+      stack.pushFrame(closure, thisObject);
       
       final OuterValue[] openOuters = closure.proto.nestedClosures.length != 0 ? 
             new OuterValue[closure.proto.maxStackSize] : null;
@@ -145,7 +149,15 @@ class LayeVM extends LayeObject
          }
       }
       
-      LayeObject result = top.pop();
+      LayeObject result;
+      if (top.hasValue())
+      {
+         result = top.pop();
+      }
+      else
+      {
+         result = NULL;
+      }
       stack.popFrame();
       
       return(result);
@@ -158,8 +170,8 @@ class LayeVM extends LayeObject
       {
          default:
          {
-            // FIXME(sekai): errors of some kind plz
-         } return;
+            throw new IllegalArgumentException();
+         }
          
          case OP_NOP:
          { // Do nothing... This is nice, I like breaks<3
@@ -173,6 +185,8 @@ class LayeVM extends LayeObject
          {
             top.dup();
          } return;
+         
+         // TODO(sekai): stores DON'T pop the value.
 
          case OP_LOAD_LOCAL:
          {
@@ -289,6 +303,7 @@ class LayeVM extends LayeObject
                   closure.captures[i] = top.closure.captures[protoOuters[i].pos];
                }
             }
+            top.push(closure);
          } return;
          case OP_TYPE:
          {

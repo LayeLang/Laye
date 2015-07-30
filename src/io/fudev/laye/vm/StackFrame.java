@@ -32,7 +32,7 @@ class StackFrame
    public final StackFrame previous;
    
    public final LayeClosure closure;
-   public final LayeObject thisValue;
+   public final LayeObject thisObject;
    
    private final LayeObject[] locals;
    private final LayeObject[] stack;
@@ -41,11 +41,11 @@ class StackFrame
    
    public int ip = 0;
    
-   public StackFrame(StackFrame previous, LayeClosure closure, LayeObject thisValue)
+   public StackFrame(StackFrame previous, LayeClosure closure, LayeObject thisObject)
    {
       this.previous = previous;
       this.closure = closure;
-      this.thisValue = thisValue;
+      this.thisObject = thisObject;
       this.locals = new LayeObject[closure.proto.maxLocals];
       this.stack = new LayeObject[closure.proto.maxStackSize];
    }
@@ -53,6 +53,11 @@ class StackFrame
    public LayeObject[] getLocals()
    {
       return(locals);
+   }
+   
+   public boolean hasValue()
+   {
+      return stackPointer > 0;
    }
    
    // ===== Local Operations

@@ -33,9 +33,9 @@ class CallStack
 {
    private @Getter StackFrame top = null;
    
-   public void pushFrame(LayeClosure closure, LayeObject thisValue)
+   public void pushFrame(LayeClosure closure, LayeObject thisObject)
    {
-      top = new StackFrame(top, closure, thisValue);
+      top = new StackFrame(top, closure, thisObject);
    }
    
    public void popFrame()

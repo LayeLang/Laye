@@ -21,20 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.ast;
+package io.fudev.laye.vm;
 
-import io.fudev.laye.lexical.Location;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-abstract class NodeExpression extends ASTNode
+public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+class LayeFunction extends LayeObject
 {
-   public boolean isResultRequired = true;
-   
-   public NodeExpression(Location location)
+   public static @FunctionalInterface
+   interface LayeFunctionCallback
    {
-      super(location);
+      LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject[] args);
+   }
+   
+   public final LayeFunctionCallback callback;
+   
+   @Override
+   public String toString()
+   {
+      return ("function:TODO");
+   }
+
+   @Override
+   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      return(callback.invoke(vm, thisObject, args));
    }
 }

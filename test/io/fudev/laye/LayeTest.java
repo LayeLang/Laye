@@ -32,12 +32,18 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.util.Arrays;
 
 import io.fudev.laye.ast.AST;
+import io.fudev.laye.codegen.FunctionCompiler;
 import io.fudev.laye.debug.ASTViewer;
 import io.fudev.laye.file.ScriptFile;
 import io.fudev.laye.lexical.Lexer;
 import io.fudev.laye.lexical.TokenStream;
 import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.parse.Parser;
+import io.fudev.laye.struct.FunctionPrototype;
+import io.fudev.laye.vm.LayeClosure;
+import io.fudev.laye.vm.LayeFunction;
+import io.fudev.laye.vm.LayeObject;
+import io.fudev.laye.vm.LayeVM;
 
 /**
  * @author Sekai Kyoretsuna
@@ -45,7 +51,7 @@ import io.fudev.laye.parse.Parser;
 public final 
 class LayeTest
 {
-   public static void main(String[] args) throws IOException
+   public static void main(String[] unused) throws IOException
    {
       // Create output directory
       File outputFolder = new File("./output");
@@ -81,6 +87,9 @@ class LayeTest
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
 
+      FunctionCompiler compiler = new FunctionCompiler(logger, null);
+      LayeVM vm = new LayeVM();
+      
       ASTViewer viewer = new ASTViewer(System.out);
       
       // Do all of the things!
@@ -98,8 +107,8 @@ class LayeTest
          return;
       }
       
-      tokens.forEach(System.out::println);
-      System.out.println();
+//      tokens.forEach(System.out::println);
+//      System.out.println();
       
       // ===== Parse the tokens
       
@@ -114,16 +123,39 @@ class LayeTest
          return;
       }
       
+      // ===== Compile the program
+      
+      ast.accept(compiler);
+      FunctionPrototype proto = compiler.builder.build();
+      LayeClosure closure = new LayeClosure(proto);
+      
       // Finished! :D
       
       logger.flush();
       
-      System.out.printf("Code generation completed with %d %s and %d %s.\n",
+      System.out.printf("Code generation completed with %d %s and %d %s.\n\n",
             logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
       
-      System.out.println();
-      viewer.visit(ast);
+//      viewer.visit(ast);
+
+      vm.state.store("PrintLn", new LayeFunction((__, thisObject, args) ->
+      {
+         StringBuilder result = new StringBuilder();
+         for (int i = 0; i < args.length; i++)
+         {
+            if (i > 0)
+            {
+               result.append(' ');
+            }
+            result.append(args[i]);
+         }
+         System.out.println(result.toString());
+         return LayeObject.NULL;
+      }));
+      vm.invoke(closure, null);
+      LayeObject main = vm.state.load("Main");
+      vm.invoke(main, null);
    }
    
    private LayeTest()

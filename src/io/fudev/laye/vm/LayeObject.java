@@ -27,7 +27,6 @@ import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
-import lombok.val;
 
 /**
  * @author Sekai Kyoretsuna
@@ -87,6 +86,11 @@ class LayeObject
       }
       Identifier name = Identifier.get(((LayeString)key).value);
       fields.put(name, object);
+   }
+   
+   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      throw new LayeException(vm, "Attempt to call type.");
    }
    
    public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)

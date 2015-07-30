@@ -42,7 +42,7 @@ class SharedState
    
    public LayeObject load(String key)
    {
-      return(shared.get(key));
+      return(shared.getOrDefault(key, LayeObject.NULL));
    }
 
    public void store(String key, LayeObject object)

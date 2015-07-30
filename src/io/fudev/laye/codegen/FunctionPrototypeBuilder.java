@@ -25,7 +25,6 @@ package io.fudev.laye.codegen;
 
 import static io.fudev.laye.vm.Instruction.*;
 
-import io.fudev.laye.file.ScriptFile;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.LocalValueInfo;
@@ -51,15 +50,7 @@ class FunctionPrototypeBuilder
       public int initialLocalsSize = locals;
    }
    
-   private final @RequiredArgsConstructor
-   class Block
-   {
-      public final Block previous;
-      // public int startPosition = currentInsnPos();
-   }
-   
    public final FunctionPrototypeBuilder parent;
-   public final ScriptFile file;
    
    public int numParams = 0;
    public boolean vargs = false;
@@ -80,7 +71,6 @@ class FunctionPrototypeBuilder
    // TODO(sekai): add jump tables for match expressions
    
    private Scope scope = null;
-   private Block block = null;
    
    public FunctionPrototype build()
    {
@@ -90,8 +80,10 @@ class FunctionPrototypeBuilder
          code[i] = this.code.get(i);
       }
       Object[] consts = this.consts.toArray();
-      OuterValueInfo[] outerValues = this.outerValues.toArray();
-      FunctionPrototype[] nested = this.nested.toArray();
+      OuterValueInfo[] outerValues = this.outerValues
+            .toArray(new OuterValueInfo[this.outerValues.size()]);
+      FunctionPrototype[] nested = this.nested
+            .toArray(new FunctionPrototype[this.nested.size()]);
       
       FunctionPrototype result = new FunctionPrototype();
       result.numParams = numParams;
@@ -125,17 +117,6 @@ class FunctionPrototypeBuilder
          }
       }
       scope = scope.previous;
-   }
-   
-   public void startBlock()
-   {
-      block = new Block(block);
-   }
-   
-   public void endBlock()
-   {
-      // TODO(sekai): Old implementations changed return codes here, check?
-      block = block.previous;
    }
    
    // ===== Locals
@@ -331,6 +312,48 @@ class FunctionPrototypeBuilder
             ((b & MAX_B) << POS_B));
    }
    
+   public void defineVariable(Identifier name)
+   {
+      if (parent != null)
+      {
+         addLocal(name);
+      }
+   }
+   
+   public void visitGetVariable(Identifier name)
+   {
+      int pos;
+      if ((pos = getLocalLocation(name)) != -1)
+      {
+         opLoadLocal(pos);
+      }
+      else if ((pos = getOuterLocation(name)) != -1)
+      {
+         opLoadOuter(pos);
+      }
+      else
+      {
+         opLoadGlobal(addConstant(name.image));
+      }
+   }
+   
+   public void visitSetVariable(Identifier name)
+   {
+      int pos;
+      if ((pos = getLocalLocation(name)) != -1)
+      {
+         opStoreLocal(pos);
+      }
+      else if ((pos = getOuterLocation(name)) != -1)
+      {
+         opStoreOuter(pos);
+      }
+      else
+      {
+         opStoreGlobal(addConstant(name.image));
+      }
+   }
+   
    // ===== Add instructions, woo
    
    public int opNop()
@@ -353,45 +376,45 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   public int opLoadLocal()
+   public int opLoadLocal(int pos)
    {
       increaseStackSize();
-      appendOp(OP_LOAD_LOCAL);
+      appendOp_C(OP_LOAD_LOCAL, pos);
       return(currentInsnPos());
    }
    
-   public int opStoreLocal()
+   public int opStoreLocal(int pos)
    {
       decreaseStackSize();
-      appendOp(OP_STORE_LOCAL);
+      appendOp_C(OP_STORE_LOCAL, pos);
       return(currentInsnPos());
    }
    
-   public int opLoadOuter()
+   public int opLoadOuter(int pos)
    {
       increaseStackSize();
-      appendOp(OP_LOAD_OUTER);
+      appendOp_C(OP_LOAD_OUTER, pos);
       return(currentInsnPos());
    }
    
-   public int opStoreOuter()
+   public int opStoreOuter(int pos)
    {
       decreaseStackSize();
-      appendOp(OP_STORE_OUTER);
+      appendOp_C(OP_STORE_OUTER, pos);
       return(currentInsnPos());
    }
    
-   public int opLoadGlobal()
+   public int opLoadGlobal(int constIndex)
    {
       increaseStackSize();
-      appendOp(OP_LOAD_GLOBAL);
+      appendOp_C(OP_LOAD_GLOBAL, constIndex);
       return(currentInsnPos());
    }
    
-   public int opStoreGlobal()
+   public int opStoreGlobal(int constIndex)
    {
       decreaseStackSize();
-      appendOp(OP_STORE_GLOBAL);
+      appendOp_C(OP_STORE_GLOBAL, constIndex);
       return(currentInsnPos());
    }
    
