@@ -335,7 +335,6 @@ class Parser
             next();
             NodeExpression index = factor();
             expect(Token.Type.CLOSE_SQUARE_BRACE);
-            // TODO(sekai): Check for SetIndex here, or do it with the assign block?
             node = postfix(new NodeGetIndex(node.location, node, index));
          } break;
          default:
@@ -353,6 +352,23 @@ class Parser
           return(null);
        }
        expr = factorRHS(expr, 0);
+       if (token != null)
+       {
+          switch (token.type)
+          {
+             case ASSIGN:
+             {
+                // nom '='
+                next();
+                NodeExpression value = factor();
+                // NOTE: Many left-expressions will fail, the code generator will check for us
+                expr = new NodeAssignment(expr.location, expr, value);
+             } break;
+             default:
+             {
+             } break;
+          }
+       }
        return(expr);
    }
    
