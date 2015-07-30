@@ -342,7 +342,7 @@ class Parser
             next();
             NodeExpression index = factor();
             expect(Token.Type.CLOSE_SQUARE_BRACE);
-            node = postfix(new NodeGetIndex(node.location, node, index));
+            node = postfix(new NodeLoadIndex(node.location, node, index));
          } break;
          default:
          {

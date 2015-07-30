@@ -29,11 +29,11 @@ import io.fudev.laye.lexical.Location;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeSetIndex extends NodeExpression
+class NodeStoreIndex extends NodeExpression
 {
    public NodeExpression target, index, value;
    
-   public NodeSetIndex(Location location, NodeExpression target, NodeExpression index,
+   public NodeStoreIndex(Location location, NodeExpression target, NodeExpression index,
          NodeExpression value)
    {
       super(location);

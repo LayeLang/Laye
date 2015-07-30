@@ -312,7 +312,7 @@ class ASTViewer implements ASTVisitor
    }
 
    @Override
-   public void visit(NodeGetIndex node)
+   public void visit(NodeLoadIndex node)
    {
       node.target.accept(this);
       print("[");
@@ -321,7 +321,7 @@ class ASTViewer implements ASTVisitor
    }
 
    @Override
-   public void visit(NodeSetIndex node)
+   public void visit(NodeStoreIndex node)
    {
       node.target.accept(this);
       print("[");
