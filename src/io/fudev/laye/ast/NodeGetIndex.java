@@ -23,41 +23,26 @@
  */
 package io.fudev.laye.ast;
 
+import io.fudev.laye.lexical.Location;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
-interface ASTVisitor
+class NodeGetIndex extends NodeExpression
 {
-   void visit(AST ast);
-
-   void visit(NodeVariableDef node);
-
-   void visit(NodeNullLiteral node);
-
-   void visit(NodeIntLiteral node);
-
-   void visit(NodeFloatLiteral node);
-
-   void visit(NodeStringLiteral node);
-
-   void visit(NodePrefixExpression node);
-
-   void visit(NodeInfixExpression node);
-
-   void visit(NodeScope node);
-
-   void visit(NodeFunctionDef node);
-
-   void visit(NodeAssignment node);
-
-   void visit(NodeIdentifier node);
-
-   void visit(NodeInvoke node);
-
-   void visit(NodeList node);
-
-   void visit(NodeGetIndex node);
-
-   void visit(NodeSetIndex node);
+   public NodeExpression target, index;
+   
+   public NodeGetIndex(Location location, NodeExpression target, NodeExpression index)
+   {
+      super(location);
+      this.target = target;
+      this.index = index;
+   }
+   
+   @Override
+   public void accept(ASTVisitor visitor)
+   {
+      visitor.visit(this);
+   }
 }

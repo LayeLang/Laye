@@ -184,6 +184,23 @@ class Parser
       return(result);
    }
    
+   private List<NodeExpression> commaFactor()
+   {
+      List<NodeExpression> exprs = new List<>();
+      NodeExpression expr;
+      while ((expr = factor()) != null)
+      {
+         exprs.append(expr);
+         if (!check(Token.Type.COMMA))
+         {
+            break;
+         }
+         // nom ','
+         next();
+      }
+      return exprs;
+   }
+   
    /**
     * DON'T call this directly, use {@link #factor()}
     * @return
@@ -199,7 +216,15 @@ class Parser
             next();
             NodeExpression value = factor();
             expect(Token.Type.CLOSE_BRACE);
-            return(value);
+            return(postfix(value));
+         }
+         case OPEN_SQUARE_BRACE:
+         {
+            // nom '['
+            next();
+            List<NodeExpression> values = commaFactor();
+            expect(Token.Type.CLOSE_SQUARE_BRACE);
+            return postfix(new NodeList(location, values));
          }
          case OPERATOR:
          {
@@ -246,7 +271,7 @@ class Parser
             LayeString value = (LayeString)token.data;
             // nom string
             next();
-            return(new NodeStringLiteral(location, value));
+            return(postfix(new NodeStringLiteral(location, value)));
          }
          case OPEN_CURLY_BRACE:
          {
@@ -264,7 +289,7 @@ class Parser
             }
             // nom '}'
             expect(Token.Type.CLOSE_CURLY_BRACE);
-            return(scope);
+            return(postfix(scope));
          }
          case IDENTIFIER:
          {
@@ -277,8 +302,9 @@ class Parser
          {
          } break;
       }
-      logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
-            "Failed to parse expression on token '%s'\n", token.toString());
+      // TODO(sekai): is this needed? I think callers should error check!
+//      logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
+//            "Failed to parse expression on token '%s'\n", token.toString());
       return(null);
    }
    
@@ -289,30 +315,28 @@ class Parser
    
    private NodeExpression postfix(NodeExpression node, boolean allowCall)
    {
+      if (token == null)
+      {
+         return node;
+      }
       switch (token.type)
       {
          case OPEN_BRACE:
          {
             // nom '('
             next();
-            List<NodeExpression> args = new List<>();
-            while (!check(Token.Type.CLOSE_BRACE))
-            {
-               NodeExpression arg = factor();
-               if (arg == null)
-               {
-                  // TODO(sekai): error
-               }
-               args.append(arg);
-               if (!check(Token.Type.COMMA))
-               {
-                  break;
-               }
-               // nom ','
-               next();
-            }
+            List<NodeExpression> args = commaFactor();
             expect(Token.Type.CLOSE_BRACE);
-            node = new NodeInvoke(node.location, node, args);
+            node = postfix(new NodeInvoke(node.location, node, args));
+         } break;
+         case OPEN_SQUARE_BRACE:
+         {
+            // nom '['
+            next();
+            NodeExpression index = factor();
+            expect(Token.Type.CLOSE_SQUARE_BRACE);
+            // TODO(sekai): Check for SetIndex here, or do it with the assign block?
+            node = postfix(new NodeGetIndex(node.location, node, index));
          } break;
          default:
          {
