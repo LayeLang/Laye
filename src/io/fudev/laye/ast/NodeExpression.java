@@ -32,6 +32,7 @@ public
 abstract class NodeExpression extends ASTNode
 {
    public boolean isResultRequired = false;
+   
    public NodeExpression(Location location)
    {
       super(location);
