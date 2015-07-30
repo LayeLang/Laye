@@ -112,11 +112,11 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
       if (key instanceof LayeInt)
       {
          long index =  ((LayeInt)key).value;
-         if (index < 1 || index > list.size())
+         if (index < 0 || index >= list.size())
          {
             throw new LayeException(vm, "Index %d out of bounds.", index);
          }
-         return(list.get((int)index - 1));
+         return(list.get((int)index));
       }
       return(super.load(vm, key));
    }
@@ -208,11 +208,11 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
       if (key instanceof LayeInt)
       {
          long index =  ((LayeInt)key).value;
-         if (index < 1 || index > list.size())
+         if (index < 0 || index >= list.size())
          {
             throw new LayeException(vm, "Index %d out of bounds.", index);
          }
-         list.set((int)index - 1, value);
+         list.set((int)index, value);
       }
       else
       {

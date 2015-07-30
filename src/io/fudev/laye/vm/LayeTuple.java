@@ -62,11 +62,11 @@ class LayeTuple extends LayeObject
       if (key instanceof LayeInt)
       {
          long index =  ((LayeInt)key).value;
-         if (index < 1 || index > values.length)
+         if (index < 0 || index >= values.length)
          {
             throw new LayeException(vm, "Index %d out of bounds.", index);
          }
-         return(values[(int)index - 1]);
+         return(values[(int)index]);
       }
       return(super.load(vm, key));
    }
