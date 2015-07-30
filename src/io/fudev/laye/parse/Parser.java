@@ -347,12 +347,13 @@ class Parser
    
    private NodeExpression factor()
    {
-       final NodeExpression left;
-       if ((left = parsePrimaryExpression()) == null)
+       NodeExpression expr;
+       if ((expr = parsePrimaryExpression()) == null)
        {
           return(null);
        }
-       return(factorRHS(left, 0));
+       expr = factorRHS(expr, 0);
+       return(expr);
    }
    
    // TODO add precedence
