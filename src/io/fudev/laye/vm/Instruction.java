@@ -99,6 +99,9 @@ class Instruction
    public static final byte OP_PREFIX           = 0x27;
    public static final byte OP_INFIX            = 0x28;
    
+   public static final byte OP_LIST             = 0x29;
+   public static final byte OP_TUPLE            = 0x2A;
+   
    private Instruction()
    {
    }

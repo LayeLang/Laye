@@ -201,12 +201,12 @@ class LayeVM extends LayeObject
          case OP_LOAD_INDEX:
          {
             LayeObject index = top.pop();
-            top.push(top.pop().load(index));
+            top.push(top.pop().load(this, index));
          } return;
          case OP_STORE_INDEX:
          {
             LayeObject value = top.pop(), index = top.pop();
-            top.pop().store(index, value);
+            top.pop().store(this, index, value);
          } return;
 
          case OP_NLOAD:
@@ -367,12 +367,23 @@ class LayeVM extends LayeObject
 
          case OP_PREFIX:
          {
-            top.push(top.pop().prefix((String)consts[(insn >>> POS_A) & MAX_A]));
+            top.push(top.pop().prefix(this, (String)consts[(insn >>> POS_A) & MAX_A]));
          } return;
          case OP_INFIX:
          {
             LayeObject right = top.pop();
-            top.push(top.pop().infix((String)consts[(insn >>> POS_A) & MAX_A], right));
+            top.push(top.pop().infix(this, (String)consts[(insn >>> POS_A) & MAX_A], right));
+         } return;
+
+         case OP_LIST:
+         {
+            LayeObject[] elements = top.popCount((insn >>> POS_A) & MAX_A);
+            top.push(new LayeList(elements));
+         } return;
+         case OP_TUPLE:
+         {
+            LayeObject[] elements = top.popCount((insn >>> POS_A) & MAX_A);
+            top.push(new LayeTuple(elements));
          } return;
       }
    }

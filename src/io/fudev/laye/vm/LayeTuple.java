@@ -21,25 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye;
+package io.fudev.laye.vm;
 
-import io.fudev.laye.vm.LayeVM;
+import java.util.Arrays;
+
+import io.fudev.laye.LayeException;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-class LayeException extends RuntimeException
+public @EqualsAndHashCode(callSuper = false)
+class LayeTuple extends LayeObject
 {
-   private static final long serialVersionUID = -5918678362546476679L;
-
-   public LayeException(LayeVM vm, String message)
+   private final LayeObject[] values;
+   
+   public LayeTuple(LayeObject... values)
    {
-      super(message);
+      this.values = Arrays.copyOf(values, values.length);
+   }
+   
+   @Override
+   public String toString()
+   {
+      StringBuilder result = new StringBuilder().append('(');
+      for (int i = 0; i < values.length; i++)
+      {
+         if (i > 0)
+         {
+            result.append(", ");
+         }
+         result.append(values[i].toString());
+      }
+      return(result.append(')').toString());
    }
 
-   public LayeException(LayeVM vm, String format, Object... args)
+   @Override
+   public LayeObject load(LayeVM vm, LayeObject key)
    {
-      super(String.format(format, args));
+      if (key instanceof LayeInt)
+      {
+         long index =  ((LayeInt)key).value;
+         if (index < 1 || index > values.length)
+         {
+            throw new LayeException(vm, "Index %d out of bounds.", index);
+         }
+         return(values[(int)index - 1]);
+      }
+      return(super.load(vm, key));
    }
 }

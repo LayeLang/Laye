@@ -99,7 +99,7 @@ class LayeInt extends LayeObject
    }
    
    @Override
-   public LayeObject prefix(String op)
+   public LayeObject prefix(LayeVM vm, String op)
    {
       switch (op)
       {
@@ -107,11 +107,11 @@ class LayeInt extends LayeObject
          case "-": return(valueOf(-value));
          case "~": return(valueOf(~value));
       }
-      return(super.prefix(op));
+      return(super.prefix(vm, op));
    }
    
    @Override
-   public LayeObject infix(String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
       switch (op)
       {
@@ -312,9 +312,9 @@ class LayeInt extends LayeObject
             }
          } break;
          case "<>": return(new LayeString(toString() + that.toString()));
-         default: return(super.infix(op, that));
+         default: return(super.infix(vm, op, that));
       }
       // FIXME(sekai): add type name
-      throw new LayeException("Attempt to perform infix operation '%s' on type with type.", op);
+      throw new LayeException(vm, "Attempt to perform infix operation '%s' on type with type.", op);
    }
 }

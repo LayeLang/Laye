@@ -26,6 +26,7 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
+import io.fudev.laye.struct.Identifier;
 import lombok.val;
 
 /**
@@ -39,7 +40,7 @@ class LayeObject
    public static final LayeBool TRUE  = LayeBool.BOOL_TRUE;
    public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
-   private final HashMap<LayeObject, LayeObject> fields = new HashMap<>();
+   private final HashMap<Identifier, LayeObject> fields = new HashMap<>();
    
    public LayeObject()
    {
@@ -58,22 +59,34 @@ class LayeObject
    
    public boolean compareEquals(LayeObject that)
    {
-      return(this == that);
+      return(this.equals(that));
    }
    
-   public LayeObject load(LayeObject key)
+   public LayeObject load(LayeVM vm, LayeObject key)
    {
-      val result = fields.get(key);
+      if (!(key instanceof LayeString))
+      {
+         // FIXME(sekai): add type name
+         throw new  LayeException(vm, "Attempt to index with type.");
+      }
+      Identifier name = Identifier.get(((LayeString)key).value);
+      LayeObject result = fields.get(name);
       if (result == null)
       {
-         return(LayeNull.INSTANCE);
+         throw new  LayeException(vm, "Field '" + name + "' does not exist.");
       }
       return(result);
    }
    
-   public void store(LayeObject key, LayeObject object)
+   public void store(LayeVM vm, LayeObject key, LayeObject object)
    {
-      fields.put(key, object);
+      if (!(key instanceof LayeString))
+      {
+         // FIXME(sekai): add type name
+         throw new  LayeException(vm, "Attempt to index with type.");
+      }
+      Identifier name = Identifier.get(((LayeString)key).value);
+      fields.put(name, object);
    }
    
    public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
@@ -81,15 +94,15 @@ class LayeObject
       return vm.invoke(fields.get(methodIndex), this, args);
    }
 
-   public LayeObject prefix(String op)
+   public LayeObject prefix(LayeVM vm, String op)
    {
       // FIXME(sekai): add type name
-      throw new LayeException("Attempt to perform prefix operation '%s' on type.", op);
+      throw new LayeException(vm, "Attempt to perform prefix operation '%s' on type.", op);
    }
 
-   public LayeObject infix(String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
       // FIXME(sekai): add type name
-      throw new LayeException("Attempt to perform infix operation '%s' on type.", op);
+      throw new LayeException(vm, "Attempt to perform infix operation '%s' on type.", op);
    }
 }
