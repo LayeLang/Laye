@@ -53,7 +53,7 @@ class Token
       OPEN_BRACE("("),
       CLOSE_BRACE(")"),
       OPEN_SQUARE_BRACE("["),
-      CLOSE_SQUARE_BRACE(")"),
+      CLOSE_SQUARE_BRACE("]"),
       OPEN_CURLY_BRACE("{"),
       CLOSE_CURLY_BRACE("}"),
       SEMI_COLON(";"),
