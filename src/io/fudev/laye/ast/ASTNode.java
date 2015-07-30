@@ -32,7 +32,6 @@ public abstract
 class ASTNode
 {
    public final Location location;
-   public boolean isResultRequired = false;
    
    public ASTNode(Location location)
    {
