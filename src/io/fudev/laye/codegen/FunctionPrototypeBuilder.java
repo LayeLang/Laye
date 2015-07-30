@@ -197,7 +197,7 @@ class FunctionPrototypeBuilder
       }
       int pos = locals;
       localValues.append(new LocalValueInfo(name, pos));
-      if ((locals++) > maxLocals)
+      if (++locals > maxLocals)
       {
          maxLocals = locals;
       }
@@ -385,7 +385,6 @@ class FunctionPrototypeBuilder
    
    public int opStoreLocal(int pos)
    {
-      decreaseStackSize();
       appendOp_C(OP_STORE_LOCAL, pos);
       return(currentInsnPos());
    }
@@ -399,7 +398,6 @@ class FunctionPrototypeBuilder
    
    public int opStoreOuter(int pos)
    {
-      decreaseStackSize();
       appendOp_C(OP_STORE_OUTER, pos);
       return(currentInsnPos());
    }
@@ -413,7 +411,6 @@ class FunctionPrototypeBuilder
    
    public int opStoreGlobal(int constIndex)
    {
-      decreaseStackSize();
       appendOp_C(OP_STORE_GLOBAL, constIndex);
       return(currentInsnPos());
    }
@@ -446,10 +443,10 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   public int opILoad(long value)
+   public int opILoad(LayeInt value)
    {
       increaseStackSize();
-      switch ((int)value)
+      switch ((int)value.value)
       {
          case -1:
          {
@@ -481,35 +478,35 @@ class FunctionPrototypeBuilder
          } break;
          default:
          {
-            int cIndex = addConstant(LayeInt.valueOf(value));
+            int cIndex = addConstant(value);
             opCLoad(cIndex);
          } break;
       }
       return(currentInsnPos());
    }
    
-   public int opFLoad(double value)
+   public int opFLoad(LayeFloat value)
    {
       increaseStackSize();
-      if (value == -1.0)
+      if (value.value == -1.0)
       {
          appendOp(OP_FLOADM1);
       }
-      else if (value == 0.0)
+      else if (value.value == 0.0)
       {
          appendOp(OP_FLOAD0);
       }
-      else if (value == 1.0)
+      else if (value.value == 1.0)
       {
          appendOp(OP_FLOAD0);
       }
-      else if (value == 2.0)
+      else if (value.value == 2.0)
       {
          appendOp(OP_FLOAD0);
       }
       else
       {
-         int cIndex = addConstant(LayeFloat.valueOf(value));
+         int cIndex = addConstant(value);
          opCLoad(cIndex);
       }
       return(currentInsnPos());
@@ -605,7 +602,7 @@ class FunctionPrototypeBuilder
    
    public int opPrefix(Operator op)
    {
-      int oIndex = addConstant(op);
+      int oIndex = addConstant(op.image);
       appendOp_C(OP_PREFIX, oIndex);
       return(currentInsnPos());
    }
@@ -613,7 +610,7 @@ class FunctionPrototypeBuilder
    public int opInfix(Operator op)
    {
       decreaseStackSize();
-      int oIndex = addConstant(op);
+      int oIndex = addConstant(op.image);
       appendOp_C(OP_INFIX, oIndex);
       return(currentInsnPos());
    }

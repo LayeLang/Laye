@@ -25,7 +25,9 @@ package io.fudev.laye.codegen;
 
 import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
+import io.fudev.laye.log.LogMessageID;
 import io.fudev.laye.struct.FunctionPrototype;
+import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -63,41 +65,53 @@ class FunctionCompiler implements ASTVisitor
    @Override
    public void visit(NodeVariableDef node)
    {
+      for (int i = 0; i < node.names.size(); i++)
+      {
+         Identifier name = node.names.get(i);
+         builder.defineVariable(name);
+         node.values.get(i).accept(this);
+         builder.visitSetVariable(name);
+         builder.opPop();
+      }
    }
    
    @Override
    public void visit(NodeNullLiteral node)
    {
+      builder.opNLoad();
    }
    
    @Override
    public void visit(NodeIntLiteral node)
    {
+      builder.opILoad(node.value);
    }
    
    @Override
    public void visit(NodeFloatLiteral node)
    {
+      builder.opFLoad(node.value);
    }
    
    @Override
    public void visit(NodeStringLiteral node)
    {
-      // TODO(sekai): cases like this should get checked when we scan the AST.
-      if (node.isResultRequired)
-      {
-         builder.opCLoad(builder.addConstant(node.value));
-      }
+      builder.opCLoad(builder.addConstant(node.value));
    }
    
    @Override
    public void visit(NodePrefixExpression node)
    {
+      node.expression.accept(this);
+      builder.opPrefix(node.operator);
    }
    
    @Override
    public void visit(NodeInfixExpression node)
    {
+      node.left.accept(this);
+      node.right.accept(this);
+      builder.opInfix(node.operator);
    }
    
    @Override
@@ -106,6 +120,7 @@ class FunctionCompiler implements ASTVisitor
       builder.startScope();
       node.body.forEach(child -> child.accept(this));
       builder.endScope();
+      // NOTE: the last node in the scope should handle the isResultRequired for us.
    }
    
    @Override
@@ -114,22 +129,40 @@ class FunctionCompiler implements ASTVisitor
       builder.defineVariable(node.name);
       handleFunctionData(node.data);
       builder.visitSetVariable(node.name);
-      //builder.opPop();
+      builder.opPop();
    }
    
    @Override
    public void visit(NodeAssignment node)
    {
+      if (node.left instanceof NodeIdentifier)
+      {
+         node.right.accept(this);
+         builder.visitSetVariable(((NodeIdentifier)node.left).value);
+      }
+      else if (node.left instanceof NodeLoadIndex)
+      {
+         NodeLoadIndex left = ((NodeLoadIndex)node.left);
+         left.target.accept(this);
+         left.index.accept(this);
+         node.right.accept(this);
+         builder.opStoreIndex();
+      }
+      else
+      {
+         logger.logErrorf(node.location, LogMessageID.ERROR_INVALID_ASSIGNMENT,
+               "invalid assignment left side %s.", node.left.getClass().getSimpleName());
+      }
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
    }
    
    @Override
    public void visit(NodeIdentifier node)
    {
-      // TODO(sekai): cases like this should get checked when we scan the AST.
-      if (node.isResultRequired)
-      {
-         builder.visitGetVariable(node.value);
-      }
+      builder.visitGetVariable(node.value);
    }
    
    @Override
@@ -147,20 +180,32 @@ class FunctionCompiler implements ASTVisitor
    @Override
    public void visit(NodeList node)
    {
+      node.values.forEach(element -> element.accept(this));
+      builder.opList(node.values.size());
+      // NOTE: We could just not generate the list, but function calls can reside in them.
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
    }
    
    @Override
    public void visit(NodeTuple node)
    {
+      node.values.forEach(element -> element.accept(this));
+      builder.opTuple(node.values.size());
+      // NOTE: We could just not generate the list, but function calls can reside in them.
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
    }
    
    @Override
    public void visit(NodeLoadIndex node)
    {
-   }
-   
-   @Override
-   public void visit(NodeStoreIndex node)
-   {
+      node.target.accept(this);
+      node.index.accept(this);
+      builder.opLoadIndex();
    }
 }

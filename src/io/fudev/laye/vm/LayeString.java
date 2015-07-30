@@ -43,4 +43,20 @@ class LayeString extends LayeObject
    {
       return(value);
    }
+
+   @Override
+   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   {
+      switch (op)
+      {
+         case "<>":
+         {
+            return(new LayeString(value + that.toString()));
+         }
+         default:
+         {
+            return(super.infix(vm, op, that));
+         }
+      }
+   }
 }

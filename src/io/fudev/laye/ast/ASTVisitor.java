@@ -60,6 +60,4 @@ interface ASTVisitor
    void visit(NodeTuple node);
 
    void visit(NodeLoadIndex node);
-
-   void visit(NodeStoreIndex node);
 }

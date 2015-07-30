@@ -194,7 +194,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_LOCAL:
          {
-            top.store(insn >>> POS_C, top.pop());
+            top.store(insn >>> POS_C, top.top());
          } return;
          case OP_LOAD_OUTER:
          {
@@ -202,7 +202,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_OUTER:
          {
-            captures[insn >>> POS_C].setValue(top.pop());
+            captures[insn >>> POS_C].setValue(top.top());
          } return;
          case OP_LOAD_GLOBAL:
          {
@@ -210,7 +210,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_GLOBAL:
          {
-            state.store((String)consts[insn >>> POS_C], top.pop());
+            state.store((String)consts[insn >>> POS_C], top.top());
          } return;
          case OP_LOAD_INDEX:
          {
@@ -221,6 +221,7 @@ class LayeVM extends LayeObject
          {
             LayeObject value = top.pop(), index = top.pop();
             top.pop().store(this, index, value);
+            top.push(value);
          } return;
 
          case OP_NLOAD:

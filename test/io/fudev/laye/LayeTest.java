@@ -123,6 +123,8 @@ class LayeTest
          return;
       }
       
+      //viewer.visit(ast);
+      
       // ===== Compile the program
       
       ast.accept(compiler);
@@ -136,8 +138,6 @@ class LayeTest
       System.out.printf("Code generation completed with %d %s and %d %s.\n\n",
             logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-      
-//      viewer.visit(ast);
 
       vm.state.store("PrintLn", new LayeFunction((__, thisObject, args) ->
       {
@@ -151,7 +151,7 @@ class LayeTest
             result.append(args[i]);
          }
          System.out.println(result.toString());
-         return LayeObject.NULL;
+         return(LayeObject.NULL);
       }));
       vm.invoke(closure, null);
       LayeObject main = vm.state.load("Main");

@@ -319,14 +319,4 @@ class ASTViewer implements ASTVisitor
       node.index.accept(this);
       print("]");
    }
-
-   @Override
-   public void visit(NodeStoreIndex node)
-   {
-      node.target.accept(this);
-      print("[");
-      node.index.accept(this);
-      print("] = ");
-      node.value.accept(this);
-   }
 }

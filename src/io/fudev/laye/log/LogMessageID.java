@@ -88,6 +88,10 @@ class LogMessageID
    public static final LogMessageID ERROR_UNFINISHED_INFIX = new LogMessageID(
          "Unexpected Token",
          NEXT_CODE++);
+
+   public static final LogMessageID ERROR_INVALID_ASSIGNMENT = new LogMessageID(
+         "Invalid Assignment",
+         NEXT_CODE++);
    
    // ===== Instance
    

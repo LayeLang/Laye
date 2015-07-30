@@ -57,7 +57,7 @@ class StackFrame
    
    public boolean hasValue()
    {
-      return stackPointer > 0;
+      return(stackPointer > 0);
    }
    
    // ===== Local Operations
@@ -69,7 +69,7 @@ class StackFrame
    
    public LayeObject load(int index)
    {
-      return locals[index];
+      return(locals[index]);
    }
    
    // ===== Stack Operations
@@ -86,7 +86,7 @@ class StackFrame
    
    public LayeObject pop()
    {
-      return stack[--stackPointer];
+      return(stack[--stackPointer]);
    }
    
    public LayeObject[] popCount(int count)
@@ -96,6 +96,11 @@ class StackFrame
       {
          result[count] = pop();
       }
-      return result;
+      return(result);
+   }
+   
+   public LayeObject top()
+   {
+      return(stack[stackPointer - 1]);
    }
 }
