@@ -27,6 +27,7 @@ import static io.fudev.laye.vm.Instruction.*;
 
 import io.fudev.laye.file.ScriptFile;
 import io.fudev.laye.struct.FunctionPrototype;
+import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.LocalValueInfo;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
@@ -41,33 +42,20 @@ import net.fudev.faxlib.collections.List;
 public @RequiredArgsConstructor
 class FunctionPrototypeBuilder
 {
-   private final class Scope
+   // TODO(sekai): Maybe consolidate these?
+   
+   private final @RequiredArgsConstructor
+   class Scope
    {
       public final Scope previous;
-      public int initialLocalsSize;
-      
-      // TODO use numUpValues
-      // public int numUpValues;
-      
-      public Scope(final Scope previous)
-      {
-         this.previous = previous;
-         // this.numUpValues = FunctionBuilder.this.getNumUpVals();
-         initialLocalsSize = locals;
-      }
+      public int initialLocalsSize = locals;
    }
    
-   private final class Block
+   private final @RequiredArgsConstructor
+   class Block
    {
       public final Block previous;
-      
-      public int startPosition;
-      
-      public Block(final Block previous)
-      {
-         this.previous = previous;
-         startPosition = currentInsnPos();
-      }
+      // public int startPosition = currentInsnPos();
    }
    
    public final FunctionPrototypeBuilder parent;
@@ -82,12 +70,17 @@ class FunctionPrototypeBuilder
    private int stackSize = 0;
    private int maxStackSize = 0;
    
+   private int outerValueCount = 0;
+   
    private final List<Integer> code = new List<>();
    private final List<Object> consts = new List<>();
    private final List<OuterValueInfo> outerValues = new List<>();
    private final List<LocalValueInfo> localValues = new List<>();
    private final List<FunctionPrototype> nested = new List<>();
    // TODO(sekai): add jump tables for match expressions
+   
+   private Scope scope = null;
+   private Block block = null;
    
    public FunctionPrototype build()
    {
@@ -111,6 +104,170 @@ class FunctionPrototypeBuilder
       result.nestedClosures = nested;
       
       return(result);
+   }
+   
+   // ===== Scopes/Blocks
+   
+   public void startScope()
+   {
+      scope = new Scope(scope);
+   }
+   
+   public void endScope()
+   {
+      int oldOuters = outerValueCount;
+      if (locals != scope.initialLocalsSize)
+      {
+         setLocalCount(scope.initialLocalsSize);
+         if (oldOuters != outerValueCount)
+         {
+            opCloseOuters(scope.initialLocalsSize);
+         }
+      }
+      scope = scope.previous;
+   }
+   
+   public void startBlock()
+   {
+      block = new Block(block);
+   }
+   
+   public void endBlock()
+   {
+      // TODO(sekai): Old implementations changed return codes here, check?
+      block = block.previous;
+   }
+   
+   // ===== Locals
+   
+   public int addParameter(Identifier name)
+   {
+      numParams++;
+      return(addLocal(name));
+   }
+   
+   public int addLocal(Identifier name)
+   {
+      final int local = allocateLocal(name);
+      if (local == -1)
+      {
+         throw new IllegalArgumentException(
+               "local variable '" + name + "' already defined in function.");
+      }
+      return(local);
+   }
+   
+   public int getLocalLocation(Identifier name)
+   {
+      for (final LocalValueInfo var : localValues)
+      {
+         if (name.equals(var.name))
+         {
+            return(var.location);
+         }
+      }
+      return(-1);
+   }
+   
+   public Identifier getLocalName(int local)
+   {
+      for (final LocalValueInfo var : localValues)
+      {
+         if (var.location == local)
+         {
+            return(var.name);
+         }
+      }
+      return(null);
+   }
+   
+   public void setLocalCount(int n)
+   {
+      while (locals > n)
+      {
+         locals--;
+         final LocalValueInfo var = localValues.removeAt(locals);
+         if (var.isOuterValue())
+         {
+            outerValueCount--;
+         }
+         var.endOp = currentInsnPos();
+      }
+   }
+   
+   public void markLocalAsOuter(int local)
+   {
+      localValues.get(local).markAsOuterValue();
+      outerValueCount++;
+   }
+   
+   private int allocateLocal(Identifier name)
+   {
+      if (name == null)
+      {
+         throw new IllegalArgumentException("name cannot be null");
+      }
+      for (LocalValueInfo var : localValues)
+      {
+         if (name.equals(var.name))
+         {
+            return(-1);
+         }
+      }
+      int pos = locals;
+      localValues.append(new LocalValueInfo(name, pos));
+      if ((locals++) > maxLocals)
+      {
+         maxLocals = locals;
+      }
+      return(pos);
+   }
+   
+   // ===== Outers
+   
+   public int getOuterLocation(Identifier name)
+   {
+      final int outerSize = outerValues.size();
+      for (int i = 0; i < outerSize; i++)
+      {
+         if (outerValues.get(i).name.equals(name))
+         {
+            return(i);
+         }
+      }
+      int pos = -1;
+      if (parent != null)
+      {
+         pos = parent.getLocalLocation(name);
+         if (pos == -1)
+         {
+            pos = parent.getOuterLocation(name);
+            if (pos != -1)
+            {
+               outerValues.append(new OuterValueInfo(name, pos, OuterValueInfo.Type.OUTER));
+               return(outerValues.size() - 1);
+            }
+         }
+         else
+         {
+            parent.markLocalAsOuter(pos);
+            outerValues.append(new OuterValueInfo(name, pos, OuterValueInfo.Type.LOCAL));
+            return(outerValues.size() - 1);
+         }
+      }
+      return(-1);
+   }
+   
+   public Identifier getOuterName(int outer)
+   {
+      for (final OuterValueInfo var : outerValues)
+      {
+         if (var.pos == outer)
+         {
+            return var.name;
+         }
+      }
+      return(null);
    }
    
    // ===== Stack Manipulation
@@ -161,16 +318,6 @@ class FunctionPrototypeBuilder
    private void appendOp(int op)
    {
       code.append(op);
-   }
-   
-   private void appendOp_A(int op, int a)
-   {
-      code.append((op & MAX_OP) | ((a & MAX_A) << POS_A));
-   }
-   
-   private void appendOp_B(int op, int b)
-   {
-      code.append((op & MAX_OP) | ((b & MAX_B) << POS_B));
    }
    
    private void appendOp_C(int op, int c)
@@ -272,7 +419,7 @@ class FunctionPrototypeBuilder
    public int opCLoad(int constIndex)
    {
       increaseStackSize();
-      appendOp_A(OP_CLOAD, constIndex);
+      appendOp_C(OP_CLOAD, constIndex);
       return(currentInsnPos());
    }
    
@@ -357,7 +504,7 @@ class FunctionPrototypeBuilder
       increaseStackSize();
       int nIndex = nested.size();
       nested.append(prototype);
-      appendOp_A(OP_CLOSURE, nIndex);
+      appendOp_C(OP_CLOSURE, nIndex);
       return(currentInsnPos());
    }
    
@@ -365,21 +512,21 @@ class FunctionPrototypeBuilder
    
    public int opCloseOuters(int index)
    {
-      appendOp_A(OP_CLOSE_OUTERS, index);
+      appendOp_C(OP_CLOSE_OUTERS, index);
       return(currentInsnPos());
    }
    
    public int opInvoke(int nargs)
    {
       changeStackSize(-nargs);
-      appendOp_A(OP_INVOKE, nargs);
+      appendOp_C(OP_INVOKE, nargs);
       return(currentInsnPos());
    }
    
    public int opInvokeMethod(int nargs)
    {
       changeStackSize(-nargs - 1);
-      appendOp_A(OP_INVOKE_METHOD, nargs);
+      appendOp_C(OP_INVOKE_METHOD, nargs);
       return(currentInsnPos());
    }
    
@@ -436,7 +583,7 @@ class FunctionPrototypeBuilder
    public int opPrefix(Operator op)
    {
       int oIndex = addConstant(op);
-      appendOp_A(OP_PREFIX, oIndex);
+      appendOp_C(OP_PREFIX, oIndex);
       return(currentInsnPos());
    }
    
@@ -444,21 +591,21 @@ class FunctionPrototypeBuilder
    {
       decreaseStackSize();
       int oIndex = addConstant(op);
-      appendOp_A(OP_INFIX, oIndex);
+      appendOp_C(OP_INFIX, oIndex);
       return(currentInsnPos());
    }
    
    public int opList(int count)
    {
       changeStackSize(1 - count);
-      appendOp_A(OP_LIST, count);
+      appendOp_C(OP_LIST, count);
       return(currentInsnPos());
    }
    
    public int opTuple(int count)
    {
       changeStackSize(1 - count);
-      appendOp_A(OP_TUPLE, count);
+      appendOp_C(OP_TUPLE, count);
       return(currentInsnPos());
    }
 }

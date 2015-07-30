@@ -176,27 +176,27 @@ class LayeVM extends LayeObject
 
          case OP_LOAD_LOCAL:
          {
-            top.push(top.load((insn >>> POS_A) & MAX_A));
+            top.push(top.load(insn >>> POS_C));
          } return;
          case OP_STORE_LOCAL:
          {
-            top.store((insn >>> POS_A) & MAX_A, top.pop());
+            top.store(insn >>> POS_C, top.pop());
          } return;
          case OP_LOAD_OUTER:
          {
-            top.push(captures[(insn >>> POS_A) & MAX_A].getValue());
+            top.push(captures[insn >>> POS_C].getValue());
          } return;
          case OP_STORE_OUTER:
          {
-            captures[(insn >>> POS_A) & MAX_A].setValue(top.pop());
+            captures[insn >>> POS_C].setValue(top.pop());
          } return;
          case OP_LOAD_GLOBAL:
          {
-            top.push(state.load((String)consts[(insn >>> POS_A) & MAX_A]));
+            top.push(state.load((String)consts[insn >>> POS_C]));
          } return;
          case OP_STORE_GLOBAL:
          {
-            state.store((String)consts[(insn >>> POS_A) & MAX_A], top.pop());
+            state.store((String)consts[insn >>> POS_C], top.pop());
          } return;
          case OP_LOAD_INDEX:
          {
@@ -215,7 +215,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_CLOAD:
          {
-            top.push((LayeObject)consts[(insn >>> POS_A) & MAX_A]);
+            top.push((LayeObject)consts[insn >>> POS_C]);
          } return;
          
          case OP_ILOADM1:
@@ -275,7 +275,7 @@ class LayeVM extends LayeObject
          
          case OP_CLOSURE:
          {
-            FunctionPrototype proto = nested[(insn >>> POS_A) & MAX_A];
+            FunctionPrototype proto = nested[insn >>> POS_C];
             LayeClosure closure = new LayeClosure(proto);
             OuterValueInfo[] protoOuters = proto.outerValues;
             for (int i = 0; i < protoOuters.length; i++)
@@ -297,7 +297,7 @@ class LayeVM extends LayeObject
 
          case OP_CLOSE_OUTERS:
          {
-            for (int i = openOuters.length, a = (insn >>> POS_A) & MAX_A; --i >= a;)
+            for (int i = openOuters.length, a = insn >>> POS_C; --i >= a;)
             {
                if (openOuters[i] != null)
                {
@@ -308,12 +308,12 @@ class LayeVM extends LayeObject
          } return;
          case OP_INVOKE:
          {
-            LayeObject[] args = top.popCount((insn >>> POS_A) & MAX_A);
+            LayeObject[] args = top.popCount(insn >>> POS_C);
             top.push(invoke(top.pop(), null, args));
          } return;
          case OP_INVOKE_METHOD:
          {
-            LayeObject args[] = top.popCount((insn >>> POS_A) & MAX_A), index = top.pop();
+            LayeObject args[] = top.popCount(insn >>> POS_C), index = top.pop();
             top.push(top.pop().invokeMethod(this, index, args));
          } return;
          case OP_INVOKE_BASE:
@@ -367,22 +367,22 @@ class LayeVM extends LayeObject
 
          case OP_PREFIX:
          {
-            top.push(top.pop().prefix(this, (String)consts[(insn >>> POS_A) & MAX_A]));
+            top.push(top.pop().prefix(this, (String)consts[insn >>> POS_C]));
          } return;
          case OP_INFIX:
          {
             LayeObject right = top.pop();
-            top.push(top.pop().infix(this, (String)consts[(insn >>> POS_A) & MAX_A], right));
+            top.push(top.pop().infix(this, (String)consts[insn >>> POS_C], right));
          } return;
 
          case OP_LIST:
          {
-            LayeObject[] elements = top.popCount((insn >>> POS_A) & MAX_A);
+            LayeObject[] elements = top.popCount(insn >>> POS_C);
             top.push(new LayeList(elements));
          } return;
          case OP_TUPLE:
          {
-            LayeObject[] elements = top.popCount((insn >>> POS_A) & MAX_A);
+            LayeObject[] elements = top.popCount(insn >>> POS_C);
             top.push(new LayeTuple(elements));
          } return;
       }
