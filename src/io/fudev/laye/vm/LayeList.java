@@ -29,6 +29,7 @@ import java.util.Spliterator;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+import io.fudev.laye.LayeException;
 import lombok.EqualsAndHashCode;
 import net.fudev.faxlib.collections.List;
 
@@ -103,6 +104,21 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    public void forEach(Consumer<? super LayeObject> action)
    {
       list.forEach(action);
+   }
+   
+   @Override
+   public LayeObject load(LayeVM vm, LayeObject key)
+   {
+      if (key instanceof LayeInt)
+      {
+         long index =  ((LayeInt)key).value;
+         if (index < 1 || index > list.size())
+         {
+            throw new LayeException(vm, "Index %d out of bounds.", index);
+         }
+         return(list.get((int)index - 1));
+      }
+      return(super.load(vm, key));
    }
 
    public LayeObject get(int index)
@@ -184,6 +200,24 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    public int retainAll(Predicate<LayeObject> predicate)
    {
       return list.retainAll(predicate);
+   }
+   
+   @Override
+   public void store(LayeVM vm, LayeObject key, LayeObject value)
+   {
+      if (key instanceof LayeInt)
+      {
+         long index =  ((LayeInt)key).value;
+         if (index < 1 || index > list.size())
+         {
+            throw new LayeException(vm, "Index %d out of bounds.", index);
+         }
+         list.set((int)index - 1, value);
+      }
+      else
+      {
+         super.store(vm, key, value);
+      }
    }
 
    public LayeObject set(int index, LayeObject value)
