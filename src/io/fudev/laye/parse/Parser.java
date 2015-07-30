@@ -214,9 +214,16 @@ class Parser
          {
             // nom '('
             next();
-            NodeExpression value = factor();
+            List<NodeExpression> values = commaFactor();
             expect(Token.Type.CLOSE_BRACE);
-            return(postfix(value));
+            if (values.size() == 1)
+            {
+               return(postfix(values.get(0)));
+            }
+            else
+            {
+               return(postfix(new NodeTuple(location, values)));
+            }
          }
          case OPEN_SQUARE_BRACE:
          {

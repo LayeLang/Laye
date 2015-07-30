@@ -295,6 +295,21 @@ class ASTViewer implements ASTVisitor
          println("[]");
       }
    }
+   
+   @Override
+   public void visit(NodeTuple node)
+   {
+      println("(");
+      tabs++;
+      node.values.forEach(arg ->
+      {
+         tprint();
+         arg.accept(this);
+         println();
+      });
+      tabs--;
+      tprint(")");
+   }
 
    @Override
    public void visit(NodeGetIndex node)
