@@ -23,11 +23,15 @@
  */
 package io.fudev.laye.codegen;
 
+import static io.fudev.laye.vm.Instruction.*;
+
 import io.fudev.laye.file.ScriptFile;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.LocalValueInfo;
+import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
-import static io.fudev.laye.vm.Instruction.*;
+import io.fudev.laye.vm.LayeFloat;
+import io.fudev.laye.vm.LayeInt;
 import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
 
@@ -109,9 +113,49 @@ class FunctionPrototypeBuilder
       return(result);
    }
    
+   // ===== Stack Manipulation
+   
+   public void changeStackSize(final int amt)
+   {
+      stackSize += amt;
+      if (stackSize > maxStackSize)
+      {
+         maxStackSize = stackSize;
+      }
+      else if (stackSize < 0)
+      {
+         throw new IllegalStateException("stackSize cannot be negative");
+      }
+   }
+   
+   public void increaseStackSize()
+   {
+      changeStackSize(1);
+   }
+   
+   public void decreaseStackSize()
+   {
+      changeStackSize(-1);
+   }
+   
+   // ===== Constants
+   
+   public int addConstant(Object constant)
+   {
+      int result = consts.indexOf(constant);
+      if (result == -1)
+      {
+         result = consts.size();
+         consts.append(constant);
+      }
+      return(result);
+   }
+   
+   // ===== Instruction management
+   
    public int currentInsnPos()
    {
-      return code.size() - 1;
+      return(code.size() - 1);
    }
    
    private void appendOp(int op)
@@ -145,66 +189,276 @@ class FunctionPrototypeBuilder
    public int opNop()
    {
       appendOp(OP_NOP);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opPop()
    {
+      decreaseStackSize();
       appendOp(OP_POP);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opDup()
    {
+      increaseStackSize();
       appendOp(OP_DUP);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opLoadLocal()
    {
+      increaseStackSize();
       appendOp(OP_LOAD_LOCAL);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opStoreLocal()
    {
+      decreaseStackSize();
       appendOp(OP_STORE_LOCAL);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opLoadOuter()
    {
+      increaseStackSize();
       appendOp(OP_LOAD_OUTER);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opStoreOuter()
    {
+      decreaseStackSize();
       appendOp(OP_STORE_OUTER);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opLoadGlobal()
    {
+      increaseStackSize();
       appendOp(OP_LOAD_GLOBAL);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opStoreGlobal()
    {
+      decreaseStackSize();
       appendOp(OP_STORE_GLOBAL);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opLoadIndex()
    {
+      decreaseStackSize();
       appendOp(OP_LOAD_INDEX);
-      return currentInsnPos();
+      return(currentInsnPos());
    }
    
    public int opStoreIndex()
    {
+      changeStackSize(-2);
       appendOp(OP_STORE_INDEX);
-      return currentInsnPos();
+      return(currentInsnPos());
+   }
+   
+   public int opNLoad()
+   {
+      increaseStackSize();
+      appendOp(OP_NLOAD);
+      return(currentInsnPos());
+   }
+   
+   public int opCLoad(int constIndex)
+   {
+      increaseStackSize();
+      appendOp_A(OP_CLOAD, constIndex);
+      return(currentInsnPos());
+   }
+   
+   public int opILoad(long value)
+   {
+      increaseStackSize();
+      switch ((int)value)
+      {
+         case -1:
+         {
+            appendOp(OP_ILOADM1);
+         } break;
+         case 0:
+         {
+            appendOp(OP_ILOAD0);
+         } break;
+         case 1:
+         {
+            appendOp(OP_ILOAD1);
+         } break;
+         case 2:
+         {
+            appendOp(OP_ILOAD2);
+         } break;
+         case 3:
+         {
+            appendOp(OP_ILOAD3);
+         } break;
+         case 4:
+         {
+            appendOp(OP_ILOAD4);
+         } break;
+         case 5:
+         {
+            appendOp(OP_ILOAD5);
+         } break;
+         default:
+         {
+            int cIndex = addConstant(LayeInt.valueOf(value));
+            opCLoad(cIndex);
+         } break;
+      }
+      return(currentInsnPos());
+   }
+   
+   public int opFLoad(double value)
+   {
+      increaseStackSize();
+      if (value == -1.0)
+      {
+         appendOp(OP_FLOADM1);
+      }
+      else if (value == 0.0)
+      {
+         appendOp(OP_FLOAD0);
+      }
+      else if (value == 1.0)
+      {
+         appendOp(OP_FLOAD0);
+      }
+      else if (value == 2.0)
+      {
+         appendOp(OP_FLOAD0);
+      }
+      else
+      {
+         int cIndex = addConstant(LayeFloat.valueOf(value));
+         opCLoad(cIndex);
+      }
+      return(currentInsnPos());
+   }
+   
+   public int opBLoad(boolean value)
+   {
+      increaseStackSize();
+      appendOp(value ? OP_BLOADT : OP_BLOADF);
+      return(currentInsnPos());
+   }
+   
+   public int opClosure(FunctionPrototype prototype)
+   {
+      increaseStackSize();
+      int nIndex = nested.size();
+      nested.append(prototype);
+      appendOp_A(OP_CLOSURE, nIndex);
+      return(currentInsnPos());
+   }
+   
+   // TODO(sekai): opType
+   
+   public int opCloseOuters(int index)
+   {
+      appendOp_A(OP_CLOSE_OUTERS, index);
+      return(currentInsnPos());
+   }
+   
+   public int opInvoke(int nargs)
+   {
+      changeStackSize(-nargs);
+      appendOp_A(OP_INVOKE, nargs);
+      return(currentInsnPos());
+   }
+   
+   public int opInvokeMethod(int nargs)
+   {
+      changeStackSize(-nargs - 1);
+      appendOp_A(OP_INVOKE_METHOD, nargs);
+      return(currentInsnPos());
+   }
+   
+   // TODO(sekai): opInvokeBase
+   
+   public int opJump(int to)
+   {
+      appendOp_C(OP_JUMP, to);
+      return(currentInsnPos());
+   }
+   
+   public int opJumpEq(int to)
+   {
+      changeStackSize(-2);
+      appendOp_C(OP_JUMP_EQ, to);
+      return(currentInsnPos());
+   }
+   
+   public int opJumpNeq(int to)
+   {
+      changeStackSize(-2);
+      appendOp_C(OP_JUMP_NEQ, to);
+      return(currentInsnPos());
+   }
+   
+   public int opJumpTrue(int to)
+   {
+      decreaseStackSize();
+      appendOp_C(OP_JUMP_TRUE, to);
+      return(currentInsnPos());
+   }
+   
+   public int opJumpFalse(int to)
+   {
+      decreaseStackSize();
+      appendOp_C(OP_JUMP_FALSE, to);
+      return(currentInsnPos());
+   }
+   
+   public int opCompEq()
+   {
+      decreaseStackSize();
+      appendOp(OP_COMP_EQ);
+      return(currentInsnPos());
+   }
+   
+   public int opCompNeq()
+   {
+      decreaseStackSize();
+      appendOp(OP_COMP_NEQ);
+      return(currentInsnPos());
+   }
+   
+   public int opPrefix(Operator op)
+   {
+      int oIndex = addConstant(op);
+      appendOp_A(OP_PREFIX, oIndex);
+      return(currentInsnPos());
+   }
+   
+   public int opInfix(Operator op)
+   {
+      decreaseStackSize();
+      int oIndex = addConstant(op);
+      appendOp_A(OP_INFIX, oIndex);
+      return(currentInsnPos());
+   }
+   
+   public int opList(int count)
+   {
+      changeStackSize(1 - count);
+      appendOp_A(OP_LIST, count);
+      return(currentInsnPos());
+   }
+   
+   public int opTuple(int count)
+   {
+      changeStackSize(1 - count);
+      appendOp_A(OP_TUPLE, count);
+      return(currentInsnPos());
    }
 }
