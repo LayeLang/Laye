@@ -44,7 +44,7 @@ class Operator
    public static final Operator DIVIDE = get("/", 8);
    public static final Operator INT_DIVIDE = get("//", 8);
    public static final Operator MODULO = get("%", 8);
-   public static final Operator POWER = get("^");
+   public static final Operator POWER = get("^", 9);
    public static final Operator AND = get("&", 3);
    public static final Operator OR = get("|", 1);
    public static final Operator XOR_COMPL = get("~", 2);

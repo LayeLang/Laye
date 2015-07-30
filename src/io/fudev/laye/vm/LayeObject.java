@@ -51,6 +51,21 @@ class LayeObject
 
    public abstract boolean equals(Object obj);
    
+   public boolean isNumeric()
+   {
+      return(false);
+   }
+   
+   public long longValue()
+   {
+      return(0L);
+   }
+   
+   public double doubleValue()
+   {
+      return(0.0);
+   }
+   
    public boolean toBool()
    {
       return(true);

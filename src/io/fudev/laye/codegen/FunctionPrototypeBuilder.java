@@ -498,11 +498,11 @@ class FunctionPrototypeBuilder
       }
       else if (value.value == 1.0)
       {
-         appendOp(OP_FLOAD0);
+         appendOp(OP_FLOAD1);
       }
       else if (value.value == 2.0)
       {
-         appendOp(OP_FLOAD0);
+         appendOp(OP_FLOAD2);
       }
       else
       {

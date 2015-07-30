@@ -155,7 +155,10 @@ class LayeTest
       }));
       vm.invoke(closure, null);
       LayeObject main = vm.state.load("Main");
-      vm.invoke(main, null);
+      if (main != LayeObject.NULL)
+      {
+         vm.invoke(main, null);
+      }
    }
    
    private LayeTest()

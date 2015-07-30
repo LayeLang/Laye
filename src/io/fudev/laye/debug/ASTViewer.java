@@ -158,6 +158,12 @@ class ASTViewer implements ASTVisitor
    {
       print("null");
    }
+   
+   @Override
+   public void visit(NodeBoolLiteral node)
+   {
+      print(node.value ? "true" : "false");
+   }
 
    @Override
    public void visit(NodeIntLiteral node)

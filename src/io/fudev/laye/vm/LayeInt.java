@@ -83,19 +83,37 @@ class LayeInt extends LayeObject
    }
    
    @Override
+   public boolean isNumeric()
+   {
+      return(true);
+   }
+   
+   @Override
+   public long longValue()
+   {
+      return(value);
+   }
+   
+   @Override
+   public double doubleValue()
+   {
+      return(value);
+   }
+   
+   @Override
    public boolean toBool()
    {
-      return(value != 0);
+      return(value != 0L);
    }
    
    @Override
    public boolean compareEquals(LayeObject that)
    {
-      if (!(that instanceof LayeInt))
+      if (!that.isNumeric())
       {
          return(false);
       }
-      return(this.value == ((LayeInt)that).value);
+      return(value == that.doubleValue());
    }
    
    @Override
@@ -113,208 +131,212 @@ class LayeInt extends LayeObject
    @Override
    public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
-      switch (op)
+      if (that.isNumeric())
       {
-         case "+":
+         switch (op)
          {
-            if (that instanceof LayeInt)
+            case "+":
             {
-               return(valueOf(value + ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(new LayeFloat(value + ((LayeFloat)that).value));
-            }
-         } break;
-         case "-":
-         {
-            if (that instanceof LayeInt)
-            {
-               return(valueOf(value - ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(new LayeFloat(value - ((LayeFloat)that).value));
-            }
-         } break;
-         case "*":
-         {
-            if (that instanceof LayeInt)
-            {
-               return(valueOf(value * ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(new LayeFloat(value * ((LayeFloat)that).value));
-            }
-         } break;
-         case "/":
-         {
-            if (that instanceof LayeInt)
-            {
-               return(valueOf(value / ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(new LayeFloat(value / ((LayeFloat)that).value));
-            }
-         } break;
-         case "//":
-         {
-            if (that instanceof LayeInt)
-            {
-               return(valueOf(value / ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(valueOf((long)(value / ((LayeFloat)that).value)));
-            }
-         } break;
-         case "%":
-         {
-            if (that instanceof LayeInt)
-            {
-               return(valueOf(value % ((LayeInt)that).value));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               return(new LayeFloat(value % ((LayeFloat)that).value));
-            }
-         } break;
-         case "^":
-         {
-            if (that instanceof LayeInt)
-            {
-               // TODO(sekai): make sure this works, it should but make sure.
-               long pow = ((LayeInt)that).value;
-               boolean negative = pow < 0L;
-               if (negative)
+               if (that instanceof LayeInt)
                {
-                  pow = -pow;
+                  return(valueOf(value + ((LayeInt)that).value));
                }
-               if (pow == 0L)
+               else if (that instanceof LayeFloat)
                {
-                  return(valueOf(1L));
+                  return(new LayeFloat(value + ((LayeFloat)that).value));
                }
-               long result = 1L;
-               while (pow-- > 0L)
+            } break;
+            case "-":
+            {
+               if (that instanceof LayeInt)
                {
-                  result *= value;
+                  return(valueOf(value - ((LayeInt)that).value));
                }
-               if (negative)
+               else if (that instanceof LayeFloat)
                {
-                  return(new LayeFloat(1.0 / result));
+                  return(new LayeFloat(value - ((LayeFloat)that).value));
                }
-               return(valueOf(result));
-            }
-            else if (that instanceof LayeFloat)
+            } break;
+            case "*":
             {
-               return(new LayeFloat(Math.pow(value, ((LayeFloat)that).value)));
-            }
-         } break;
-         case "&":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value * ((LayeInt)that).value));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(new LayeFloat(value * ((LayeFloat)that).value));
+               }
+            } break;
+            case "/":
             {
-               return(valueOf(value & ((LayeInt)that).value));
-            }
-         } break;
-         case "|":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value / ((LayeInt)that).value));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(new LayeFloat(value / ((LayeFloat)that).value));
+               }
+            } break;
+            case "//":
             {
-               return(valueOf(value | ((LayeInt)that).value));
-            }
-         } break;
-         case "~":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value / ((LayeInt)that).value));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(valueOf((long)(value / ((LayeFloat)that).value)));
+               }
+            } break;
+            case "%":
             {
-               return(valueOf(value ^ ((LayeInt)that).value));
-            }
-         } break;
-         case "<<":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value % ((LayeInt)that).value));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(new LayeFloat(value % ((LayeFloat)that).value));
+               }
+            } break;
+            case "^":
             {
-               return(valueOf(value << ((LayeInt)that).value));
-            }
-         } break;
-         case ">>":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  // TODO(sekai): make sure this works, it should but make sure.
+                  long pow = ((LayeInt)that).value;
+                  boolean negative = pow < 0L;
+                  if (negative)
+                  {
+                     pow = -pow;
+                  }
+                  if (pow == 0L)
+                  {
+                     return(valueOf(1L));
+                  }
+                  long result = 1L;
+                  while (pow-- > 0L)
+                  {
+                     result *= value;
+                  }
+                  if (negative)
+                  {
+                     return(new LayeFloat(1.0 / result));
+                  }
+                  return(valueOf(result));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(new LayeFloat(Math.pow(value, ((LayeFloat)that).value)));
+               }
+            } break;
+            case "&":
             {
-               return(valueOf(value >> ((LayeInt)that).value));
-            }
-         } break;
-         case ">>>":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value & ((LayeInt)that).value));
+               }
+            } break;
+            case "|":
             {
-               return(valueOf(value >>> ((LayeInt)that).value));
-            }
-         } break;
-         case "<":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value | ((LayeInt)that).value));
+               }
+            } break;
+            case "~":
             {
-               return(value < ((LayeInt)that).value ? TRUE : FALSE);
-            }
-            else if (that instanceof LayeFloat)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value ^ ((LayeInt)that).value));
+               }
+            } break;
+            case "<<":
             {
-               return(value < ((LayeFloat)that).value ? TRUE : FALSE);
-            }
-         } break;
-         case "<=":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value << ((LayeInt)that).value));
+               }
+            } break;
+            case ">>":
             {
-               return(value <= ((LayeInt)that).value ? TRUE : FALSE);
-            }
-            else if (that instanceof LayeFloat)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value >> ((LayeInt)that).value));
+               }
+            } break;
+            case ">>>":
             {
-               return(value <= ((LayeFloat)that).value ? TRUE : FALSE);
-            }
-         } break;
-         case ">":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(valueOf(value >>> ((LayeInt)that).value));
+               }
+            } break;
+            case "<":
             {
-               return(value > ((LayeInt)that).value ? TRUE : FALSE);
-            }
-            else if (that instanceof LayeFloat)
+               if (that instanceof LayeInt)
+               {
+                  return(value < ((LayeInt)that).value ? TRUE : FALSE);
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(value < ((LayeFloat)that).value ? TRUE : FALSE);
+               }
+            } break;
+            case "<=":
             {
-               return(value > ((LayeFloat)that).value ? TRUE : FALSE);
-            }
-         } break;
-         case ">=":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(value <= ((LayeInt)that).value ? TRUE : FALSE);
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(value <= ((LayeFloat)that).value ? TRUE : FALSE);
+               }
+            } break;
+            case ">":
             {
-               return(value >= ((LayeInt)that).value ? TRUE : FALSE);
-            }
-            else if (that instanceof LayeFloat)
+               if (that instanceof LayeInt)
+               {
+                  return(value > ((LayeInt)that).value ? TRUE : FALSE);
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(value > ((LayeFloat)that).value ? TRUE : FALSE);
+               }
+            } break;
+            case ">=":
             {
-               return(value >= ((LayeFloat)that).value ? TRUE : FALSE);
-            }
-         } break;
-         case "<=>":
-         {
-            if (that instanceof LayeInt)
+               if (that instanceof LayeInt)
+               {
+                  return(value >= ((LayeInt)that).value ? TRUE : FALSE);
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  return(value >= ((LayeFloat)that).value ? TRUE : FALSE);
+               }
+            } break;
+            case "<=>":
             {
-               long result = value - ((LayeInt)that).value;
-               return(valueOf(result < 0L ? 1L : (result > 0L ? 1L : 0L)));
-            }
-            else if (that instanceof LayeFloat)
-            {
-               double result = value - ((LayeFloat)that).value;
-               return(valueOf(result < 0.0 ? 1L : (result > 0.0 ? 1L : 0L)));
-            }
-         } break;
-         case "<>": return(new LayeString(toString() + that.toString()));
-         default: return(super.infix(vm, op, that));
+               if (that instanceof LayeInt)
+               {
+                  long result = value - ((LayeInt)that).value;
+                  return(valueOf(result < 0L ? 1L : (result > 0L ? 1L : 0L)));
+               }
+               else if (that instanceof LayeFloat)
+               {
+                  double result = value - ((LayeFloat)that).value;
+                  return(valueOf(result < 0.0 ? 1L : (result > 0.0 ? 1L : 0L)));
+               }
+            } break;
+            case "<>": return(new LayeString(toString() + that.toString()));
+            default: return(super.infix(vm, op, that));
+         }
       }
       // FIXME(sekai): add type name
-      throw new LayeException(vm, "Attempt to perform infix operation '%s' on type with type.", op);
+      throw new LayeException(vm, 
+            "Attempt to perform infix operation '%s' on type with type.", op);
    }
 }

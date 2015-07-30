@@ -252,7 +252,19 @@ class Parser
                {
                   // nom 'null'
                   next();
-                  return(new NodeNullLiteral(location));
+                  return(postfix(new NodeNullLiteral(location)));
+               }
+               case Keyword.STR_TRUE:
+               {
+                  // nom 'null'
+                  next();
+                  return(postfix(new NodeBoolLiteral(location, true)));
+               }
+               case Keyword.STR_FALSE:
+               {
+                  // nom 'null'
+                  next();
+                  return(postfix(new NodeBoolLiteral(location, false)));
                }
                default:
                {

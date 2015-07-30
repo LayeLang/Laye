@@ -82,6 +82,12 @@ class FunctionCompiler implements ASTVisitor
    }
    
    @Override
+   public void visit(NodeBoolLiteral node)
+   {
+      builder.opBLoad(node.value);
+   }
+   
+   @Override
    public void visit(NodeIntLiteral node)
    {
       builder.opILoad(node.value);
