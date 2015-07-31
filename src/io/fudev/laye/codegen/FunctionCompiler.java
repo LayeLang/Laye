@@ -297,4 +297,13 @@ class FunctionCompiler implements IASTVisitor
       node.right.accept(this);
       builder.setOp_C(and, builder.currentInsnPos() + 1);
    }
+   
+   @Override
+   public void visit(NodeOr node)
+   {
+      node.left.accept(this);
+      int and = builder.opBoolOr(0);
+      node.right.accept(this);
+      builder.setOp_C(and, builder.currentInsnPos() + 1);
+   }
 }

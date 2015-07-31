@@ -249,10 +249,17 @@ class ASTProcessor
       return(new NodeNot(node.location, (NodeExpression)node.expression.accept(this)));
    }
 
-   public ASTNode process(NodeAnd nodeAnd)
+   public ASTNode process(NodeAnd node)
    {
       // TODO(sekai): check special cases
-      return(new NodeAnd(nodeAnd.location, (NodeExpression)nodeAnd.left.accept(this),
-            (NodeExpression)nodeAnd.right.accept(this)));
+      return(new NodeAnd(node.location, (NodeExpression)node.left.accept(this),
+            (NodeExpression)node.right.accept(this)));
+   }
+
+   public ASTNode process(NodeOr node)
+   {
+      // TODO(sekai): check special cases
+      return(new NodeOr(node.location, (NodeExpression)node.left.accept(this),
+            (NodeExpression)node.right.accept(this)));
    }
 }
