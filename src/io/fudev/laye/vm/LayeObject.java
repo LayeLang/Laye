@@ -122,6 +122,17 @@ class LayeObject
    public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
       // FIXME(sekai): add type name
+      switch (op)
+      {
+         case "==":
+         {
+            return compareEquals(that) ? TRUE : FALSE;
+         }
+         case "!=":
+         {
+            return compareEquals(that) ? FALSE : TRUE;
+         }
+      }
       throw new LayeException(vm, "Attempt to perform infix operation '%s' on type.", op);
    }
 }
