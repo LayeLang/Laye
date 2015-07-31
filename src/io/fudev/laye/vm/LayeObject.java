@@ -105,12 +105,12 @@ class LayeObject
    
    public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
-      throw new LayeException(vm, "Attempt to call type.");
+      return(vm.invoke(this, thisObject, args));
    }
    
    public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
    {
-      return vm.invoke(fields.get(methodIndex), this, args);
+      return vm.invoke(load(vm, methodIndex), this, args);
    }
 
    public LayeObject prefix(LayeVM vm, String op)

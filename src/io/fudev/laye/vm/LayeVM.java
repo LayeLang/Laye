@@ -25,6 +25,9 @@ package io.fudev.laye.vm;
 
 import static io.fudev.laye.vm.Instruction.*;
 
+import java.util.Arrays;
+
+import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.OuterValueInfo;
 import lombok.EqualsAndHashCode;
@@ -90,7 +93,7 @@ class LayeVM extends LayeObject
       {
          return(((LayeFunction)target).invoke(this, thisObject, args));
       }
-      throw new IllegalArgumentException("target (" + target.getClass().getSimpleName() + ")");
+      throw new LayeException(this, "Attempt to call %s.", getClass().getSimpleName());
    }
    
    public LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
@@ -166,6 +169,7 @@ class LayeVM extends LayeObject
    private void executeInstruction(int insn, OuterValue[] openOuters, OuterValue[] captures,
          StackFrame top, Object[] consts, FunctionPrototype[] nested)
    {
+      //System.out.println(top.stackPointer + ": " + Arrays.toString(top.stack));
       switch (insn & MAX_OP)
       {
          default:
