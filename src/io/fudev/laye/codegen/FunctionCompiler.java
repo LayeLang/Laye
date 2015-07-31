@@ -200,9 +200,20 @@ class FunctionCompiler implements IASTVisitor
    @Override
    public void visit(NodeInvoke node)
    {
-      node.target.accept(this);
-      node.args.forEach(arg -> arg.accept(this));
-      builder.opInvoke(node.args.size());
+      if (node.target instanceof NodeLoadIndex)
+      {
+         NodeLoadIndex load = (NodeLoadIndex)node.target;
+         load.target.accept(this);
+         load.index.accept(this);
+         node.args.forEach(arg -> arg.accept(this));
+         builder.opInvokeMethod(node.args.size());
+      }
+      else
+      {
+         node.target.accept(this);
+         node.args.forEach(arg -> arg.accept(this));
+         builder.opInvoke(node.args.size());
+      }
       if (!node.isResultRequired)
       {
          builder.opPop();
