@@ -35,6 +35,7 @@ import io.fudev.laye.ast.AST;
 import io.fudev.laye.codegen.FunctionCompiler;
 import io.fudev.laye.debug.ASTViewer;
 import io.fudev.laye.file.ScriptFile;
+import io.fudev.laye.kit.KitLaye;
 import io.fudev.laye.lexical.Lexer;
 import io.fudev.laye.lexical.TokenStream;
 import io.fudev.laye.log.DetailLogger;
@@ -42,7 +43,6 @@ import io.fudev.laye.parse.Parser;
 import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.vm.LayeClosure;
-import io.fudev.laye.vm.LayeFunction;
 import io.fudev.laye.vm.LayeKit;
 import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
@@ -147,23 +147,7 @@ class LayeTest
             logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
       
-      LayeKit layeKit = new LayeKit();
-
-      layeKit.store(vm, "PrintLn", new LayeFunction((__, thisObject, args) ->
-      {
-         StringBuilder result = new StringBuilder();
-         for (int i = 0; i < args.length; i++)
-         {
-            if (i > 0)
-            {
-               result.append(' ');
-            }
-            result.append(args[i]);
-         }
-         System.out.println(result.toString());
-         return(LayeObject.NULL);
-      }));
-      vm.state.registerKit("Laye", layeKit);
+      vm.state.registerKit("Laye", new KitLaye(vm));
       vm.state.useAll("Laye");
       
       vm.invoke(closure, null);
