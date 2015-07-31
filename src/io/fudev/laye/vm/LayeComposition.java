@@ -23,8 +23,6 @@
  */
 package io.fudev.laye.vm;
 
-import java.util.Arrays;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 
