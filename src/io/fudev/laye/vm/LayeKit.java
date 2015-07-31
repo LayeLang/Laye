@@ -31,7 +31,7 @@ import lombok.EqualsAndHashCode;
 public @EqualsAndHashCode(callSuper = false) 
 class LayeKit extends LayeObject
 {
-   private LayeKit()
+   public LayeKit()
    {
    }
    
@@ -39,5 +39,15 @@ class LayeKit extends LayeObject
    public String toString()
    {
       return(null);
+   }
+   
+   public void store(LayeVM vm, String key, LayeObject obj)
+   {
+      store(vm, new LayeString(key), obj);
+   }
+   
+   public LayeObject load(LayeVM vm, String key)
+   {
+      return(load(vm, new LayeString(key)));
    }
 }

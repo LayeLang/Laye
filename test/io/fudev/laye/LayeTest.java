@@ -43,6 +43,7 @@ import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.vm.LayeClosure;
 import io.fudev.laye.vm.LayeFunction;
+import io.fudev.laye.vm.LayeKit;
 import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
 
@@ -145,8 +146,10 @@ class LayeTest
       System.out.printf("Code generation completed with %d %s and %d %s.\n\n",
             logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
             logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+      
+      LayeKit layeKit = new LayeKit();
 
-      vm.state.store("PrintLn", new LayeFunction((__, thisObject, args) ->
+      layeKit.store(vm, "PrintLn", new LayeFunction((__, thisObject, args) ->
       {
          StringBuilder result = new StringBuilder();
          for (int i = 0; i < args.length; i++)
@@ -160,6 +163,9 @@ class LayeTest
          System.out.println(result.toString());
          return(LayeObject.NULL);
       }));
+      vm.state.registerKit("Laye", layeKit);
+      vm.state.useAll("Laye");
+      
       vm.invoke(closure, null);
       LayeObject main = vm.state.load("Main");
       if (main != LayeObject.NULL)

@@ -38,6 +38,7 @@ class SharedState
    final LayeVM mainThread;
    
    private final HashMap<String, LayeObject> shared = new HashMap<>();
+   private final HashMap<String, LayeKit> registeredKits = new HashMap<>();
    private final List<LayeVM> sideThreads = new List<>();
    
    public LayeObject load(String key)
@@ -58,5 +59,28 @@ class SharedState
    public void eachSideThread(Consumer<? super LayeVM> consumer)
    {
       sideThreads.forEach(consumer);
+   }
+
+   public void registerKit(String key, LayeKit kit)
+   {
+      registeredKits.put(key, kit);
+   }
+   
+   public void useAll(String kitKey)
+   {
+      LayeKit kit = registeredKits.get(kitKey);
+      kit.fields.forEach((key, value) ->
+      {
+         shared.put(key.image, value);
+      });
+   }
+   
+   public void use(String kitKey, String... indices)
+   {
+      LayeKit kit = registeredKits.get(kitKey);
+      for (String index : indices)
+      {
+         shared.put(index, kit.load(mainThread, index));
+      }
    }
 }

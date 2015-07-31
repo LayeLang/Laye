@@ -39,7 +39,7 @@ class LayeObject
    public static final LayeBool TRUE  = LayeBool.BOOL_TRUE;
    public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
-   private final HashMap<Identifier, LayeObject> fields = new HashMap<>();
+   final HashMap<Identifier, LayeObject> fields = new HashMap<>();
    
    public LayeObject()
    {
