@@ -1,8 +1,7 @@
 fn FizzBuzz(value)
-   if (var by5 = not (value % 5),
-           by3 = not (value % 3)) and by5 'fizzbuzz'
+   if (var by3 = not (value % 3)) and not (value % 5) 'fizzbuzz'
    el if by3 'fizz'
-   el if by5 'buzz'
+   el if not (value % 5) 'buzz'
    el value
 
 (1 -> 100).replace(FizzBuzz).forEach(PrintLn)
