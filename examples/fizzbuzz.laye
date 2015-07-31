@@ -7,4 +7,4 @@ fn FizzBuzz(value)
       'buzz'
    el value
 
-(1 -> 100).replace(FizzBuzz).forEach(PrintLn)
+(1 -> 100).Replace(FizzBuzz).ForEach(PrintLn)

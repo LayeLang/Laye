@@ -44,7 +44,7 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    
    public LayeList()
    {
-      fields.put(Identifier.get("map"), new LayeFunction((vm, thisObject, args) ->
+      fields.put(Identifier.get("Map"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
          LayeList result = new LayeList();
@@ -55,7 +55,7 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
          }
          return(result);
       }));
-      fields.put(Identifier.get("replace"), new LayeFunction((vm, thisObject, args) ->
+      fields.put(Identifier.get("Replace"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
          LayeObject fn = args[0];
@@ -65,7 +65,7 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
          }
          return(this);
       }));
-      fields.put(Identifier.get("forEach"), new LayeFunction((vm, thisObject, args) ->
+      fields.put(Identifier.get("ForEach"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
          LayeObject fn = args[0];
