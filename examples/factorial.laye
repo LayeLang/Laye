@@ -1,0 +1,6 @@
+fn Factorial(n)
+   if n == 0
+      1
+   el n * Factorial(n - 1)
+
+PrintLn(Factorial(7))

@@ -1,0 +1,6 @@
+fn Fibonacci(n)
+   if n <= 1
+      n
+   el Fibonacci(n - 1) + Fibonacci(n - 2)
+
+(1 -> 10).Replace(Fibonacci).ForEach(PrintLn)
