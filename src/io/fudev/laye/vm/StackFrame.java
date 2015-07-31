@@ -35,9 +35,9 @@ class StackFrame
    public final LayeObject thisObject;
    
    private final LayeObject[] locals;
-   private final LayeObject[] stack;
+   final LayeObject[] stack;
    
-   private int stackPointer = 0;
+   int stackPointer = 0;
    
    public int ip = 0;
    
