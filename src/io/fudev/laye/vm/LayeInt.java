@@ -332,6 +332,29 @@ class LayeInt extends LayeObject
                }
             } break;
             case "<>": return(new LayeString(toString() + that.toString()));
+            case "->":
+            {
+               if (that instanceof LayeInt)
+               {
+                  LayeList result = new LayeList();
+                  long start = value, dest = ((LayeInt)that).value;
+                  if (start < dest)
+                  {
+                     for (; start < dest; start++)
+                     {
+                        result.append(valueOf(start));
+                     }
+                  }
+                  else
+                  {
+                     for (; start > dest; start--)
+                     {
+                        result.append(valueOf(start));
+                     }
+                  }
+                  return(result);
+               }
+            } break;
             default: return(super.infix(vm, op, that));
          }
       }
