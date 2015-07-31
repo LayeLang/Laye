@@ -643,12 +643,14 @@ class FunctionPrototypeBuilder
    
    public int opBoolAnd(int jump)
    {
+      decreaseStackSize();
       appendOp_C(OP_BOOL_AND, jump);
       return(currentInsnPos());
    }
    
    public int opBoolOr(int jump)
    {
+      decreaseStackSize();
       appendOp_C(OP_BOOL_OR, jump);
       return(currentInsnPos());
    }
