@@ -340,4 +340,19 @@ class ASTViewer implements IASTVisitor
          node.fail.accept(this);
       }
    }
+   
+   @Override
+   public void visit(NodeNot node)
+   {
+      print("NOT ");
+      node.expression.accept(this);
+   }
+   
+   @Override
+   public void visit(NodeAnd node)
+   {
+      node.left.accept(this);
+      print(" AND ");
+      node.right.accept(this);
+   }
 }

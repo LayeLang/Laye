@@ -271,6 +271,12 @@ class Parser
                   next();
                   return(postfix(new NodeBoolLiteral(location, false)));
                }
+               case Keyword.STR_NOT:
+               {
+                  // nom 'not'
+                  next();
+                  return(new NodeNot(location, parsePrimaryExpression()));
+               }
                case Keyword.STR_IF:
                {
                   // nom 'if'
@@ -412,6 +418,22 @@ class Parser
                 // NOTE: Many left-expressions will fail, the code generator will check for us
                 expr = new NodeAssignment(expr.location, expr, value);
              } break;
+             case KEYWORD:
+             {
+                switch (((Keyword)token.data).image)
+                {
+                   case Keyword.STR_AND:
+                   {
+                      // nom 'and'
+                      next();
+                      NodeExpression value = factor();
+                      expr = new NodeAnd(expr.location, expr, value);
+                   } break;
+                   default:
+                   {
+                   } break;
+                }
+             }
              default:
              {
              } break;

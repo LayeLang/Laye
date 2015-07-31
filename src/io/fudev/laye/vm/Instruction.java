@@ -101,6 +101,10 @@ class Instruction
    
    public static final byte OP_LIST             = 0x29;
    public static final byte OP_TUPLE            = 0x2A;
+
+   public static final byte OP_NOT              = 0x2B;
+   public static final byte OP_BOOL_AND         = 0x2C;
+   public static final byte OP_BOOL_OR          = 0x2D;
    
    private Instruction()
    {

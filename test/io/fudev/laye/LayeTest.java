@@ -96,7 +96,7 @@ class LayeTest
       DetailLogger logger = new DetailLogger(infoPrintStream, errorPrintStream);
       
       // Create all of the objects that we'll need here.
-      ScriptFile scriptFile = ScriptFile.fromFile("./examples/test.laye", "UTF-16");
+      ScriptFile scriptFile = ScriptFile.fromFile("./examples/fizzbuzz.laye", "UTF-8");
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
@@ -131,7 +131,7 @@ class LayeTest
       ast = processor.process(ast);
       logDetails(logger, "AST processing");
       
-      //viewer.visit(ast);
+      viewer.visit(ast);
       
       // ===== Compile the program
       

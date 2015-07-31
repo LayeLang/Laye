@@ -401,6 +401,35 @@ class LayeVM extends LayeObject
             LayeObject[] elements = top.popCount(insn >>> POS_C);
             top.push(new LayeTuple(elements));
          } return;
+         
+         case OP_NOT:
+         {
+            top.push(top.pop().toBool() ? FALSE : TRUE);
+         } return;
+         case OP_BOOL_AND:
+         {
+            LayeObject value = top.top();
+            if (value.toBool())
+            {
+               top.pop();
+            }
+            else
+            {
+               top.ip = insn >>> POS_C;
+            }
+         } break;
+         case OP_BOOL_OR:
+         {
+            LayeObject value = top.top();
+            if (value.toBool())
+            {
+               top.ip = insn >>> POS_C;
+            }
+            else
+            {
+               top.pop();
+            }
+         } break;
       }
    }
 }

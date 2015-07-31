@@ -634,4 +634,22 @@ class FunctionPrototypeBuilder
       appendOp_C(OP_TUPLE, count);
       return(currentInsnPos());
    }
+   
+   public int opNot()
+   {
+      appendOp(OP_NOT);
+      return(currentInsnPos());
+   }
+   
+   public int opBoolAnd(int jump)
+   {
+      appendOp_C(OP_BOOL_AND, jump);
+      return(currentInsnPos());
+   }
+   
+   public int opBoolOr(int jump)
+   {
+      appendOp_C(OP_BOOL_OR, jump);
+      return(currentInsnPos());
+   }
 }
