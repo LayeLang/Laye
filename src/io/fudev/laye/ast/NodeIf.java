@@ -23,45 +23,25 @@
  */
 package io.fudev.laye.ast;
 
+import io.fudev.laye.lexical.Location;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
-interface ASTVisitor
+class NodeIf extends NodeExpression
 {
-   void visit(AST ast);
+   public NodeExpression condition;
+   public NodeExpression pass, fail;
+   
+   public NodeIf(Location location)
+   {
+      super(location);
+   }
 
-   void visit(NodeVariableDef node);
-
-   void visit(NodeNullLiteral node);
-
-   void visit(NodeBoolLiteral node);
-
-   void visit(NodeIntLiteral node);
-
-   void visit(NodeFloatLiteral node);
-
-   void visit(NodeStringLiteral node);
-
-   void visit(NodePrefixExpression node);
-
-   void visit(NodeInfixExpression node);
-
-   void visit(NodeScope node);
-
-   void visit(NodeFunctionDef node);
-
-   void visit(NodeAssignment node);
-
-   void visit(NodeIdentifier node);
-
-   void visit(NodeInvoke node);
-
-   void visit(NodeList node);
-
-   void visit(NodeTuple node);
-
-   void visit(NodeLoadIndex node);
-
-   void visit(NodeIf node);
+   @Override
+   public void accept(ASTVisitor visitor)
+   {
+      visitor.visit(this);
+   }
 }

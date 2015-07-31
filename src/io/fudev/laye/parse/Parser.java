@@ -108,6 +108,11 @@ class Parser
       return(token.type == type);
    }
    
+   private boolean checkKeyword(Keyword keyword)
+   {
+      return(check(Token.Type.KEYWORD) && token.data.equals(keyword));
+   }
+   
    private boolean peekCheck(int offset, Token.Type type)
    {
       Token peeked = peek(offset);
@@ -265,6 +270,21 @@ class Parser
                   // nom 'null'
                   next();
                   return(postfix(new NodeBoolLiteral(location, false)));
+               }
+               case Keyword.STR_IF:
+               {
+                  // nom 'if'
+                  next();
+                  NodeIf result = new NodeIf(location);
+                  result.condition = factor();
+                  result.pass = factor();
+                  if (checkKeyword(Keyword.EL))
+                  {
+                     // nom 'el'
+                     next();
+                     result.fail = factor();
+                  }
+                  return(result);
                }
                default:
                {

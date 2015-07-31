@@ -123,7 +123,7 @@ class LayeTest
          return;
       }
       
-      //viewer.visit(ast);
+      viewer.visit(ast);
       
       // ===== Compile the program
       

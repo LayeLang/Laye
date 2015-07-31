@@ -312,6 +312,12 @@ class FunctionPrototypeBuilder
             ((b & MAX_B) << POS_B));
    }
    
+   public void setOp_C(int index, int c)
+   {
+      int op = code.get(index) & MAX_OP;
+      code.set(index, op | ((c & MAX_C) << POS_C));
+   }
+   
    public void defineVariable(Identifier name)
    {
       if (parent != null)

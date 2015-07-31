@@ -325,4 +325,16 @@ class ASTViewer implements ASTVisitor
       node.index.accept(this);
       print("]");
    }
+   
+   @Override
+   public void visit(NodeIf node)
+   {
+      print("IF ");
+      node.condition.accept(this);
+      print(" ");
+      node.pass.accept(this);
+      println();
+      tprint("ELSE ");
+      node.fail.accept(this);
+   }
 }

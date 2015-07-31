@@ -21,47 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.ast;
+package io.fudev.laye.process;
+
+import io.fudev.laye.ast.*;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-interface ASTVisitor
+public class ASTProcessor
 {
-   void visit(AST ast);
-
-   void visit(NodeVariableDef node);
-
-   void visit(NodeNullLiteral node);
-
-   void visit(NodeBoolLiteral node);
-
-   void visit(NodeIntLiteral node);
-
-   void visit(NodeFloatLiteral node);
-
-   void visit(NodeStringLiteral node);
-
-   void visit(NodePrefixExpression node);
-
-   void visit(NodeInfixExpression node);
-
-   void visit(NodeScope node);
-
-   void visit(NodeFunctionDef node);
-
-   void visit(NodeAssignment node);
-
-   void visit(NodeIdentifier node);
-
-   void visit(NodeInvoke node);
-
-   void visit(NodeList node);
-
-   void visit(NodeTuple node);
-
-   void visit(NodeLoadIndex node);
-
-   void visit(NodeIf node);
+   public AST process(AST ast)
+   {
+      AST newAst = new AST();
+      return(newAst);
+   }
 }

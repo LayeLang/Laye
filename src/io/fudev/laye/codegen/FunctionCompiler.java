@@ -200,7 +200,7 @@ class FunctionCompiler implements ASTVisitor
    {
       node.values.forEach(element -> element.accept(this));
       builder.opTuple(node.values.size());
-      // NOTE: We could just not generate the list, but function calls can reside in them.
+      // NOTE: We could just not generate the list, but calls/assignments can reside in them.
       if (!node.isResultRequired)
       {
          builder.opPop();
@@ -213,5 +213,54 @@ class FunctionCompiler implements ASTVisitor
       node.target.accept(this);
       node.index.accept(this);
       builder.opLoadIndex();
+   }
+   
+   @Override
+   public void visit(NodeIf node)
+   {
+      // TODO(sekai): move all of this out to the ast processor.
+      if (node.condition instanceof NodeNullLiteral)
+      {
+         node.fail.accept(this);
+      }
+      else if (node.condition instanceof NodeBoolLiteral)
+      {
+         (((NodeBoolLiteral)node.condition).value ? node.pass : node.fail).accept(this);
+      }
+      else if (node.condition instanceof NodeIntLiteral)
+      {
+         (((NodeIntLiteral)node.condition).value.toBool() ? node.pass : node.fail).accept(this);
+      }
+      else if (node.condition instanceof NodeFloatLiteral)
+      {
+         (((NodeFloatLiteral)node.condition).value.toBool() ? node.pass : node.fail).accept(this);
+      }
+      else if (node.condition instanceof NodeStringLiteral)
+      {
+         node.pass.accept(this);
+      }
+      // TODO(sekai): When constants are added, check those here as well.
+      else
+      {
+         node.condition.accept(this);
+         // TODO(sekai): check for the NOT keyword and do a jumpTrue otherwise.
+         // TODO(sekai): check ==, !=
+         int jump = builder.opJumpFalse(0);
+         node.pass.accept(this);
+         int ifEnd;
+         // TODO(sekai): when we process the AST, we should check for cases where we need to add a null literal as the fail case.
+         if (node.fail != null)
+         {
+            ifEnd = builder.opJump(0);
+            node.fail.accept(this);
+            int elseEnd = builder.currentInsnPos();
+            builder.setOp_C(ifEnd, elseEnd + 1);
+         }
+         else
+         {
+            ifEnd = builder.currentInsnPos();
+         }
+         builder.setOp_C(jump, ifEnd + 1);
+      }
    }
 }
