@@ -71,38 +71,56 @@ class FunctionCompiler implements IASTVisitor
          builder.defineVariable(name);
          node.values.get(i).accept(this);
          builder.visitSetVariable(name);
-         builder.opPop();
+         if (i < node.names.size() - 1 || !node.isResultRequired)
+         {
+            builder.opPop();
+         }
       }
    }
    
    @Override
    public void visit(NodeNullLiteral node)
    {
-      builder.opNLoad();
+      if (node.isResultRequired)
+      {
+         builder.opNLoad();
+      }
    }
    
    @Override
    public void visit(NodeBoolLiteral node)
    {
-      builder.opBLoad(node.value);
+      if (node.isResultRequired)
+      {
+         builder.opBLoad(node.value);
+      }
    }
    
    @Override
    public void visit(NodeIntLiteral node)
    {
-      builder.opILoad(node.value);
+      if (node.isResultRequired)
+      {
+         builder.opILoad(node.value);
+      }
    }
    
    @Override
    public void visit(NodeFloatLiteral node)
    {
-      builder.opFLoad(node.value);
+      if (node.isResultRequired)
+      {
+         builder.opFLoad(node.value);
+      }
    }
    
    @Override
    public void visit(NodeStringLiteral node)
    {
-      builder.opCLoad(builder.addConstant(node.value));
+      if (node.isResultRequired)
+      {
+         builder.opCLoad(builder.addConstant(node.value));
+      }
    }
    
    @Override
@@ -110,6 +128,10 @@ class FunctionCompiler implements IASTVisitor
    {
       node.expression.accept(this);
       builder.opPrefix(node.operator);
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
    }
    
    @Override
@@ -118,6 +140,10 @@ class FunctionCompiler implements IASTVisitor
       node.left.accept(this);
       node.right.accept(this);
       builder.opInfix(node.operator);
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
    }
    
    @Override
@@ -218,49 +244,30 @@ class FunctionCompiler implements IASTVisitor
    @Override
    public void visit(NodeIf node)
    {
-      // TODO(sekai): move all of this out to the ast processor.
-      if (node.condition instanceof NodeNullLiteral)
+      node.condition.accept(this);
+      // TODO(sekai): check for the NOT keyword and do a jumpTrue otherwise.
+      // TODO(sekai): check ==, !=
+      int jump = builder.opJumpFalse(0);
+      node.pass.accept(this);
+      int ifEnd;
+      // TODO(sekai): when we process the AST, we should check for cases where we need to add a null literal as the fail case.
+      if (node.fail != null)
       {
+         ifEnd = builder.opJump(0);
          node.fail.accept(this);
+         int elseEnd = builder.currentInsnPos();
+         builder.setOp_C(ifEnd, elseEnd + 1);
       }
-      else if (node.condition instanceof NodeBoolLiteral)
-      {
-         (((NodeBoolLiteral)node.condition).value ? node.pass : node.fail).accept(this);
-      }
-      else if (node.condition instanceof NodeIntLiteral)
-      {
-         (((NodeIntLiteral)node.condition).value.toBool() ? node.pass : node.fail).accept(this);
-      }
-      else if (node.condition instanceof NodeFloatLiteral)
-      {
-         (((NodeFloatLiteral)node.condition).value.toBool() ? node.pass : node.fail).accept(this);
-      }
-      else if (node.condition instanceof NodeStringLiteral)
-      {
-         node.pass.accept(this);
-      }
-      // TODO(sekai): When constants are added, check those here as well.
       else
       {
-         node.condition.accept(this);
-         // TODO(sekai): check for the NOT keyword and do a jumpTrue otherwise.
-         // TODO(sekai): check ==, !=
-         int jump = builder.opJumpFalse(0);
-         node.pass.accept(this);
-         int ifEnd;
-         // TODO(sekai): when we process the AST, we should check for cases where we need to add a null literal as the fail case.
-         if (node.fail != null)
+         ifEnd = builder.currentInsnPos();
+         if (node.isResultRequired)
          {
-            ifEnd = builder.opJump(0);
-            node.fail.accept(this);
+            new NodeNullLiteral(null).accept(this);
             int elseEnd = builder.currentInsnPos();
             builder.setOp_C(ifEnd, elseEnd + 1);
          }
-         else
-         {
-            ifEnd = builder.currentInsnPos();
-         }
-         builder.setOp_C(jump, ifEnd + 1);
       }
+      builder.setOp_C(jump, ifEnd + 1);
    }
 }

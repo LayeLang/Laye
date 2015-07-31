@@ -40,4 +40,12 @@ class FunctionData
    public FunctionData()
    {
    }
+   
+   public FunctionData(FunctionData that)
+   {
+      this.params = that.params;
+      this.defaults = that.defaults;
+      this.body = that.body;
+      this.vargs = that.vargs;
+   }
 }

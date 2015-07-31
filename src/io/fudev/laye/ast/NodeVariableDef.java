@@ -26,6 +26,7 @@ package io.fudev.laye.ast;
 import java.util.Iterator;
 
 import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.util.Pair;
 import net.fudev.faxlib.collections.List;
@@ -54,6 +55,12 @@ class NodeVariableDef extends NodeExpression implements Iterable<Pair<Identifier
    public void accept(IASTVisitor visitor)
    {
       visitor.visit(this);
+   }
+   
+   @Override
+   public ASTNode accept(ASTProcessor processor)
+   {
+      return(processor.process(this));
    }
 
    @Override

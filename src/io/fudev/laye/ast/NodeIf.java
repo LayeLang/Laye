@@ -24,6 +24,7 @@
 package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 
 /**
  * @author Sekai Kyoretsuna
@@ -43,5 +44,11 @@ class NodeIf extends NodeExpression
    public void accept(IASTVisitor visitor)
    {
       visitor.visit(this);
+   }
+   
+   @Override
+   public ASTNode accept(ASTProcessor processor)
+   {
+      return(processor.process(this));
    }
 }

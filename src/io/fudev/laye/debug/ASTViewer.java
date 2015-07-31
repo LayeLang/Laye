@@ -333,8 +333,11 @@ class ASTViewer implements IASTVisitor
       node.condition.accept(this);
       print(" ");
       node.pass.accept(this);
-      println();
-      tprint("ELSE ");
-      node.fail.accept(this);
+      if (node.fail != null)
+      {
+         println();
+         tprint("ELSE ");
+         node.fail.accept(this);
+      }
    }
 }

@@ -92,6 +92,10 @@ class LogMessageID
    public static final LogMessageID ERROR_INVALID_ASSIGNMENT = new LogMessageID(
          "Invalid Assignment",
          NEXT_CODE++);
+
+   public static final LogMessageID ERROR_INVALID_BLOCK = new LogMessageID(
+         "Invalid Code Block",
+         NEXT_CODE++);
    
    // ===== Instance
    

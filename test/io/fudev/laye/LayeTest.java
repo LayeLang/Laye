@@ -39,6 +39,7 @@ import io.fudev.laye.lexical.Lexer;
 import io.fudev.laye.lexical.TokenStream;
 import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.parse.Parser;
+import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.vm.LayeClosure;
 import io.fudev.laye.vm.LayeFunction;
@@ -86,6 +87,7 @@ class LayeTest
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
+      ASTProcessor processor = new ASTProcessor(logger);
 
       FunctionCompiler compiler = new FunctionCompiler(logger, null);
       LayeVM vm = new LayeVM();
@@ -118,6 +120,23 @@ class LayeTest
       {
          logger.flush();
          System.err.printf("Syntax tree generation failed with %d %s and %d %s.\n",
+               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
+               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+         return;
+      }
+      
+      viewer.visit(ast);
+      
+      // ===== TODO(sekai): Semantic Analysis
+      
+      // ===== Final AST processing
+      
+      ast = processor.process(ast);
+      
+      if (logger.getErrorCount() > 0)
+      {
+         logger.flush();
+         System.err.printf("AST processing failed with %d %s and %d %s.\n",
                logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
                logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
          return;

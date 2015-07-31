@@ -24,6 +24,7 @@
 package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 
 /**
  * @author Sekai Kyoretsuna
@@ -39,4 +40,6 @@ class ASTNode
    }
    
    public abstract void accept(IASTVisitor visitor);
+   
+   public abstract ASTNode accept(ASTProcessor processor);
 }
