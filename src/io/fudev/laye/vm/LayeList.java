@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import io.fudev.laye.LayeException;
+import io.fudev.laye.struct.Identifier;
 import lombok.EqualsAndHashCode;
 import net.fudev.faxlib.collections.List;
 
@@ -43,6 +44,34 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    
    public LayeList()
    {
+      fields.put(Identifier.get("map"), new LayeFunction((vm, thisObject, args) ->
+      {
+         // FIXME(sekai): proper error checking plz
+         LayeList result = new LayeList();
+         LayeObject fn = args[0];
+         for (int i = 0; i < list.size(); i++)
+         {
+            result.list.append(fn.invoke(vm, null, list.get(i)));
+         }
+         return(result);
+      }));
+      fields.put(Identifier.get("replace"), new LayeFunction((vm, thisObject, args) ->
+      {
+         // FIXME(sekai): proper error checking plz
+         LayeObject fn = args[0];
+         for (int i = 0; i < list.size(); i++)
+         {
+            list.set(i, fn.invoke(vm, null, list.get(i)));
+         }
+         return(this);
+      }));
+      fields.put(Identifier.get("forEach"), new LayeFunction((vm, thisObject, args) ->
+      {
+         // FIXME(sekai): proper error checking plz
+         LayeObject fn = args[0];
+         list.forEach(value -> fn.invoke(vm, null, value));
+         return(NULL);
+      }));
    }
    
    public LayeList(LayeObject... values)
