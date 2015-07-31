@@ -1,0 +1,7 @@
+fn MakeAdder(start)
+   fn(value) start + value
+
+var Add5 = MakeAdder(5)
+var Add7 = MakeAdder(7)
+
+PrintLn(Add5(10), Add7(10))
