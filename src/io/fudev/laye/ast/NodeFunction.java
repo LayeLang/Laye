@@ -25,7 +25,6 @@ package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna

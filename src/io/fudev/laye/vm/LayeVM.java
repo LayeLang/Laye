@@ -25,8 +25,6 @@ package io.fudev.laye.vm;
 
 import static io.fudev.laye.vm.Instruction.*;
 
-import java.util.Arrays;
-
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.OuterValueInfo;

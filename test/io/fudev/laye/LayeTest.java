@@ -43,7 +43,6 @@ import io.fudev.laye.parse.Parser;
 import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.vm.LayeClosure;
-import io.fudev.laye.vm.LayeKit;
 import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
 

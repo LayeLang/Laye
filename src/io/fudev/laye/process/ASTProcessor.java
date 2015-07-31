@@ -23,13 +23,12 @@
  */
 package io.fudev.laye.process;
 
+import static io.fudev.laye.log.LogMessageID.ERROR_INVALID_BLOCK;
+
+import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
 import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
-
-import static io.fudev.laye.log.LogMessageID.*;
-
-import io.fudev.laye.ast.*;
 
 /**
  * @author Sekai Kyoretsuna

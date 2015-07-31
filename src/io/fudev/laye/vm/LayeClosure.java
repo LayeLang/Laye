@@ -25,7 +25,6 @@ package io.fudev.laye.vm;
 
 import io.fudev.laye.struct.FunctionPrototype;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Sekai Kyoretsuna
