@@ -256,7 +256,7 @@ public class Lexer
       {
          readChar();
       }
-      while (currentChar != '\n');
+      while (currentChar != '\n' && !eof);
    }
    
    private Token lexStringLiteral()
