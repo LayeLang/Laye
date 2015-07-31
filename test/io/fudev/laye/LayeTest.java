@@ -52,6 +52,18 @@ import io.fudev.laye.vm.LayeVM;
 public final 
 class LayeTest
 {
+   private static void logDetails(DetailLogger logger, String name)
+   {
+      if (logger.getErrorCount() > 0)
+      {
+         logger.flush();
+         System.err.printf("%s failed with %d %s and %d %s.\n", name,
+               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
+               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+         System.exit(1);
+      }
+   }
+   
    public static void main(String[] unused) throws IOException
    {
       // Create output directory
@@ -99,15 +111,7 @@ class LayeTest
       // ==== Lex the input file
       
       TokenStream tokens = lexer.getTokens(scriptFile);
-      
-      if (logger.getErrorCount() > 0)
-      {
-         logger.flush();
-         System.err.printf("Token generation failed with %d %s and %d %s.\n",
-               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
-               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-         return;
-      }
+      logDetails(logger, "Token generation");
       
 //      tokens.forEach(System.out::println);
 //      System.out.println();
@@ -115,34 +119,18 @@ class LayeTest
       // ===== Parse the tokens
       
       AST ast = parser.getAST(tokens);
+      logDetails(logger, "Syntax tree generation");
       
-      if (logger.getErrorCount() > 0)
-      {
-         logger.flush();
-         System.err.printf("Syntax tree generation failed with %d %s and %d %s.\n",
-               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
-               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-         return;
-      }
-      
-      viewer.visit(ast);
+      //viewer.visit(ast);
       
       // ===== TODO(sekai): Semantic Analysis
       
       // ===== Final AST processing
       
       ast = processor.process(ast);
+      logDetails(logger, "AST processing");
       
-      if (logger.getErrorCount() > 0)
-      {
-         logger.flush();
-         System.err.printf("AST processing failed with %d %s and %d %s.\n",
-               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
-               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-         return;
-      }
-      
-      viewer.visit(ast);
+      //viewer.visit(ast);
       
       // ===== Compile the program
       
