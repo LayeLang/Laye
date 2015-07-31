@@ -376,6 +376,15 @@ class Parser
             expect(Token.Type.CLOSE_SQUARE_BRACE);
             node = postfix(new NodeLoadIndex(node.location, node, index));
          } break;
+         case DOT:
+         {
+            // nom '.'
+            next();
+            Location location = getLocation();
+            Identifier ident = expectIdentifier();
+            node = postfix(new NodeLoadIndex(node.location, node,
+                  new NodeStringLiteral(location, new LayeString(ident.image))));
+         } break;
          default:
          {
          } break;
