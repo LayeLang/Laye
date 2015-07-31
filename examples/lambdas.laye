@@ -1,1 +1,1 @@
-(1 -> 10).ForEach((fn(value) value ^ 2) |> PrintLn)
+(1 -> 10).ForEach(PrintLn <| fn(value) value ^ 2))
