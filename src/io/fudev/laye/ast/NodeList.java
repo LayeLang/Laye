@@ -41,7 +41,7 @@ class NodeList extends NodeExpression
    }
    
    @Override
-   public void accept(ASTVisitor visitor)
+   public void accept(IASTVisitor visitor)
    {
       visitor.visit(this);
    }

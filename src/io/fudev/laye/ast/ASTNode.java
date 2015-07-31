@@ -38,5 +38,5 @@ class ASTNode
       this.location = location;
    }
    
-   public abstract void accept(ASTVisitor visitor);
+   public abstract void accept(IASTVisitor visitor);
 }

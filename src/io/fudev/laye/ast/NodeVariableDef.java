@@ -51,7 +51,7 @@ class NodeVariableDef extends NodeExpression implements Iterable<Pair<Identifier
    }
    
    @Override
-   public void accept(ASTVisitor visitor)
+   public void accept(IASTVisitor visitor)
    {
       visitor.visit(this);
    }

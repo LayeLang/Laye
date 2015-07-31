@@ -33,7 +33,7 @@ import io.fudev.laye.struct.Identifier;
  * @author Sekai Kyoretsuna
  */
 public
-class FunctionCompiler implements ASTVisitor
+class FunctionCompiler implements IASTVisitor
 {
    public final DetailLogger logger;
    public FunctionPrototypeBuilder builder;

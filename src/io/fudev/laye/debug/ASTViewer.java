@@ -32,7 +32,7 @@ import io.fudev.laye.ast.*;
  * @author Sekai Kyoretsuna
  */
 public
-class ASTViewer implements ASTVisitor
+class ASTViewer implements IASTVisitor
 {
    private PrintStream out;
    

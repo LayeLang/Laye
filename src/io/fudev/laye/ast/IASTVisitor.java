@@ -27,7 +27,7 @@ package io.fudev.laye.ast;
  * @author Sekai Kyoretsuna
  */
 public
-interface ASTVisitor
+interface IASTVisitor
 {
    void visit(AST ast);
 
