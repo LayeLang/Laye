@@ -438,6 +438,13 @@ class Parser
                       NodeExpression value = factor();
                       expr = new NodeAnd(expr.location, expr, value);
                    } break;
+                   case Keyword.STR_OR:
+                   {
+                      // nom 'and'
+                      next();
+                      NodeExpression value = factor();
+                      expr = new NodeOr(expr.location, expr, value);
+                   } break;
                    default:
                    {
                    } break;
