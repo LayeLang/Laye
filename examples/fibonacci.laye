@@ -3,4 +3,4 @@ fn Fibonacci(n)
       n
    el Fibonacci(n - 1) + Fibonacci(n - 2)
 
-(1 -> 10).Replace(Fibonacci).ForEach(PrintLn)
+(1 -> 10).ForEach(Fibonacci |> PrintLn)
