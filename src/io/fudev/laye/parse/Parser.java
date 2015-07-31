@@ -440,7 +440,7 @@ class Parser
                    } break;
                    case Keyword.STR_OR:
                    {
-                      // nom 'and'
+                      // nom 'or'
                       next();
                       NodeExpression value = factor();
                       expr = new NodeOr(expr.location, expr, value);
