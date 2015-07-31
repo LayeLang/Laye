@@ -30,12 +30,18 @@ import lombok.RequiredArgsConstructor;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+public @EqualsAndHashCode(callSuper = false)
 class LayeClosure extends LayeObject
 {
    public final FunctionPrototype proto;
    public OuterValue[] captures = null;
 
+   public LayeClosure(FunctionPrototype proto)
+   {
+      this.proto = proto;
+      this.captures = new OuterValue[proto.maxStackSize];
+   }
+   
    @Override
    public String toString()
    {
