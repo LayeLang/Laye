@@ -23,32 +23,22 @@
  */
 package io.fudev.laye.vm;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
-class LayeFunction extends LayeComposable
+public
+abstract class LayeComposable extends LayeObject
 {
-   public static @FunctionalInterface
-   interface Callback
-   {
-      LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject[] args);
-   }
-   
-   public final Callback callback;
-   
    @Override
-   public String toString()
+   public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
-      return ("function:TODO");
-   }
-
-   @Override
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
-   {
-      return(callback.invoke(vm, thisObject, args));
+      switch (op)
+      {
+         case "|>":
+         {
+            return(new LayeComposition(this, that));
+         }
+      }
+      return(super.infix(vm, op, that));
    }
 }

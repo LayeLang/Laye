@@ -30,7 +30,7 @@ import lombok.EqualsAndHashCode;
  * @author Sekai Kyoretsuna
  */
 public @EqualsAndHashCode(callSuper = false)
-class LayeClosure extends LayeObject
+class LayeClosure extends LayeComposable
 {
    public final FunctionPrototype proto;
    public OuterValue[] captures = null;

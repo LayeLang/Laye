@@ -23,32 +23,28 @@
  */
 package io.fudev.laye.vm;
 
+import java.util.Arrays;
+
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
-class LayeFunction extends LayeComposable
+public @EqualsAndHashCode(callSuper = false) @AllArgsConstructor
+class LayeComposition extends LayeObject
 {
-   public static @FunctionalInterface
-   interface Callback
-   {
-      LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject[] args);
-   }
-   
-   public final Callback callback;
+   private LayeObject first, second;
    
    @Override
    public String toString()
    {
-      return ("function:TODO");
+      return("Composition:TODO"); // TODO(sekai): toString() for compositions
    }
 
    @Override
    public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
-      return(callback.invoke(vm, thisObject, args));
+      return(second.invoke(vm, thisObject, first.invoke(vm, thisObject, args)));
    }
 }

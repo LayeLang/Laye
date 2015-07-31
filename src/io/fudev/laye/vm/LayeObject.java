@@ -133,6 +133,7 @@ class LayeObject
             return compareEquals(that) ? FALSE : TRUE;
          }
       }
-      throw new LayeException(vm, "Attempt to perform infix operation '%s' on type.", op);
+      throw new LayeException(vm, "Attempt to perform infix operation '%s' on %s.", op,
+            getClass().getSimpleName());
    }
 }
