@@ -93,7 +93,7 @@ class LayeVM extends LayeObject
       {
          return(((LayeFunction)target).invoke(this, thisObject, args));
       }
-      throw new LayeException(this, "Attempt to call %s.", getClass().getSimpleName());
+      throw new LayeException(this, "Attempt to call %s.", target.getClass().getSimpleName());
    }
    
    public LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
