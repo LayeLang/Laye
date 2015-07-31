@@ -38,6 +38,10 @@ abstract class LayeComposable extends LayeObject
          {
             return(new LayeComposition(this, that));
          }
+         case "<|":
+         {
+            return(new LayeComposition(that, this));
+         }
       }
       return(super.infix(vm, op, that));
    }
