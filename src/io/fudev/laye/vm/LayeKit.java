@@ -46,6 +46,11 @@ class LayeKit extends LayeObject
       store(vm, new LayeString(key), obj);
    }
    
+   public void store(LayeVM vm, String key, LayeFunction.Callback callback)
+   {
+      store(vm, new LayeString(key), new LayeFunction(callback));
+   }
+   
    public LayeObject load(LayeVM vm, String key)
    {
       return(load(vm, new LayeString(key)));

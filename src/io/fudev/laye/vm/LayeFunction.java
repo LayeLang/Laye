@@ -33,12 +33,12 @@ public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
 class LayeFunction extends LayeObject
 {
    public static @FunctionalInterface
-   interface LayeFunctionCallback
+   interface Callback
    {
       LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject[] args);
    }
    
-   public final LayeFunctionCallback callback;
+   public final Callback callback;
    
    @Override
    public String toString()

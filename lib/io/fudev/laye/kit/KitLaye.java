@@ -23,7 +23,8 @@
  */
 package io.fudev.laye.kit;
 
-import io.fudev.laye.vm.LayeFunction;
+import java.io.PrintStream;
+
 import io.fudev.laye.vm.LayeKit;
 import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
@@ -34,9 +35,11 @@ import io.fudev.laye.vm.LayeVM;
 public
 class KitLaye extends LayeKit
 {
+   public PrintStream out = System.out;
+   
    public KitLaye(LayeVM vm)
    {
-      store(vm, "PrintLn", new LayeFunction(this::PrintLn));
+      store(vm, "PrintLn", this::PrintLn);
    }
    
    public LayeObject PrintLn(LayeVM vm, LayeObject thisObject, LayeObject[] args)
@@ -50,7 +53,7 @@ class KitLaye extends LayeKit
          }
          result.append(args[i]);
       }
-      System.out.println(result.toString());
+      out.println(result.toString());
       return(LayeObject.NULL);
    }
 }
