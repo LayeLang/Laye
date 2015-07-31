@@ -1,16 +1,1 @@
-# Will import values from the Sys kit.
-# This will be done by default for Laye programs.
-from Sys import Print, Error
-
-# Define a function called MakeAdder, which...
-fn MakeAdder(left) 
-   # ...returns a function to add two numbers, woa!
-   fn(right) left + right
-
-# The optional entry point of each kit.
-# The 'Main' function in a kit is invoked when it's loaded.
-fn Main()
-{
-   var Add5 = MakeAdder(0b101)
-   Print(Add5(0xA))
-}
+PrintLn('Hello, world')
