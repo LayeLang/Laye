@@ -25,6 +25,8 @@ package io.fudev.laye.vm;
 
 import static io.fudev.laye.vm.Instruction.*;
 
+import java.util.Arrays;
+
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.OuterValueInfo;
@@ -111,10 +113,10 @@ class LayeVM extends LayeObject
          LayeObject arg;
          if (c < argc)
          {
-            if (c == args.length - 1 && vargs)
+            if (c == argc - 1 && vargs)
             {
-               // FIXME(sekai): create a vargs list
-               arg = null;
+               LayeList vargsList = new LayeList(Arrays.copyOfRange(args, c, args.length));
+               arg = vargsList;
             }
             else
             {

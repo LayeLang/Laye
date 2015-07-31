@@ -76,6 +76,7 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    
    public LayeList(LayeObject... values)
    {
+      this();
       list.appendAll(values);
    }
 
