@@ -368,6 +368,11 @@ class Parser
       {
          case OPEN_BRACE:
          {
+            // '(' must be on the same line
+            if (node.location.line != token.location.line)
+            {
+               break;
+            }
             // nom '('
             next();
             List<NodeExpression> args = commaFactor();

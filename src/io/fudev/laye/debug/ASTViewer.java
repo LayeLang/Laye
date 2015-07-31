@@ -320,8 +320,9 @@ class ASTViewer implements IASTVisitor
    @Override
    public void visit(NodeLoadIndex node)
    {
+      print("(");
       node.target.accept(this);
-      print("[");
+      print(")[");
       node.index.accept(this);
       print("]");
    }
