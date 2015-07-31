@@ -253,6 +253,10 @@ class Parser
                {
                   return(parseVariableDefinition());
                }
+               case Keyword.STR_FN:
+               {
+                  return(parseLambdaFunction());
+               }
                case Keyword.STR_NULL:
                {
                   // nom 'null'
@@ -488,14 +492,9 @@ class Parser
       return(left);
    }
    
-   private NodeFunctionDef parseFunctionDefinition()
+   private FunctionData getFunctionData()
    {
-      NodeFunctionDef def = new NodeFunctionDef(getLocation());
-      
-      // nom 'fn'
-      next();
-      
-      def.name = expectIdentifier();
+      FunctionData data = new FunctionData();
 
       // nom '('
       expect(Token.Type.OPEN_BRACE);
@@ -508,15 +507,15 @@ class Parser
          {
             // nom '..'
             next();
-            def.data.vargs = true;
+            data.vargs = true;
          }
          
          // TODO(sekai): check defaults
          
-         def.data.params.append(param);
-         def.data.defaults.append(null);
+         data.params.append(param);
+         data.defaults.append(null);
          
-         if (!def.data.vargs && check(Token.Type.COMMA))
+         if (!data.vargs && check(Token.Type.COMMA))
          {
             // nom ','
             next();
@@ -530,7 +529,32 @@ class Parser
       // nom ')'
       expect(Token.Type.CLOSE_BRACE);
       
-      def.data.body = factor();
+      data.body = factor();
+      
+      return(data);
+   }
+   
+   private NodeFunctionDef parseFunctionDefinition()
+   {
+      NodeFunctionDef def = new NodeFunctionDef(getLocation());
+      
+      // nom 'fn'
+      next();
+      
+      def.name = expectIdentifier();
+      def.data = getFunctionData();
+      
+      return(def);
+   }
+   
+   private NodeFunction parseLambdaFunction()
+   {
+      NodeFunction def = new NodeFunction(getLocation());
+      
+      // nom 'fn'
+      next();
+      
+      def.data = getFunctionData();
       
       return(def);
    }

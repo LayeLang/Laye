@@ -165,6 +165,15 @@ class FunctionCompiler implements IASTVisitor
    }
    
    @Override
+   public void visit(NodeFunction node)
+   {
+      if (node.isResultRequired)
+      {
+         handleFunctionData(node.data);
+      }
+   }
+   
+   @Override
    public void visit(NodeAssignment node)
    {
       if (node.left instanceof NodeIdentifier)

@@ -243,6 +243,26 @@ class ASTViewer implements IASTVisitor
    }
 
    @Override
+   public void visit(NodeFunction node)
+   {
+      print("FUNCTION (");
+      for (int i = 0; i < node.data.params.size(); i++)
+      {
+         if (i > 0)
+         {
+            print(", ");
+         }
+         print(node.data.params.get(i).image);
+      }
+      if (node.data.vargs)
+      {
+         print("..");
+      }
+      print(") ");
+      node.data.body.accept(this);
+   }
+
+   @Override
    public void visit(NodeAssignment node)
    {
       node.left.accept(this);

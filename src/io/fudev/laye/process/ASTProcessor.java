@@ -158,6 +158,22 @@ class ASTProcessor
       }
    }
    
+   public ASTNode process(NodeFunction node)
+   {
+      NodeExpression body = (NodeExpression)node.data.body.accept(this);
+      if (body == node.data.body)
+      {
+         return(node);
+      }
+      else
+      {
+         NodeFunction result = new NodeFunction(node.location);
+         result.data = new FunctionData(node.data);
+         result.data.body = body;
+         return(result);
+      }
+   }
+   
    public ASTNode process(NodeAssignment node)
    {
       NodeAssignment result = new NodeAssignment(node.location,
