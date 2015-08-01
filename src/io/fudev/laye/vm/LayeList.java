@@ -72,6 +72,13 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
          list.forEach(value -> fn.invoke(vm, null, value));
          return(NULL);
       }));
+      fields.put(Identifier.get("Append"), new LayeFunction((vm, thisObject, args) ->
+      {
+         // FIXME(sekai): proper error checking plz
+         LayeObject value = args[0];
+         append(value);
+         return(NULL);
+      }));
    }
    
    public LayeList(LayeObject... values)

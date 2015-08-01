@@ -28,6 +28,7 @@ import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.log.LogMessageID;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
+import io.fudev.laye.vm.LayeString;
 
 /**
  * @author Sekai Kyoretsuna
@@ -196,7 +197,6 @@ class FunctionCompiler implements IASTVisitor
       }
       if (!node.isResultRequired)
       {
-         System.out.println("no");
          builder.opPop();
       }
    }
@@ -204,7 +204,10 @@ class FunctionCompiler implements IASTVisitor
    @Override
    public void visit(NodeIdentifier node)
    {
-      builder.visitGetVariable(node.value);
+      if (node.isResultRequired)
+      {
+         builder.visitGetVariable(node.value);
+      }
    }
    
    @Override
@@ -323,6 +326,11 @@ class FunctionCompiler implements IASTVisitor
       boolean isResultRequired = node.isResultRequired;
       boolean hasElse = node.initialFail != null;
       
+      if (isResultRequired && !hasElse)
+      {
+         builder.opList(0);
+      }
+      
       int ifJumpToElse = 0;
       
       int conditionStart = builder.currentInsnPos() + 1;
@@ -331,6 +339,10 @@ class FunctionCompiler implements IASTVisitor
       if (hasElse)
       {
          ifJumpToElse = builder.opJumpFalse(0);
+         if (isResultRequired)
+         {
+            builder.opList(0);
+         }
          int skipFirstCondition = builder.opJump(0);
          conditionStart = builder.currentInsnPos() + 1;
          node.condition.accept(this);
@@ -339,9 +351,16 @@ class FunctionCompiler implements IASTVisitor
       
       int whileTestFalse = builder.opJumpFalse(0);
       
+      if (isResultRequired)
+      {
+         builder.opDup();
+         builder.opCLoad(builder.addConstant(new LayeString("Append")));
+      }
       node.pass.accept(this);
       if (isResultRequired)
       {
+         // append the value to the list.
+         builder.opInvokeMethod(1);
          builder.opPop();
       }
       builder.opJump(conditionStart);

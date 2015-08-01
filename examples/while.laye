@@ -1,12 +1,12 @@
 fn WhileTest(a, b)
    while a < b
    {
-      PrintLn(a)
+      var res = a
       a+ = 1
+      res
    }
-   el PrintLn("a > b")
-
+   el "a > b"
 PrintLn("> 5, 10")
-WhileTest(5,  10)
+PrintLn(WhileTest(5,  10))
 PrintLn("\n> 20, 10")
-WhileTest(20, 10)
+PrintLn(WhileTest(20,  10))
