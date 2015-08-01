@@ -33,6 +33,73 @@ public abstract
 class LayeReference extends LayeObject
 {
    public abstract void store(LayeVM vm, LayeObject value);
+
+   @Override
+   public String toString()
+   {
+      return(deref(null).toString());
+   }
+
+   @Override
+   public long longValue(LayeVM vm)
+   {
+      return(deref(vm).longValue(vm));
+   }
+
+   @Override
+   public double doubleValue(LayeVM vm)
+   {
+      return(deref(vm).doubleValue(vm));
+   }
+
+   @Override
+   public boolean toBool(LayeVM vm)
+   {
+      return(deref(vm).toBool(vm));
+   }
+
+   @Override
+   public boolean compareEquals(LayeVM vm, LayeObject that)
+   {
+      // FIXME(sekai): check references first, then dereference.
+      return(deref(vm).compareEquals(vm, that));
+   }
+
+   @Override
+   public LayeObject load(LayeVM vm, LayeObject key)
+   {
+      return(deref(vm).load(vm, key));
+   }
+
+   @Override
+   public void store(LayeVM vm, LayeObject key, LayeObject object)
+   {
+      deref(vm).store(vm, key, object);
+   }
+
+   @Override
+   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      return(deref(vm).invoke(vm, thisObject, args));
+   }
+
+   @Override
+   public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
+   {
+      return(deref(vm).invokeMethod(vm, methodIndex, args));
+   }
+
+   @Override
+   public LayeObject prefix(LayeVM vm, String op)
+   {
+      return(deref(vm).prefix(vm, op));
+   }
+
+   @Override
+   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   {
+      return(deref(vm).infix(vm, op, that));
+   }
 }
 
 @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor

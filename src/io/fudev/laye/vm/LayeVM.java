@@ -355,7 +355,7 @@ class LayeVM extends LayeObject
          case OP_INVOKE:
          {
             LayeObject[] args = top.popCount(insn >>> POS_C);
-            top.push(invoke(top.pop(), null, args));
+            top.push(top.pop().invoke(this, null, args));
          } return;
          case OP_INVOKE_METHOD:
          {
@@ -417,7 +417,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_INFIX:
          {
-            LayeObject right = top.pop();
+            LayeObject right = top.pop().deref(this);
             top.push(top.pop().infix(this, (String)consts[insn >>> POS_C], right));
          } return;
 
@@ -491,6 +491,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_DEREF:
          {
+            // Force a deref, of course
             top.push(top.pop().deref(this));
          } return;
       }

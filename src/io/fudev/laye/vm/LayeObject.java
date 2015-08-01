@@ -115,7 +115,7 @@ class LayeObject
    
    public LayeObject deref(LayeVM vm)
    {
-      throw new LayeException(vm, "Attempt to deref '%s'.", getClass().getSimpleName());
+      return(this);
    }
 
    public LayeObject prefix(LayeVM vm, String op)
