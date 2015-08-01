@@ -293,15 +293,32 @@ class ASTProcessor
       NodeExpression pass = (NodeExpression)node.pass.accept(this);
       NodeExpression initialFail = node.initialFail == null ? null :
          (NodeExpression)node.initialFail.accept(this);
-//      pass.isResultRequired = isResultRequired;
-//      if (initialFail != null)
-//      {
-//         initialFail.isResultRequired = isResultRequired;
-//      }
-      // TODO(sekai): same checks as with 'if'
-      NodeWhile result = new NodeWhile(node.location, (NodeExpression)node.condition.accept(this),
-            pass, initialFail);
-      result.isResultRequired = isResultRequired;
-      return(result);
+      if (node.condition instanceof NodeNullLiteral)
+      {
+         return(initialFail);
+      }
+      else if (node.condition instanceof NodeBoolLiteral)
+      {
+         return((((NodeBoolLiteral)node.condition).value ? pass : initialFail));
+      }
+      else if (node.condition instanceof NodeIntLiteral)
+      {
+         return((((NodeIntLiteral)node.condition).value.toBool() ? pass : initialFail));
+      }
+      else if (node.condition instanceof NodeFloatLiteral)
+      {
+         return((((NodeFloatLiteral)node.condition).value.toBool() ? pass : initialFail));
+      }
+      else if (node.condition instanceof NodeStringLiteral)
+      {
+         return(pass);
+      }
+      else
+      {
+         NodeWhile result = new NodeWhile(node.location, (NodeExpression)node.condition.accept(this),
+               pass, initialFail);
+         result.isResultRequired = isResultRequired;
+         return(result);
+      }
    }
 }
