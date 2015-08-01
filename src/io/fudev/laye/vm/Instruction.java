@@ -105,6 +105,9 @@ class Instruction
    public static final byte OP_NOT              = 0x2B;
    public static final byte OP_BOOL_AND         = 0x2C;
    public static final byte OP_BOOL_OR          = 0x2D;
+
+   public static final byte OP_REF              = 0x2E;
+   public static final byte OP_DEREF            = 0x2F;
    
    private Instruction()
    {

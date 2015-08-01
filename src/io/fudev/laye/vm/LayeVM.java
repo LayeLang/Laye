@@ -198,7 +198,16 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_LOCAL:
          {
-            top.store(insn >>> POS_C, top.top());
+            int c;
+            LayeObject temp;
+            if ((temp = top.load(c = insn >>> POS_C)) instanceof LayeReference)
+            {
+               ((LayeReference)temp).store(this, top.top());
+            }
+            else
+            {
+               top.store(c, top.top());
+            }
          } return;
          case OP_LOAD_OUTER:
          {
@@ -206,7 +215,7 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_OUTER:
          {
-            captures[insn >>> POS_C].setValue(top.top());
+            captures[insn >>> POS_C].setValue(this, top.top());
          } return;
          case OP_LOAD_GLOBAL:
          {
@@ -214,7 +223,16 @@ class LayeVM extends LayeObject
          } return;
          case OP_STORE_GLOBAL:
          {
-            state.store((String)consts[insn >>> POS_C], top.top());
+            String key = (String)consts[insn >>> POS_C];
+            LayeObject temp;
+            if ((temp = state.load(key)) instanceof LayeReference)
+            {
+               ((LayeReference)temp).store(this, top.top());
+            }
+            else
+            {
+               state.store(key, top.top());
+            }
          } return;
          case OP_LOAD_INDEX:
          {
@@ -224,7 +242,15 @@ class LayeVM extends LayeObject
          case OP_STORE_INDEX:
          {
             LayeObject value = top.pop(), index = top.pop();
-            top.pop().store(this, index, value);
+            LayeObject target = top.pop(), temp;
+            if ((temp = target.load(this, index)) instanceof LayeReference)
+            {
+               ((LayeReference)temp).store(this, value);
+            }
+            else
+            {
+               target.store(this, index, value);
+            }
             top.push(value);
          } return;
 
@@ -347,28 +373,28 @@ class LayeVM extends LayeObject
          } return;
          case OP_JUMP_EQ:
          {
-            if (top.pop().compareEquals(top.pop()))
+            if (top.pop().compareEquals(this, top.pop()))
             {
                top.ip = insn >>> POS_C;
             }
          } return;
          case OP_JUMP_NEQ:
          {
-            if (!top.pop().compareEquals(top.pop()))
+            if (!top.pop().compareEquals(this, top.pop()))
             {
                top.ip = insn >>> POS_C;
             }
          } return;
          case OP_JUMP_TRUE:
          {
-            if (top.pop().toBool())
+            if (top.pop().toBool(this))
             {
                top.ip = insn >>> POS_C;
             }
          } return;
          case OP_JUMP_FALSE:
          {
-            if (!top.pop().toBool())
+            if (!top.pop().toBool(this))
             {
                top.ip = insn >>> POS_C;
             }
@@ -376,12 +402,12 @@ class LayeVM extends LayeObject
 
          case OP_COMP_EQ:
          {
-            top.push(top.pop().compareEquals(top.pop()) ?
+            top.push(top.pop().compareEquals(this, top.pop()) ?
                   LayeBool.BOOL_TRUE : LayeBool.BOOL_FALSE);
          } return;
          case OP_COMP_NEQ:
          {
-            top.push(top.pop().compareEquals(top.pop()) ?
+            top.push(top.pop().compareEquals(this, top.pop()) ?
                   LayeBool.BOOL_FALSE : LayeBool.BOOL_TRUE);
          } return;
 
@@ -408,12 +434,12 @@ class LayeVM extends LayeObject
          
          case OP_NOT:
          {
-            top.push(top.pop().toBool() ? FALSE : TRUE);
+            top.push(top.pop().toBool(this) ? FALSE : TRUE);
          } return;
          case OP_BOOL_AND:
          {
             LayeObject value = top.top();
-            if (value.toBool())
+            if (value.toBool(this))
             {
                top.pop();
             }
@@ -425,7 +451,7 @@ class LayeVM extends LayeObject
          case OP_BOOL_OR:
          {
             LayeObject value = top.top();
-            if (value.toBool())
+            if (value.toBool(this))
             {
                top.ip = insn >>> POS_C;
             }
@@ -434,6 +460,39 @@ class LayeVM extends LayeObject
                top.pop();
             }
          } break;
+         
+         case OP_REF:
+         {
+            switch ((insn >>> POS_A) & MAX_A)
+            {
+               case 0: // Global
+               {
+                  top.push(new LayeGlobalReference(state,
+                        (String)consts[(insn >>> POS_B) & MAX_B]));
+               } return;
+               case 1: // Local
+               {
+                  top.push(new LayeLocalReference(top, (insn >>> POS_B) & MAX_B));
+               } return;
+               case 2: // Outer
+               {
+                  top.push(new LayeOuterReference(captures, (insn >>> POS_B) & MAX_B));
+               } return;
+               case 3: // Index
+               {
+                  LayeObject index = top.pop();
+                  top.push(new LayeIndexReference(this, top.pop(), index));
+               } return;
+               default:
+               {
+                  // TODO(sekai): error when invalid reference type
+               }
+            }
+         } return;
+         case OP_DEREF:
+         {
+            top.push(top.pop().deref(this));
+         } return;
       }
    }
 }

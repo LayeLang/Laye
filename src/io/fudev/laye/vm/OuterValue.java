@@ -32,7 +32,7 @@ class OuterValue
    private LayeObject[] values;
    private int index;
    
-   public OuterValue(final LayeObject[] stack, final int index)
+   public OuterValue(LayeObject[] stack, int index)
    {
       values = stack;
       this.index = index;
@@ -48,8 +48,13 @@ class OuterValue
       return values[index];
    }
    
-   public void setValue(final LayeObject value)
+   public void setValue(LayeVM vm, LayeObject value)
    {
+      LayeObject temp;
+      if ((temp = values[index]) instanceof LayeReference)
+      {
+         ((LayeReference)temp).store(vm, value);
+      }
       values[index] = value;
    }
    

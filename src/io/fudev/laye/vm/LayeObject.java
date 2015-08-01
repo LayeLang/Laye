@@ -51,27 +51,27 @@ class LayeObject
 
    public abstract boolean equals(Object obj);
    
-   public boolean isNumeric()
+   public boolean isNumeric(LayeVM vm)
    {
       return(false);
    }
    
-   public long longValue()
+   public long longValue(LayeVM vm)
    {
       return(0L);
    }
    
-   public double doubleValue()
+   public double doubleValue(LayeVM vm)
    {
       return(0.0);
    }
    
-   public boolean toBool()
+   public boolean toBool(LayeVM vm)
    {
       return(true);
    }
    
-   public boolean compareEquals(LayeObject that)
+   public boolean compareEquals(LayeVM vm, LayeObject that)
    {
       return(this.equals(that));
    }
@@ -112,6 +112,11 @@ class LayeObject
    {
       return vm.invoke(load(vm, methodIndex), this, args);
    }
+   
+   public LayeObject deref(LayeVM vm)
+   {
+      throw new LayeException(vm, "Attempt to deref '%s'.", getClass().getSimpleName());
+   }
 
    public LayeObject prefix(LayeVM vm, String op)
    {
@@ -126,11 +131,11 @@ class LayeObject
       {
          case "==":
          {
-            return compareEquals(that) ? TRUE : FALSE;
+            return compareEquals(vm, that) ? TRUE : FALSE;
          }
          case "!=":
          {
-            return compareEquals(that) ? FALSE : TRUE;
+            return compareEquals(vm, that) ? FALSE : TRUE;
          }
       }
       throw new LayeException(vm, "Attempt to perform infix operation '%s' on %s.", op,

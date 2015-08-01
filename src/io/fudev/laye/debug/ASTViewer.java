@@ -399,4 +399,18 @@ class ASTViewer implements IASTVisitor
          node.initialFail.accept(this);
       }
    }
+   
+   @Override
+   public void visit(NodeReference node)
+   {
+      print("REF ");
+      node.expression.accept(this);
+   }
+   
+   @Override
+   public void visit(NodeDereference node)
+   {
+      print("DEREF ");
+      node.expression.accept(this);
+   }
 }

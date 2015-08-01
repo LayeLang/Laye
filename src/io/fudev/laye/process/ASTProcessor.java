@@ -167,6 +167,7 @@ class ASTProcessor
       else
       {
          NodeFunction result = new NodeFunction(node.location);
+         result.isResultRequired = node.isResultRequired;
          result.data = new FunctionData(node.data);
          result.data.body = body;
          return(result);
@@ -240,11 +241,11 @@ class ASTProcessor
       }
       else if (node.condition instanceof NodeIntLiteral)
       {
-         return((((NodeIntLiteral)node.condition).value.toBool() ? pass : fail));
+         return((((NodeIntLiteral)node.condition).value.toBool(null) ? pass : fail));
       }
       else if (node.condition instanceof NodeFloatLiteral)
       {
-         return((((NodeFloatLiteral)node.condition).value.toBool() ? pass : fail));
+         return((((NodeFloatLiteral)node.condition).value.toBool(null) ? pass : fail));
       }
       else if (node.condition instanceof NodeStringLiteral)
       {
@@ -264,21 +265,28 @@ class ASTProcessor
    public ASTNode process(NodeNot node)
    {
       // TODO(sekai): check special cases
-      return(new NodeNot(node.location, (NodeExpression)node.expression.accept(this)));
+      NodeNot result = new NodeNot(node.location,
+            (NodeExpression)node.expression.accept(this));
+      result.isResultRequired = node.isResultRequired;
+      return(result);
    }
 
    public ASTNode process(NodeAnd node)
    {
       // TODO(sekai): check special cases
-      return(new NodeAnd(node.location, (NodeExpression)node.left.accept(this),
-            (NodeExpression)node.right.accept(this)));
+      NodeAnd result = new NodeAnd(node.location, (NodeExpression)node.left.accept(this),
+            (NodeExpression)node.right.accept(this));
+      result.isResultRequired = node.isResultRequired;
+      return(result);
    }
 
    public ASTNode process(NodeOr node)
    {
       // TODO(sekai): check special cases
-      return(new NodeOr(node.location, (NodeExpression)node.left.accept(this),
-            (NodeExpression)node.right.accept(this)));
+      NodeOr result = new NodeOr(node.location, (NodeExpression)node.left.accept(this),
+            (NodeExpression)node.right.accept(this));
+      result.isResultRequired = node.isResultRequired;
+      return(result);
    }
    
    public ASTNode process(NodeWhile node)
@@ -303,11 +311,11 @@ class ASTProcessor
       }
       else if (node.condition instanceof NodeIntLiteral)
       {
-         return((((NodeIntLiteral)node.condition).value.toBool() ? pass : initialFail));
+         return((((NodeIntLiteral)node.condition).value.toBool(null) ? pass : initialFail));
       }
       else if (node.condition instanceof NodeFloatLiteral)
       {
-         return((((NodeFloatLiteral)node.condition).value.toBool() ? pass : initialFail));
+         return((((NodeFloatLiteral)node.condition).value.toBool(null) ? pass : initialFail));
       }
       else if (node.condition instanceof NodeStringLiteral)
       {
@@ -320,5 +328,21 @@ class ASTProcessor
          result.isResultRequired = isResultRequired;
          return(result);
       }
+   }
+   
+   public ASTNode process(NodeReference node)
+   {
+      NodeReference result = new NodeReference(node.location,
+            (NodeExpression)node.expression.accept(this));
+      result.isResultRequired = node.isResultRequired;
+      return(result);
+   }
+   
+   public ASTNode process(NodeDereference node)
+   {
+      NodeDereference result = new NodeDereference(node.location,
+            (NodeExpression)node.expression.accept(this));
+      result.isResultRequired = node.isResultRequired;
+      return(result);
    }
 }

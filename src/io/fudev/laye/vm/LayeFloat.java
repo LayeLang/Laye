@@ -51,37 +51,37 @@ class LayeFloat extends LayeObject
    }
    
    @Override
-   public boolean isNumeric()
+   public boolean isNumeric(LayeVM vm)
    {
       return(true);
    }
    
    @Override
-   public long longValue()
+   public long longValue(LayeVM vm)
    {
       return((long)value);
    }
    
    @Override
-   public double doubleValue()
+   public double doubleValue(LayeVM vm)
    {
       return(value);
    }
    
    @Override
-   public boolean toBool()
+   public boolean toBool(LayeVM vm)
    {
       return(value != 0.0);
    }
    
    @Override
-   public boolean compareEquals(LayeObject that)
+   public boolean compareEquals(LayeVM vm, LayeObject that)
    {
-      if (!that.isNumeric())
+      if (!that.isNumeric(vm))
       {
          return(false);
       }
-      return(value == that.doubleValue());
+      return(value == that.doubleValue(vm));
    }
    
    @Override
@@ -98,57 +98,57 @@ class LayeFloat extends LayeObject
    @Override
    public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
-      if (that.isNumeric())
+      if (that.isNumeric(vm))
       {
          switch (op)
          {
             case "+":
             {
-               return(new LayeFloat(value + that.doubleValue()));
+               return(new LayeFloat(value + that.doubleValue(vm)));
             }
             case "-":
             {
-               return(new LayeFloat(value - that.doubleValue()));
+               return(new LayeFloat(value - that.doubleValue(vm)));
             }
             case "*":
             {
-               return(new LayeFloat(value * that.doubleValue()));
+               return(new LayeFloat(value * that.doubleValue(vm)));
             }
             case "/":
             {
-               return(new LayeFloat(value / that.doubleValue()));
+               return(new LayeFloat(value / that.doubleValue(vm)));
             }
             case "//":
             {
-               return(new LayeInt((long)(value / that.doubleValue())));
+               return(new LayeInt((long)(value / that.doubleValue(vm))));
             }
             case "%":
             {
-               return(new LayeFloat(value % that.doubleValue()));
+               return(new LayeFloat(value % that.doubleValue(vm)));
             }
             case "^":
             {
-               return(new LayeFloat(Math.pow(value, that.doubleValue())));
+               return(new LayeFloat(Math.pow(value, that.doubleValue(vm))));
             }
             case "<":
             {
-               return(value < that.doubleValue() ? TRUE : FALSE);
+               return(value < that.doubleValue(vm) ? TRUE : FALSE);
             }
             case "<=":
             {
-               return(value <= that.doubleValue() ? TRUE : FALSE);
+               return(value <= that.doubleValue(vm) ? TRUE : FALSE);
             }
             case ">":
             {
-               return(value > that.doubleValue() ? TRUE : FALSE);
+               return(value > that.doubleValue(vm) ? TRUE : FALSE);
             }
             case ">=":
             {
-               return(value >= that.doubleValue() ? TRUE : FALSE);
+               return(value >= that.doubleValue(vm) ? TRUE : FALSE);
             }
             case "<=>":
             {
-               double result = value - that.doubleValue();
+               double result = value - that.doubleValue(vm);
                return(LayeInt.valueOf(result < 0.0 ? 1L : (result > 0.0 ? 1L : 0L)));
             }
             default: return(super.infix(vm, op, that));

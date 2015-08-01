@@ -1,0 +1,19 @@
+var a
+
+fn SetToTen(out)
+   out = 10
+
+fn OuterFunction(b)
+   fn(c)
+   {
+      var temp = deref b
+      b = deref c
+      c = temp
+   }
+
+var five = 5, seventeen = 17
+PrintLn(a, five, seventeen)
+SetToTen(ref a)
+var NewFunction = OuterFunction(ref five)
+NewFunction(ref seventeen)
+PrintLn(a, five, seventeen)

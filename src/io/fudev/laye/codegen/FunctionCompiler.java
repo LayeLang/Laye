@@ -373,4 +373,44 @@ class FunctionCompiler implements IASTVisitor
       
       builder.setOp_C(whileTestFalse, builder.currentInsnPos() + 1);
    }
+   
+   @Override
+   public void visit(NodeReference node)
+   {
+      if (node.expression instanceof NodeIdentifier)
+      {
+         Identifier name = ((NodeIdentifier)node.expression).value;
+         int index;
+         if ((index = builder.getLocalLocation(name)) != -1)
+         {
+            builder.opRef(1, index);
+         }
+         else if ((index = builder.getOuterLocation(name)) != -1)
+         {
+            builder.opRef(2, index);
+         }
+         else
+         {
+            builder.opRef(0, builder.addConstant(name.image));
+         }
+      }
+      else if (node.expression instanceof NodeLoadIndex)
+      {
+         NodeLoadIndex load = (NodeLoadIndex)node.expression;
+         load.target.accept(this);
+         load.index.accept(this);
+         builder.opRef(3, 0);
+      }
+      else
+      {
+         // FIXME(sekai): error!
+      }
+   }
+   
+   @Override
+   public void visit(NodeDereference node)
+   {
+      node.expression.accept(this);
+      builder.opDeref();
+   }
 }

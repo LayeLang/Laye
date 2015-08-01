@@ -83,37 +83,37 @@ class LayeInt extends LayeObject
    }
    
    @Override
-   public boolean isNumeric()
+   public boolean isNumeric(LayeVM vm)
    {
       return(true);
    }
    
    @Override
-   public long longValue()
+   public long longValue(LayeVM vm)
    {
       return(value);
    }
    
    @Override
-   public double doubleValue()
+   public double doubleValue(LayeVM vm)
    {
       return(value);
    }
    
    @Override
-   public boolean toBool()
+   public boolean toBool(LayeVM vm)
    {
       return(value != 0L);
    }
    
    @Override
-   public boolean compareEquals(LayeObject that)
+   public boolean compareEquals(LayeVM vm, LayeObject that)
    {
-      if (!that.isNumeric())
+      if (!that.isNumeric(vm))
       {
          return(false);
       }
-      return(value == that.doubleValue());
+      return(value == that.doubleValue(vm));
    }
    
    @Override
@@ -131,7 +131,7 @@ class LayeInt extends LayeObject
    @Override
    public LayeObject infix(LayeVM vm, String op, LayeObject that)
    {
-      if (that.isNumeric())
+      if (that.isNumeric(vm))
       {
          switch (op)
          {

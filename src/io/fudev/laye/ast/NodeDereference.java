@@ -21,45 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.vm;
+package io.fudev.laye.ast;
+
+import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-class LayeBool extends LayeObject
+public class NodeDereference extends NodeExpression
 {
-   static final LayeBool BOOL_TRUE  = new LayeBool(true);
-   static final LayeBool BOOL_FALSE = new LayeBool(false);
+   public NodeExpression expression = null;
    
-   public final boolean value;
-   
-   private LayeBool(boolean value)
+   public NodeDereference(Location location, NodeExpression expression)
    {
-      this.value = value;
+      super(location);
+      this.expression = expression;
+   }
+
+   @Override
+   public void accept(IASTVisitor visitor)
+   {
+      visitor.visit(this);
    }
    
    @Override
-   public String toString()
+   public ASTNode accept(ASTProcessor processor)
    {
-      return(value ? "true" : "false");
-   }
-   
-   @Override
-   public int hashCode()
-   {
-      return(value ? 1231 : 1237);
-   }
-   
-   @Override
-   public boolean equals(Object obj)
-   {
-      return(this == obj);
-   }
-   
-   @Override
-   public boolean toBool(LayeVM vm)
-   {
-      return(value);
+      return(processor.process(this));
    }
 }

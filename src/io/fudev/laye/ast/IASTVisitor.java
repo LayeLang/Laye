@@ -74,4 +74,8 @@ interface IASTVisitor
    void visit(NodeOr node);
 
    void visit(NodeWhile node);
+
+   void visit(NodeReference node);
+
+   void visit(NodeDereference node);
 }

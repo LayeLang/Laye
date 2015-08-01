@@ -32,9 +32,7 @@ import lombok.RequiredArgsConstructor;
 public abstract
 class LayeReference extends LayeObject
 {
-   public abstract LayeObject deref();
-   
-   public abstract void store(LayeObject value);
+   public abstract void store(LayeVM vm, LayeObject value);
 }
 
 @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
@@ -50,13 +48,13 @@ class LayeGlobalReference extends LayeReference
    }
    
    @Override
-   public LayeObject deref()
+   public LayeObject deref(LayeVM vm)
    {
       return(state.load(key));
    }
    
    @Override
-   public void store(LayeObject value)
+   public void store(LayeVM vm, LayeObject value)
    {
       state.store(key, value);
    }
@@ -75,15 +73,15 @@ class LayeOuterReference extends LayeReference
    }
 
    @Override
-   public LayeObject deref()
+   public LayeObject deref(LayeVM vm)
    {
       return(captures[index].getValue());
    }
    
    @Override
-   public void store(LayeObject value)
+   public void store(LayeVM vm, LayeObject value)
    {
-      captures[index].setValue(value);
+      captures[index].setValue(vm, value);
    }
 }
 
@@ -100,13 +98,13 @@ class LayeLocalReference extends LayeReference
    }
 
    @Override
-   public LayeObject deref()
+   public LayeObject deref(LayeVM vm)
    {
       return(frame.load(index));
    }
    
    @Override
-   public void store(LayeObject value)
+   public void store(LayeVM vm, LayeObject value)
    {
       frame.store(index, value);
    }
@@ -126,13 +124,13 @@ class LayeIndexReference extends LayeReference
    }
    
    @Override
-   public LayeObject deref()
+   public LayeObject deref(LayeVM vm)
    {
       return(object.load(vm, key));
    }
    
    @Override
-   public void store(LayeObject value)
+   public void store(LayeVM vm, LayeObject value)
    {
       object.store(vm, key, value);
    }

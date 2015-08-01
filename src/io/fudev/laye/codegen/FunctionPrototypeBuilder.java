@@ -32,6 +32,7 @@ import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
 
@@ -58,7 +59,7 @@ class FunctionPrototypeBuilder
    private int locals = 0;
    private int maxLocals = 0;
    
-   private int stackSize = 0;
+   private @Getter int stackSize = 0;
    private int maxStackSize = 0;
    
    private int outerValueCount = 0;
@@ -262,7 +263,7 @@ class FunctionPrototypeBuilder
       }
       else if (stackSize < 0)
       {
-         throw new IllegalStateException("stackSize cannot be negative");
+         throw new IllegalStateException("stackSize cannot be negative (" + stackSize + ")");
       }
    }
    
@@ -652,6 +653,26 @@ class FunctionPrototypeBuilder
    {
       decreaseStackSize();
       appendOp_C(OP_BOOL_OR, jump);
+      return(currentInsnPos());
+   }
+   
+   public int opRef(int a, int b)
+   {
+      if (a == 3)
+      {
+         decreaseStackSize();
+      }
+      else
+      {
+         increaseStackSize();
+      }
+      appendOp_AB(OP_REF, a, b);
+      return(currentInsnPos());
+   }
+   
+   public int opDeref()
+   {
+      appendOp(OP_DEREF);
       return(currentInsnPos());
    }
 }

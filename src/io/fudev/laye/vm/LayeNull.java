@@ -54,7 +54,7 @@ class LayeNull extends LayeObject
    }
    
    @Override
-   public boolean toBool()
+   public boolean toBool(LayeVM vm)
    {
       return(false);
    }

@@ -281,6 +281,18 @@ class Parser
                   next();
                   return(new NodeNot(location, parsePrimaryExpression()));
                }
+               case Keyword.STR_REF:
+               {
+                  // nom 'ref'
+                  next();
+                  return(new NodeReference(location, parsePrimaryExpression()));
+               }
+               case Keyword.STR_DEREF:
+               {
+                  // nom 'deref'
+                  next();
+                  return(new NodeDereference(location, parsePrimaryExpression()));
+               }
                case Keyword.STR_IF:
                {
                   // nom 'if'
