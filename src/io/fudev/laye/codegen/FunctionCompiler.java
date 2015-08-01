@@ -196,6 +196,7 @@ class FunctionCompiler implements IASTVisitor
       }
       if (!node.isResultRequired)
       {
+         System.out.println("no");
          builder.opPop();
       }
    }
@@ -314,5 +315,43 @@ class FunctionCompiler implements IASTVisitor
       int and = builder.opBoolOr(0);
       node.right.accept(this);
       builder.setOp_C(and, builder.currentInsnPos() + 1);
+   }
+   
+   @Override
+   public void visit(NodeWhile node)
+   {
+      boolean isResultRequired = node.isResultRequired;
+      boolean hasElse = node.initialFail != null;
+      
+      int ifJumpToElse = 0;
+      
+      int conditionStart = builder.currentInsnPos() + 1;
+      node.condition.accept(this);
+      
+      if (hasElse)
+      {
+         ifJumpToElse = builder.opJumpFalse(0);
+         int skipFirstCondition = builder.opJump(0);
+         conditionStart = builder.currentInsnPos() + 1;
+         node.condition.accept(this);
+         builder.setOp_C(skipFirstCondition, builder.currentInsnPos() + 2);
+      }
+      
+      int whileTestFalse = builder.opJumpFalse(0);
+      
+      node.pass.accept(this);
+      if (isResultRequired)
+      {
+         builder.opPop();
+      }
+      builder.opJump(conditionStart);
+      
+      if (hasElse)
+      {
+         builder.setOp_C(ifJumpToElse, builder.currentInsnPos() + 1);
+         node.initialFail.accept(this);
+      }
+      
+      builder.setOp_C(whileTestFalse, builder.currentInsnPos() + 1);
    }
 }

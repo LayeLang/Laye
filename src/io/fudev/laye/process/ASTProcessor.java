@@ -277,4 +277,22 @@ class ASTProcessor
       return(new NodeOr(node.location, (NodeExpression)node.left.accept(this),
             (NodeExpression)node.right.accept(this)));
    }
+   
+   public ASTNode process(NodeWhile node)
+   {
+      // FIXME(sekai): only accept values if they're used, save time.
+      NodeExpression pass = (NodeExpression)node.pass.accept(this);
+      NodeExpression initialFail = node.initialFail == null ? null :
+         (NodeExpression)node.initialFail.accept(this);
+      pass.isResultRequired = node.isResultRequired;
+      if (initialFail != null)
+      {
+         initialFail.isResultRequired = node.isResultRequired;
+      }
+      // TODO(sekai): same checks as with 'if'
+      NodeWhile result = new NodeWhile(node.location, (NodeExpression)node.condition.accept(this),
+            pass, initialFail);
+      result.isResultRequired = node.isResultRequired;
+      return(result);
+   }
 }

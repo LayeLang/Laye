@@ -1,0 +1,12 @@
+fn WhileTest(a, b)
+   while a < b
+   {
+      PrintLn(a)
+      a+ = 1
+   }
+   el PrintLn("a > b")
+
+PrintLn("> 5, 10")
+WhileTest(5,  10)
+PrintLn("\n> 20, 10")
+WhileTest(20, 10)

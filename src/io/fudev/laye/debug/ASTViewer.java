@@ -384,4 +384,19 @@ class ASTViewer implements IASTVisitor
       print(" OR ");
       node.right.accept(this);
    }
+   
+   @Override
+   public void visit(NodeWhile node)
+   {
+      print("WHILE");
+      node.condition.accept(this);
+      print(" ");
+      node.pass.accept(this);
+      if (node.initialFail != null)
+      {
+         println();
+         tprint("ELSE ");
+         node.initialFail.accept(this);
+      }
+   }
 }

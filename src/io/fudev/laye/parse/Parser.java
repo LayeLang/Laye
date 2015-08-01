@@ -296,6 +296,21 @@ class Parser
                   }
                   return(result);
                }
+               case Keyword.STR_WHILE:
+               {
+                  // nom 'if'
+                  next();
+                  NodeWhile result = new NodeWhile(location);
+                  result.condition = factor();
+                  result.pass = factor();
+                  if (checkKeyword(Keyword.EL))
+                  {
+                     // nom 'el'
+                     next();
+                     result.initialFail = factor();
+                  }
+                  return(result);
+               }
                default:
                {
                } break;

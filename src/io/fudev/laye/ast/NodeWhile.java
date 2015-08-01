@@ -23,55 +23,40 @@
  */
 package io.fudev.laye.ast;
 
+import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
-interface IASTVisitor
+class NodeWhile extends NodeExpression
 {
-   void visit(AST ast);
+   public NodeExpression condition, pass, initialFail;
+   
+   public NodeWhile(Location location)
+   {
+      super(location);
+   }
+   
+   public NodeWhile(Location location, NodeExpression condition, NodeExpression pass,
+         NodeExpression initialFail)
+   {
+      super(location);
+      this.condition = condition;
+      this.pass = pass;
+      this.initialFail = initialFail;
+   }
 
-   void visit(NodeVariableDef node);
+   @Override
+   public void accept(IASTVisitor visitor)
+   {
+      visitor.visit(this);
+   }
 
-   void visit(NodeNullLiteral node);
-
-   void visit(NodeBoolLiteral node);
-
-   void visit(NodeIntLiteral node);
-
-   void visit(NodeFloatLiteral node);
-
-   void visit(NodeStringLiteral node);
-
-   void visit(NodePrefixExpression node);
-
-   void visit(NodeInfixExpression node);
-
-   void visit(NodeScope node);
-
-   void visit(NodeFunctionDef node);
-
-   void visit(NodeFunction node);
-
-   void visit(NodeAssignment node);
-
-   void visit(NodeIdentifier node);
-
-   void visit(NodeInvoke node);
-
-   void visit(NodeList node);
-
-   void visit(NodeTuple node);
-
-   void visit(NodeLoadIndex node);
-
-   void visit(NodeIf node);
-
-   void visit(NodeNot node);
-
-   void visit(NodeAnd node);
-
-   void visit(NodeOr node);
-
-   void visit(NodeWhile node);
+   @Override
+   public ASTNode accept(ASTProcessor processor)
+   {
+      return(processor.process(this));
+   }
 }
