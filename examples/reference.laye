@@ -1,9 +1,29 @@
-var a
+# Okay, this example might require a bit more explaining
+# since I'm doing a lot of testing in this example (I'll
+# provide a simpler example soon.)
 
+# Laye provides four types of references:
+#    Global
+#    Local
+#    Outer
+#    Index
+# This example does not demonstrate index references, but the other
+# three are used
+
+var a # Define a global variable
+
+# Define a function that sets an output variable to 10.
+# The output variable is expected to be a reference.
 fn SetToTen(out)
    out = 10
 
+# Define a function that returns another function.
+# The returned function swaps the values of b and c,
+# assuming both are references.
+# The returned function will be referred to as the 'swap function' later.
 fn OuterFunction(b)
+   # In the scope of this function, note how b is an outer
+   # value and c is a local value.
    fn(c)
    {
       var temp = deref b
@@ -11,9 +31,16 @@ fn OuterFunction(b)
       c = temp
    }
 
+# define two more variables that we'll use as arguments later.
 var five = 5, seventeen = 17
+# Initial output, should be "null, 5, 17"
 PrintLn(a, five, seventeen)
+# Set a to 10 via the SetToTen function using a reference to a
 SetToTen(ref a)
+# Get the previously mentioned swap function, passing a
+# reference to five
 var NewFunction = OuterFunction(ref five)
+# Call the swap function, passing a reference to seventeen
 NewFunction(ref seventeen)
+# Final output, should be "10, 17, 5"
 PrintLn(a, five, seventeen)
