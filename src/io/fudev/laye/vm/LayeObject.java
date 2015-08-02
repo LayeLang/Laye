@@ -105,7 +105,7 @@ class LayeObject
    
    public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
-      return(vm.invoke(this, thisObject, args));
+      throw new LayeException(vm, "Attempt to call %s.", getClass().getSimpleName());
    }
    
    public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)

@@ -108,6 +108,8 @@ class Instruction
 
    public static final byte OP_REF              = 0x2E;
    public static final byte OP_DEREF            = 0x2F;
+
+   public static final byte OP_MATCH            = 0x30;
    
    private Instruction()
    {

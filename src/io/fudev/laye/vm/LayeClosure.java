@@ -46,4 +46,10 @@ class LayeClosure extends LayeComposable
    {
       return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
    }
+
+   @Override
+   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      return(vm.invoke(this, thisObject, args));
+   }
 }

@@ -401,6 +401,24 @@ class ASTViewer implements IASTVisitor
    }
    
    @Override
+   public void visit(NodeMatch node)
+   {
+      node.match.accept(this);
+      println(" MATCH {");
+      tabs++;
+      for (int i = 0; i < node.cases.size(); i++)
+      {
+         tprint();
+         node.cases.get(i).accept(this);
+         print(": ");
+         node.paths.get(i).accept(this);
+         println();
+      }
+      tabs--;
+      tprint("}");
+   }
+   
+   @Override
    public void visit(NodeReference node)
    {
       print("REF ");
@@ -412,5 +430,11 @@ class ASTViewer implements IASTVisitor
    {
       print("DEREF ");
       node.expression.accept(this);
+   }
+   
+   @Override
+   public void visit(NodeWildcard node)
+   {
+      print("_");
    }
 }

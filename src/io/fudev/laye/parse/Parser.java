@@ -427,6 +427,41 @@ class Parser
             node = postfix(new NodeLoadIndex(node.location, node,
                   new NodeStringLiteral(location, new LayeString(ident.image))));
          } break;
+         case KEYWORD:
+         {
+            switch (((Keyword)token.data).image)
+            {
+               case Keyword.STR_MATCH:
+               {
+                  NodeMatch match = new NodeMatch(getLocation(), node);
+                  // nom 'match'
+                  next();
+                  expect(Token.Type.OPEN_CURLY_BRACE);
+                  while (!check(Token.Type.CLOSE_CURLY_BRACE))
+                  {
+                     NodeExpression _case;
+                     if (check(Token.Type.WILDCARD))
+                     {
+                        _case = new NodeWildcard(getLocation());
+                        // nom '_'
+                        next();
+                     }
+                     else
+                     {
+                        _case = factor();
+                     }
+                     expect(Token.Type.COLON);
+                     NodeExpression path = factor();
+                     match.addCase(_case, path);
+                  }
+                  expect(Token.Type.CLOSE_CURLY_BRACE);
+                  node = match;
+               } break;
+               default:
+               {
+               } break;
+            }
+         } break;
          default:
          {
          } break;

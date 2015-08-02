@@ -96,6 +96,14 @@ class LogMessageID
    public static final LogMessageID ERROR_INVALID_BLOCK = new LogMessageID(
          "Invalid Code Block",
          NEXT_CODE++);
+
+   public static final LogMessageID ERROR_INVALID_CASE = new LogMessageID(
+         "Invalid Case",
+         NEXT_CODE++);
+
+   public static final LogMessageID ERROR_DUPLICATE_CASE = new LogMessageID(
+         "Duplicate Case",
+         NEXT_CODE++);
    
    // ===== Instance
    

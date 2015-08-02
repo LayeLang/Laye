@@ -32,7 +32,7 @@ import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
- */
+ */ // TODO(sekai): Constant folding!
 public @RequiredArgsConstructor
 class ASTProcessor
 {
@@ -330,6 +330,20 @@ class ASTProcessor
       }
    }
    
+   public ASTNode process(NodeMatch node)
+   {
+      NodeMatch result = new NodeMatch(node.location, (NodeExpression)node.match.accept(this));
+      for (int i = 0; i < node.cases.size(); i++)
+      {
+         NodeExpression _case = (NodeExpression)node.cases.get(i).accept(this);
+         NodeExpression path = (NodeExpression)node.paths.get(i).accept(this);
+         path.isResultRequired = node.isResultRequired;
+         result.addCase(_case, path);
+      }
+      result.isResultRequired = node.isResultRequired;
+      return(result);
+   }
+   
    public ASTNode process(NodeReference node)
    {
       NodeReference result = new NodeReference(node.location,
@@ -344,5 +358,10 @@ class ASTProcessor
             (NodeExpression)node.expression.accept(this));
       result.isResultRequired = node.isResultRequired;
       return(result);
+   }
+   
+   public ASTNode process(NodeWildcard node)
+   {
+      return(node);
    }
 }

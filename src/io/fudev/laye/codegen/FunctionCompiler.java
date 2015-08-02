@@ -23,11 +23,15 @@
  */
 package io.fudev.laye.codegen;
 
+import static io.fudev.laye.log.LogMessageID.*;
+
+import java.util.HashMap;
+
 import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
-import io.fudev.laye.log.LogMessageID;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
+import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeString;
 
 /**
@@ -192,7 +196,7 @@ class FunctionCompiler implements IASTVisitor
       }
       else
       {
-         logger.logErrorf(node.location, LogMessageID.ERROR_INVALID_ASSIGNMENT,
+         logger.logErrorf(node.location, ERROR_INVALID_ASSIGNMENT,
                "invalid assignment left side %s.", node.left.getClass().getSimpleName());
       }
       if (!node.isResultRequired)
@@ -375,6 +379,72 @@ class FunctionCompiler implements IASTVisitor
    }
    
    @Override
+   public void visit(NodeMatch node)
+   {
+      node.match.accept(this);
+      int match = builder.opMatch(0);
+      // generate lookup table
+      int[] caseJumpInsns = new int[node.cases.size()];
+      HashMap<LayeObject, Integer> lookup = new HashMap<>();
+      for (int i = 0; i < caseJumpInsns.length; i++)
+      {
+         int index = builder.currentInsnPos() + 1;
+         node.paths.get(i).accept(this);
+         caseJumpInsns[i] = builder.opJump(0);
+         NodeExpression _case = node.cases.get(i);
+         LayeObject key;
+         // NOTE: Sooner or later the processor will constant fold, so these checks will do fine.
+         if (_case instanceof NodeWildcard)
+         {
+            key = null;
+         }
+         else if (_case instanceof NodeStringLiteral)
+         {
+            key = ((NodeStringLiteral)_case).value;
+         }
+         else if (_case instanceof NodeIntLiteral)
+         {
+            key = ((NodeIntLiteral)_case).value;
+         }
+         else if (_case instanceof NodeBoolLiteral)
+         {
+            key = ((NodeBoolLiteral)_case).value ? LayeObject.TRUE : LayeObject.FALSE;
+         }
+         else if (_case instanceof NodeNullLiteral)
+         {
+            key = LayeObject.NULL;
+         }
+         else
+         {
+            key = null;
+            logger.logError(_case.location, ERROR_INVALID_CASE, "Cases must be string literals,"
+                  + "int literals, true, false, the null literal, or the wildcard token.");
+         }
+         // NOTE: if the above error occurs, we may get duplicate case errors as well.
+         if (lookup.containsKey(key))
+         {
+            logger.logErrorf(_case.location, ERROR_DUPLICATE_CASE, "Duplicate case %s.",
+                  key.toString());
+         }
+         lookup.put(key, index);
+      }
+      if (!lookup.containsKey(null))
+      {
+         if (node.isResultRequired)
+         {
+            builder.opNLoad();
+         }
+         lookup.put(null, builder.currentInsnPos());
+      }
+      int matchEnd = builder.currentInsnPos() + 1;
+      builder.setOp_C(match, builder.addConstant(lookup));
+      for (int i = 0; i < caseJumpInsns.length; i++)
+      {
+         builder.setOp_C(caseJumpInsns[i], matchEnd);
+      }
+   }
+   
+   @Override
    public void visit(NodeReference node)
    {
       if (node.expression instanceof NodeIdentifier)
@@ -412,5 +482,12 @@ class FunctionCompiler implements IASTVisitor
    {
       node.expression.accept(this);
       builder.opDeref();
+   }
+   
+   @Override
+   public void visit(NodeWildcard node)
+   {
+      logger.logError(node.location, ERROR_UNEXPECTED_TOKEN,
+            "compiler encountered unexpected wildcard token.");
    }
 }

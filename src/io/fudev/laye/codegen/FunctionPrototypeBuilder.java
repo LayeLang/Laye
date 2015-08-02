@@ -675,4 +675,10 @@ class FunctionPrototypeBuilder
       appendOp(OP_DEREF);
       return(currentInsnPos());
    }
+   
+   public int opMatch(int table)
+   {
+      appendOp_C(OP_MATCH, table);
+      return(currentInsnPos());
+   }
 }

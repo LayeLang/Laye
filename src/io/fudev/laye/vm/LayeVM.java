@@ -26,13 +26,15 @@ package io.fudev.laye.vm;
 import static io.fudev.laye.vm.Instruction.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
-import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.OuterValueInfo;
 import lombok.EqualsAndHashCode;
 
 /**
+ * The Laye virtual machine.
+ * 
  * @author Sekai Kyoretsuna
  */
 public @EqualsAndHashCode(callSuper = false)
@@ -65,6 +67,10 @@ class LayeVM extends LayeObject
    
    private LayeObject haltValue;
    
+   /**
+    * Creates a new virtual machine. This virtual machine is initialized with an empty
+    * {@link SharedState} to store global variables in.
+    */
    public LayeVM()
    {
       this.parent = null;
@@ -83,19 +89,58 @@ class LayeVM extends LayeObject
       return "LayeVM:TODO"; // FIXME(sekai): Add a toString to LayeVM.
    }
    
+   /**
+    * Attempts to invoke the target LayeObject. This is equivalent to calling the
+    * {@link LayeObject#invoke(LayeVM, LayeObject, LayeObject...)} method using this
+    * vm as the first argument.
+    * 
+    * @param target
+    *    The object to invoke
+    * @param thisObject
+    *    The object to invoke {@code target} on as a method. This may be null
+    * @param args
+    *    The arguments to passed to {@code target} on invocation
+    * @return
+    *    The result of the invocation. {@link LayeObject#NULL} if no value is returned
+    */
    public LayeObject invoke(LayeObject target, LayeObject thisObject, LayeObject... args)
    {
-      if (target instanceof LayeClosure)
-      {
-         return(invoke((LayeClosure)target, thisObject, args));
-      }
-      else if (target instanceof LayeFunction)
-      {
-         return(((LayeFunction)target).invoke(this, thisObject, args));
-      }
-      throw new LayeException(this, "Attempt to call %s.", target.getClass().getSimpleName());
+      return(target.invoke(this, thisObject, args));
    }
-   
+
+   /**
+    * Invokes the target LayeFunction. This is equivalent to calling the
+    * {@link LayeFunction#invoke(LayeVM, LayeObject, LayeObject...)} method using this
+    * vm as the first argument.
+    * 
+    * @param target
+    *    The function to invoke
+    * @param thisObject
+    *    The object to invoke {@code target} on as a method. This may be null
+    * @param args
+    *    The arguments to passed to {@code target} on invocation
+    * @return
+    *    The result of the invocation. {@link LayeObject#NULL} if no value is returned
+    */
+   public LayeObject invoke(LayeFunction target, LayeObject thisObject, LayeObject... args)
+   {
+      return(target.invoke(this, thisObject, args));
+   }
+
+   /**
+    * Invokes the target LayeClosure. This is equivalent to calling the
+    * {@link LayeClosure#invoke(LayeVM, LayeObject, LayeObject...)} method using this
+    * vm as the first argument.
+    * 
+    * @param target
+    *    The function to invoke
+    * @param thisObject
+    *    The object to invoke {@code target} on as a method. This may be null
+    * @param args
+    *    The arguments to passed to {@code target} on invocation
+    * @return
+    *    The result of the invocation. {@link LayeObject#NULL} if no value is returned
+    */
    public LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
    {
       stack.pushFrame(closure, thisObject);
@@ -170,6 +215,7 @@ class LayeVM extends LayeObject
          StackFrame top, Object[] consts, FunctionPrototype[] nested)
    {
       //System.out.println(top.stackPointer + ": " + Arrays.toString(top.stack));
+      //System.out.println(String.format("0x%02X\n", insn & MAX_OP));
       switch (insn & MAX_OP)
       {
          default:
@@ -493,6 +539,20 @@ class LayeVM extends LayeObject
          {
             // Force a deref, of course
             top.push(top.pop().deref(this));
+         } return;
+         
+         case OP_MATCH:
+         {
+            @SuppressWarnings("unchecked")
+            HashMap<LayeObject, Integer> lookup =
+                  (HashMap<LayeObject, Integer>)consts[insn >>> POS_C];
+            LayeObject value = top.pop();
+            Integer jump = lookup.get(value);
+            if (jump == null)
+            {
+               jump = lookup.get(null);
+            }
+            top.ip = jump.intValue();
          } return;
       }
    }

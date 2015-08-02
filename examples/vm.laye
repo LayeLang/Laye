@@ -8,7 +8,7 @@ fn VMExecute(code)
    var xRef = ref var x
    var yRef = ref var y
    var ipRef = ref (var ip = 0)
-   while (ip < codeLength)
+   while ip < codeLength
    {
       (var op = code[ip]) match
       {

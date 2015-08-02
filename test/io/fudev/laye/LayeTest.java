@@ -52,50 +52,20 @@ import io.fudev.laye.vm.LayeVM;
 public final 
 class LayeTest
 {
-   private static void logDetails(DetailLogger logger, String name)
-   {
-      if (logger.getErrorCount() > 0)
-      {
-         logger.flush();
-         System.err.printf("%s failed with %d %s and %d %s.\n", name,
-               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
-               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
-         System.exit(1);
-      }
-   }
-   
    public static void main(String[] unused) throws IOException
    {
-      // Create output directory
-      File outputFolder = new File("./output");
-      outputFolder.mkdir();
+      File[] outputFiles = initOutput();
       
-      // Clear our output directory:
-      File[] outputFiles = outputFolder.listFiles();
-      if (outputFiles != null && outputFiles.length != 0)
-      {
-         Arrays.asList(outputFiles).forEach(file -> file.delete());
-      }
-      
-      // Get the time as a string
-      final ZonedDateTime time = ZonedDateTime.now();
-      final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-            .appendPattern("u-M-d HH.mm.ss.SSS")
-            .toFormatter();
-      
-      final String timeString = time.format(formatter);
-      
-      // Create new files for info/errors
-      File infoDest = new File(String.format("./output/info_log %s.txt", timeString));
-      File errorDest = new File(String.format("./output/error_log %s.txt", timeString));
-
-      PrintStream infoPrintStream = new PrintStream(infoDest);
-      PrintStream errorPrintStream = new PrintStream(errorDest);
+      // outputFiles[0] is the info file
+      PrintStream infoPrintStream = new PrintStream(outputFiles[0]);
+      // outputFiles[1] is the error file
+      PrintStream errorPrintStream = new PrintStream(outputFiles[1]);
       
       DetailLogger logger = new DetailLogger(infoPrintStream, errorPrintStream);
       
-      // Create all of the objects that we'll need here.
-      ScriptFile scriptFile = ScriptFile.fromFile("./examples/reference.laye", "UTF-8");
+      // ===== Create all of the objects that we'll need here
+      
+      ScriptFile scriptFile = ScriptFile.fromFile("./examples/match.laye", "UTF-8");
       
       Lexer lexer = new Lexer(logger);
       Parser parser = new Parser(logger);
@@ -154,6 +124,50 @@ class LayeTest
       if (main != LayeObject.NULL)
       {
          vm.invoke(main, null);
+      }
+   }
+   
+   /**
+    * @return
+    *    An array containing the info file followed by the error file
+    */
+   private static File[] initOutput()
+   {
+      // Create output directory
+      File outputFolder = new File("./output");
+      outputFolder.mkdir();
+      
+      // Clear our output directory:
+      File[] outputFiles = outputFolder.listFiles();
+      if (outputFiles != null && outputFiles.length != 0)
+      {
+         Arrays.asList(outputFiles).forEach(file -> file.delete());
+      }
+      
+      // Get the time as a string
+      final ZonedDateTime time = ZonedDateTime.now();
+      final DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+            .appendPattern("u-M-d HH.mm.ss.SSS")
+            .toFormatter();
+      
+      final String timeString = time.format(formatter);
+      
+      // Create new files for info/errors
+      File infoDest = new File(String.format("./output/info_log %s.txt", timeString));
+      File errorDest = new File(String.format("./output/error_log %s.txt", timeString));
+      
+      return(new File[] { infoDest, errorDest });
+   }
+
+   private static void logDetails(DetailLogger logger, String name)
+   {
+      if (logger.getErrorCount() > 0)
+      {
+         logger.flush();
+         System.err.printf("%s failed with %d %s and %d %s.\n", name,
+               logger.getWarningCount(), logger.getWarningCount() == 1 ? "warning" : "warnings",
+               logger.getErrorCount(), logger.getErrorCount() == 1 ? "error" : "errors");
+         System.exit(1);
       }
    }
    

@@ -1,0 +1,10 @@
+fn Respond(a)
+   a match
+   {
+      _: "Something else"
+      0: "Zero"
+      1: "One"
+      2: "Two"
+   }
+
+(0 -> 4).ForEach(Respond |> PrintLn)

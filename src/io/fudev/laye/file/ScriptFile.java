@@ -38,16 +38,48 @@ import lombok.RequiredArgsConstructor;
 public @EqualsAndHashCode @RequiredArgsConstructor
 class ScriptFile
 {
+   /**
+    * Creates a {@code ScriptFile} using this platform's default {@link Charset}.
+    * The file is obtained through {@link Class#getResourceAsStream(String)}.
+    * 
+    * @param resourcePath
+    *    The path to the resource file
+    * @return
+    *    A {@code ScriptFile} that can read the resource with the default {@code Charset}
+    */
    public static ScriptFile fromResource(String resourcePath)
    {
       return(new ScriptFile(resourcePath, true, Charset.defaultCharset()));
    }
 
+   /**
+    * Creates a {@code ScriptFile} using the {@link Charset} obtained by
+    * {@link Charset#forName(String)} when passed the {@code encodingName}.
+    * The file is obtained through {@link Class#getResourceAsStream(String)}.
+    * 
+    * @param resourcePath
+    *    The path to the resource file
+    * @param encodingName
+    *    The name of the {@code Charset} to use when reading this file
+    * @return
+    *    A {@code ScriptFile} that can read the resource with the acquired {@code Charset}
+    */
    public static ScriptFile fromResource(String resourcePath, String encodingName)
    {
       return(new ScriptFile(resourcePath, true, Charset.forName(encodingName)));
    }
 
+   /**
+    * Creates a {@code ScriptFile} using the given {@link Charset}.
+    * The file is obtained through {@link Class#getResourceAsStream(String)}.
+    * 
+    * @param resourcePath
+    *    The path to the resource file
+    * @param encoding
+    *    The {@code Charset} to use when reading this file
+    * @return
+    *    A {@code ScriptFile} that can read the resource with the given {@code Charset}
+    */
    public static ScriptFile fromResource(String resourcePath, Charset encoding)
    {
       return(new ScriptFile(resourcePath, true, encoding));
@@ -68,9 +100,16 @@ class ScriptFile
       return(new ScriptFile(filePath, false, encoding));
    }
    
+   /**
+    * The path to the file.
+    */ // TODO(sekai): more information.
    public final String path;
    // TODO(sekai): enums? I don't like having a bool here.
    private final boolean isResource;
+   
+   /**
+    * The Charset to use when reading the file input.
+    */
    public final Charset encoding;
    
    public InputStreamReader read() throws IOException
