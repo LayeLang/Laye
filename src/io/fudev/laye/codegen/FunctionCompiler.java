@@ -144,7 +144,21 @@ class FunctionCompiler implements IASTVisitor
    {
       node.left.accept(this);
       node.right.accept(this);
-      builder.opInfix(node.operator);
+      switch (node.operator.image)
+      {
+         case "==":
+         {
+            builder.opCompEq();
+         } break;
+         case "!=":
+         {
+            builder.opCompNeq();
+         } break;
+         default:
+         {
+            builder.opInfix(node.operator);
+         } break;
+      }
       if (!node.isResultRequired)
       {
          builder.opPop();

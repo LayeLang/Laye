@@ -609,7 +609,7 @@ class FunctionPrototypeBuilder
    
    public int opPrefix(Operator op)
    {
-      int oIndex = addConstant(op.image);
+      int oIndex = addConstant(op);
       appendOp_C(OP_PREFIX, oIndex);
       return(currentInsnPos());
    }
@@ -617,7 +617,7 @@ class FunctionPrototypeBuilder
    public int opInfix(Operator op)
    {
       decreaseStackSize();
-      int oIndex = addConstant(op.image);
+      int oIndex = addConstant(op);
       appendOp_C(OP_INFIX, oIndex);
       return(currentInsnPos());
    }

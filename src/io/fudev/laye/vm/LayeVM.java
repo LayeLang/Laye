@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import io.fudev.laye.struct.FunctionPrototype;
+import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 import lombok.EqualsAndHashCode;
 
@@ -37,7 +38,7 @@ import lombok.EqualsAndHashCode;
  * 
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false)
+public @EqualsAndHashCode(callSuper = true)
 class LayeVM extends LayeObject
 {
    private static OuterValue findOuterValue(LayeObject[] locals, int idx, OuterValue[] openUps)
@@ -459,12 +460,12 @@ class LayeVM extends LayeObject
 
          case OP_PREFIX:
          {
-            top.push(top.pop().prefix(this, (String)consts[insn >>> POS_C]));
+            top.push(top.pop().prefix(this, (Operator)consts[insn >>> POS_C]));
          } return;
          case OP_INFIX:
          {
             LayeObject right = top.pop().deref(this);
-            top.push(top.pop().infix(this, (String)consts[insn >>> POS_C], right));
+            top.push(top.pop().infix(this, (Operator)consts[insn >>> POS_C], right));
          } return;
 
          case OP_LIST:
