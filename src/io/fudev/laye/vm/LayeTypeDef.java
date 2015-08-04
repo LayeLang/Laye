@@ -28,12 +28,13 @@ import java.util.HashMap;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public
-class LayeTypeDef
+public @EqualsAndHashCode(callSuper = true)
+class LayeTypeDef extends LayeObject
 {
    HashMap<Identifier, LayeObject> methods = new HashMap<>();
    HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
@@ -43,6 +44,7 @@ class LayeTypeDef
    
    public LayeTypeDef()
    {
+      super(null);
    }
    
    public LayeObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
