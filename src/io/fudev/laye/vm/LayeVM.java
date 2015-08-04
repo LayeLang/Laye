@@ -28,6 +28,7 @@ import static io.fudev.laye.vm.Instruction.*;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
@@ -539,7 +540,13 @@ class LayeVM extends LayeObject
          case OP_DEREF:
          {
             // Force a deref, of course
-            top.push(top.pop().deref(this));
+            LayeObject value = top.pop();
+            if (!(value instanceof LayeReference))
+            {
+               throw new LayeException(this, "attempt to dereference %s.",
+                     value.getClass().getSimpleName());
+            }
+            top.push(value.deref(this));
          } return;
          
          case OP_MATCH:
