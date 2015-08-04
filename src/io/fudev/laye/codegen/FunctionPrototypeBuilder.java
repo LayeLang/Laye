@@ -436,6 +436,19 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
+   public int opLoadField(int constIndex)
+   {
+      appendOp(OP_LOAD_FIELD);
+      return(currentInsnPos());
+   }
+   
+   public int opStoreField(int constIndex)
+   {
+      decreaseStackSize();
+      appendOp(OP_STORE_FIELD);
+      return(currentInsnPos());
+   }
+   
    public int opNLoad()
    {
       increaseStackSize();
@@ -550,10 +563,10 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   public int opInvokeMethod(int nargs)
+   public int opInvokeMethod(int constIndex, int nargs)
    {
-      changeStackSize(-nargs - 1);
-      appendOp_C(OP_INVOKE_METHOD, nargs);
+      changeStackSize(-nargs);
+      appendOp_AB(OP_INVOKE_METHOD, constIndex, nargs);
       return(currentInsnPos());
    }
    

@@ -81,7 +81,7 @@ class SharedState
       LayeKit kit = registeredKits.get(kitKey);
       for (String index : indices)
       {
-         shared.put(index, kit.load(mainThread, index));
+         shared.put(index, kit.getField(mainThread, index));
       }
    }
 }

@@ -39,7 +39,7 @@ class KitLaye extends LayeKit
    
    public KitLaye(LayeVM vm)
    {
-      store(vm, "PrintLn", this::PrintLn);
+      setField(vm, "PrintLn", this::PrintLn);
    }
    
    public LayeObject PrintLn(LayeVM vm, LayeObject thisObject, LayeObject[] args)

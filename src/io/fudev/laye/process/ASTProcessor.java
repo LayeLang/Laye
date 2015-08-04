@@ -219,6 +219,14 @@ class ASTProcessor
       result.isResultRequired = node.isResultRequired;
       return(result);
    }
+   
+   public ASTNode process(NodeLoadField node)
+   {
+      NodeLoadField result = new NodeLoadField(node.location,
+            (NodeExpression)node.target.accept(this), node.index);
+      result.isResultRequired = node.isResultRequired;
+      return(result);
+   }
 
    public ASTNode process(NodeIf node)
    {

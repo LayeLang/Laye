@@ -21,39 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.vm;
+package io.fudev.laye.ast;
 
+import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.Identifier;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true) 
-class LayeKit extends LayeObject
+public
+class NodeLoadField extends NodeExpression
 {
-   public LayeKit()
+   public NodeExpression target;
+   public Identifier index;
+   
+   public NodeLoadField(Location location, NodeExpression target, Identifier index)
    {
+      super(location);
+      this.target = target;
+      this.index = index;
    }
    
    @Override
-   public String toString()
+   public void accept(IASTVisitor visitor)
    {
-      return(null);
+      visitor.visit(this);
    }
    
-   public void setField(LayeVM vm, String key, LayeObject obj)
+   @Override
+   public ASTNode accept(ASTProcessor processor)
    {
-      setField(vm, Identifier.get(key), obj);
-   }
-   
-   public void setField(LayeVM vm, String key, LayeFunction.Callback callback)
-   {
-      setField(vm, Identifier.get(key), new LayeFunction(callback));
-   }
-   
-   public LayeObject getField(LayeVM vm, String key)
-   {
-      return(getField(vm, Identifier.get(key)));
+      return(processor.process(this));
    }
 }

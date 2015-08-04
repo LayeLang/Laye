@@ -110,6 +110,9 @@ class Instruction
    public static final byte OP_DEREF            = 0x2F;
 
    public static final byte OP_MATCH            = 0x30;
+
+   public static final byte OP_LOAD_FIELD       = 0x31;
+   public static final byte OP_STORE_FIELD      = 0x32;
    
    private Instruction()
    {

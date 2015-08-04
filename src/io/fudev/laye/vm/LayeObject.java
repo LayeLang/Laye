@@ -110,35 +110,32 @@ class LayeObject
       return(this.equals(that)); 
    }
    
-   public LayeObject load(LayeVM vm, LayeObject key)
+   public LayeObject getField(LayeVM vm, Identifier key)
    {
-      if (!(key instanceof LayeString))
-      {
-         // FIXME(sekai): add type name
-         throw new  LayeException(vm, "Attempt to index with type.");
-      }
-      Identifier name = Identifier.get(((LayeString)key).value);
-      LayeObject result = fields.get(name);
+      LayeObject result = fields.get(key);
       if (result == null)
       {
-         if ((result = typedef.methods.get(name)) == null)
+         if ((result = typedef.methods.get(key)) == null)
          {
-            throw new  LayeException(vm, "Field '" + name + "' does not exist.");
+            throw new  LayeException(vm, "Field '" + key + "' does not exist.");
          }
       }
       return(result);
    }
    
-   public void store(LayeVM vm, LayeObject key, LayeObject object)
+   public void setField(LayeVM vm, Identifier key, LayeObject object)
    {
-      if (!(key instanceof LayeString))
-      {
-         // FIXME(sekai): add type name
-         throw new  LayeException(vm, "Attempt to index with %s.",
-               object.getClass().getSimpleName());
-      }
-      Identifier name = Identifier.get(((LayeString)key).value);
-      fields.put(name, object);
+      fields.put(key, object);
+   }
+   
+   public LayeObject load(LayeVM vm, LayeObject index)
+   {
+      throw new LayeException(vm, "Attempt to index %s.", getClass().getSimpleName());
+   }
+   
+   public void store(LayeVM vm, LayeObject index, LayeObject value)
+   {
+      throw new LayeException(vm, "Attempt to index %s.", getClass().getSimpleName());
    }
    
    public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
@@ -146,9 +143,9 @@ class LayeObject
       throw new LayeException(vm, "Attempt to call %s.", getClass().getSimpleName());
    }
    
-   public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
+   public LayeObject invokeMethod(LayeVM vm, Identifier methodIndex, LayeObject... args)
    {
-      return vm.invoke(load(vm, methodIndex), this, args);
+      return vm.invoke(getField(vm, methodIndex), this, args);
    }
    
    public LayeObject deref(LayeVM vm)

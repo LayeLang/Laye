@@ -23,6 +23,7 @@
  */
 package io.fudev.laye.vm;
 
+import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -67,6 +68,18 @@ class LayeReference extends LayeObject
    }
 
    @Override
+   public LayeObject getField(LayeVM vm, Identifier key)
+   {
+      return(deref(vm).getField(vm, key));
+   }
+
+   @Override
+   public void setField(LayeVM vm, Identifier key, LayeObject object)
+   {
+      deref(vm).setField(vm, key, object);
+   }
+
+   @Override
    public LayeObject load(LayeVM vm, LayeObject key)
    {
       return(deref(vm).load(vm, key));
@@ -85,7 +98,7 @@ class LayeReference extends LayeObject
    }
 
    @Override
-   public LayeObject invokeMethod(LayeVM vm, LayeObject methodIndex, LayeObject... args)
+   public LayeObject invokeMethod(LayeVM vm, Identifier methodIndex, LayeObject... args)
    {
       return(deref(vm).invokeMethod(vm, methodIndex, args));
    }
@@ -201,5 +214,31 @@ class LayeIndexReference extends LayeReference
    public void store(LayeVM vm, LayeObject value)
    {
       object.store(vm, key, value);
+   }
+}
+
+@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
+class LayeFieldReference extends LayeReference
+{
+   private final LayeVM vm;
+   private final LayeObject object;
+   private final Identifier key;
+
+   @Override
+   public String toString()
+   {
+      return(object.getField(vm, key).toString());
+   }
+   
+   @Override
+   public LayeObject deref(LayeVM vm)
+   {
+      return(object.getField(vm, key));
+   }
+   
+   @Override
+   public void store(LayeVM vm, LayeObject value)
+   {
+      object.setField(vm, key, value);
    }
 }

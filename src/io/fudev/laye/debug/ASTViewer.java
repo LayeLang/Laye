@@ -346,6 +346,15 @@ class ASTViewer implements IASTVisitor
       node.index.accept(this);
       print("]");
    }
+
+   @Override
+   public void visit(NodeLoadField node)
+   {
+      print("(");
+      node.target.accept(this);
+      print(").");
+      print(node.index.image);
+   }
    
    @Override
    public void visit(NodeIf node)

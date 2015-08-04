@@ -65,6 +65,8 @@ interface IASTVisitor
 
    void visit(NodeLoadIndex node);
 
+   void visit(NodeLoadField node);
+
    void visit(NodeIf node);
 
    void visit(NodeNot node);

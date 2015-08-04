@@ -208,6 +208,13 @@ class FunctionCompiler implements IASTVisitor
          node.right.accept(this);
          builder.opStoreIndex();
       }
+      else if (node.left instanceof NodeLoadField)
+      {
+         NodeLoadField left = ((NodeLoadField)node.left);
+         left.target.accept(this);
+         node.right.accept(this);
+         builder.opStoreField(builder.addConstant(left.index));
+      }
       else
       {
          logger.logErrorf(node.location, ERROR_INVALID_ASSIGNMENT,
@@ -231,13 +238,12 @@ class FunctionCompiler implements IASTVisitor
    @Override
    public void visit(NodeInvoke node)
    {
-      if (node.target instanceof NodeLoadIndex)
+      if (node.target instanceof NodeLoadField)
       {
-         NodeLoadIndex load = (NodeLoadIndex)node.target;
+         NodeLoadField load = (NodeLoadField)node.target;
          load.target.accept(this);
-         load.index.accept(this);
          node.args.forEach(arg -> arg.accept(this));
-         builder.opInvokeMethod(node.args.size());
+         builder.opInvokeMethod(builder.addConstant(load.index), node.args.size());
       }
       else
       {
@@ -281,6 +287,13 @@ class FunctionCompiler implements IASTVisitor
       node.target.accept(this);
       node.index.accept(this);
       builder.opLoadIndex();
+   }
+   
+   @Override
+   public void visit(NodeLoadField node)
+   {
+      node.target.accept(this);
+      builder.opLoadField(builder.addConstant(node.index));
    }
    
    @Override
@@ -369,16 +382,17 @@ class FunctionCompiler implements IASTVisitor
       
       int whileTestFalse = builder.opJumpFalse(0);
       
+      int appendConst = -1;
       if (isResultRequired)
       {
+         appendConst = builder.addConstant(Identifier.get("Append"));
          builder.opDup();
-         builder.opCLoad(builder.addConstant(new LayeString("Append")));
       }
       node.pass.accept(this);
       if (isResultRequired)
       {
          // append the value to the list.
-         builder.opInvokeMethod(1);
+         builder.opInvokeMethod(appendConst, 1);
          builder.opPop();
       }
       builder.opJump(conditionStart);

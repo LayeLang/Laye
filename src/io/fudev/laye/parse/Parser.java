@@ -424,8 +424,7 @@ class Parser
             next();
             Location location = getLocation();
             Identifier ident = expectIdentifier();
-            node = postfix(new NodeLoadIndex(node.location, node,
-                  new NodeStringLiteral(location, new LayeString(ident.image))));
+            node = postfix(new NodeLoadField(node.location, node, ident));
          } break;
          case KEYWORD:
          {

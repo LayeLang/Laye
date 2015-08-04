@@ -30,6 +30,7 @@ import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
+import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 import lombok.EqualsAndHashCode;
@@ -301,6 +302,24 @@ class LayeVM extends LayeObject
             }
             top.push(value);
          } return;
+         case OP_LOAD_FIELD:
+         {
+            top.push(top.pop().getField(this, (Identifier)consts[insn >>> POS_C]));
+         } return;
+         case OP_STORE_FIELD:
+         {
+            Identifier index = (Identifier)consts[insn >>> POS_C];
+            LayeObject value = top.pop(), target = top.pop(), temp;
+            if ((temp = target.getField(this, index)) instanceof LayeReference)
+            {
+               ((LayeReference)temp).store(this, value);
+            }
+            else
+            {
+               target.setField(this, index, value);
+            }
+            top.push(value);
+         } return;
 
          case OP_NLOAD:
          {
@@ -407,7 +426,8 @@ class LayeVM extends LayeObject
          } return;
          case OP_INVOKE_METHOD:
          {
-            LayeObject args[] = top.popCount(insn >>> POS_C), index = top.pop();
+            Identifier index = (Identifier)consts[(insn >>> POS_A) & MAX_A];
+            LayeObject args[] = top.popCount((insn >>> POS_B) & MAX_B);
             top.push(top.pop().invokeMethod(this, index, args));
          } return;
          case OP_INVOKE_BASE:
@@ -530,6 +550,11 @@ class LayeVM extends LayeObject
                {
                   LayeObject index = top.pop();
                   top.push(new LayeIndexReference(this, top.pop(), index));
+               } return;
+               case 4: // Field
+               {
+                  top.push(new LayeFieldReference(this, top.pop(),
+                        (Identifier)consts[(insn >>> POS_B) & MAX_B]));
                } return;
                default:
                {
