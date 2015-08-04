@@ -56,9 +56,29 @@ class LayeObject
       return(false);
    }
    
+   public boolean isInt(LayeVM vm)
+   {
+      return(false);
+   }
+   
+   public boolean isFloat(LayeVM vm)
+   {
+      return(false);
+   }
+   
+   public int intValue(LayeVM vm)
+   {
+      return((int)longValue(vm));
+   }
+   
    public long longValue(LayeVM vm)
    {
       return(0L);
+   }
+   
+   public float floatValue(LayeVM vm)
+   {
+      return((float)doubleValue(vm));
    }
    
    public double doubleValue(LayeVM vm)
