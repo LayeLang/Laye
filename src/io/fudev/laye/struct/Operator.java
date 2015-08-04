@@ -105,7 +105,7 @@ class Operator
    
    public static boolean isOperatorChar(int codepoint)
    {
-      return("~!@$%^&*-+=\\|<>/?".indexOf(codepoint) != -1);
+      return("~!%^&*-+=\\|<>/?".indexOf(codepoint) != -1);
    }
    
    public final String image;
