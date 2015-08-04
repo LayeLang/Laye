@@ -40,13 +40,22 @@ import net.fudev.faxlib.collections.List;
 public @EqualsAndHashCode(callSuper = true)
 class LayeList extends LayeObject implements Iterable<LayeObject>
 {
-   private final List<LayeObject> list = new List<>();
+   private static final LayeTypeDef TYPEDEF_LIST = new LayeTypeDef();
    
-   public LayeList()
+   static
    {
-      fields.put(Identifier.get("Map"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod(Identifier.get("ForEach"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
+         List<LayeObject> list = ((LayeList)thisObject).list;
+         LayeObject fn = args[0];
+         list.forEach(value -> fn.invoke(vm, null, value));
+         return(NULL);
+      }));
+      TYPEDEF_LIST.addMethod(Identifier.get("Map"), new LayeFunction((vm, thisObject, args) ->
+      {
+         // FIXME(sekai): proper error checking plz
+         List<LayeObject> list = ((LayeList)thisObject).list;
          LayeList result = new LayeList();
          LayeObject fn = args[0];
          for (int i = 0; i < list.size(); i++)
@@ -55,30 +64,31 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
          }
          return(result);
       }));
-      fields.put(Identifier.get("Replace"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod(Identifier.get("Replace"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
+         List<LayeObject> list = ((LayeList)thisObject).list;
          LayeObject fn = args[0];
          for (int i = 0; i < list.size(); i++)
          {
             list.set(i, fn.invoke(vm, null, list.get(i)));
          }
-         return(this);
+         return(thisObject);
       }));
-      fields.put(Identifier.get("ForEach"), new LayeFunction((vm, thisObject, args) ->
-      {
-         // FIXME(sekai): proper error checking plz
-         LayeObject fn = args[0];
-         list.forEach(value -> fn.invoke(vm, null, value));
-         return(NULL);
-      }));
-      fields.put(Identifier.get("Append"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod(Identifier.get("Append"), new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(sekai): proper error checking plz
          LayeObject value = args[0];
-         append(value);
+         ((LayeList)thisObject).append(value);
          return(NULL);
       }));
+   }
+   
+   private final List<LayeObject> list = new List<>();
+   
+   public LayeList()
+   {
+      super(TYPEDEF_LIST);
    }
    
    public LayeList(LayeObject... values)
