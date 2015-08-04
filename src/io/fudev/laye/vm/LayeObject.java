@@ -46,7 +46,6 @@ class LayeObject
    
    public LayeObject()
    {
-      // TODO remove this ctor and use typedefs
       typedef = new LayeTypeDef();
    }
    
