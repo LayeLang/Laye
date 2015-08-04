@@ -134,7 +134,8 @@ class LayeObject
       if (!(key instanceof LayeString))
       {
          // FIXME(sekai): add type name
-         throw new  LayeException(vm, "Attempt to index with type.");
+         throw new  LayeException(vm, "Attempt to index with %s.",
+               object.getClass().getSimpleName());
       }
       Identifier name = Identifier.get(((LayeString)key).value);
       fields.put(name, object);
