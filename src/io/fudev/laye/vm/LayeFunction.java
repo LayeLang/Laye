@@ -29,7 +29,7 @@ import lombok.RequiredArgsConstructor;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+public @EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
 class LayeFunction extends LayeComposable
 {
    public static @FunctionalInterface
@@ -44,6 +44,12 @@ class LayeFunction extends LayeComposable
    public String toString()
    {
       return ("function:TODO");
+   }
+
+   @Override
+   public boolean isFunction(LayeVM vm)
+   {
+      return(true);
    }
 
    @Override

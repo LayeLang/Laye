@@ -23,6 +23,7 @@
  */
 package io.fudev.laye.vm;
 
+import io.fudev.laye.struct.Operator;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
@@ -90,19 +91,19 @@ class LayeReference extends LayeObject
    }
 
    @Override
-   public LayeObject prefix(LayeVM vm, String op)
+   public LayeObject prefix(LayeVM vm, Operator op)
    {
       return(deref(vm).prefix(vm, op));
    }
 
    @Override
-   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, Operator op, LayeObject that)
    {
       return(deref(vm).infix(vm, op, that));
    }
 }
 
-@EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
 class LayeGlobalReference extends LayeReference
 {
    private final SharedState state;
@@ -127,7 +128,7 @@ class LayeGlobalReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
 class LayeOuterReference extends LayeReference
 {
    private final OuterValue[] captures;
@@ -152,7 +153,7 @@ class LayeOuterReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
 class LayeLocalReference extends LayeReference
 {
    private final StackFrame frame;
@@ -177,7 +178,7 @@ class LayeLocalReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = false) @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
 class LayeIndexReference extends LayeReference
 {
    private final LayeVM vm;

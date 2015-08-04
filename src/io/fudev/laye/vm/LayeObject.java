@@ -27,11 +27,13 @@ import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
+import io.fudev.laye.struct.Operator;
+import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public abstract
+public @EqualsAndHashCode
 class LayeObject
 {
    public static final LayeNull NULL = LayeNull.INSTANCE;
@@ -39,17 +41,24 @@ class LayeObject
    public static final LayeBool TRUE  = LayeBool.BOOL_TRUE;
    public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
+   final LayeTypeDef typedef;
    final HashMap<Identifier, LayeObject> fields = new HashMap<>();
    
    public LayeObject()
    {
+      // TODO remove this ctor and use typedefs
+      typedef = new LayeTypeDef();
    }
    
-   public abstract String toString();
-
-   public abstract int hashCode();
-
-   public abstract boolean equals(Object obj);
+   public LayeObject(LayeTypeDef typedef)
+   {
+      this.typedef = typedef;
+   }
+   
+   public String toString()
+   {
+      return "LayeObject:TODO"; // TODO(sekai): toString() for LayeObject
+   }
    
    public boolean isNumeric(LayeVM vm)
    {
@@ -62,6 +71,11 @@ class LayeObject
    }
    
    public boolean isFloat(LayeVM vm)
+   {
+      return(false);
+   }
+   
+   public boolean isFunction(LayeVM vm)
    {
       return(false);
    }
@@ -93,7 +107,8 @@ class LayeObject
    
    public boolean compareEquals(LayeVM vm, LayeObject that)
    {
-      return(this.equals(that));
+      // FIXME(sekai): call operator == overloads
+      return(this.equals(that)); 
    }
    
    public LayeObject load(LayeVM vm, LayeObject key)
@@ -107,7 +122,10 @@ class LayeObject
       LayeObject result = fields.get(name);
       if (result == null)
       {
-         throw new  LayeException(vm, "Field '" + name + "' does not exist.");
+         if ((result = typedef.methods.get(name)) == null)
+         {
+            throw new  LayeException(vm, "Field '" + name + "' does not exist.");
+         }
       }
       return(result);
    }
@@ -138,27 +156,25 @@ class LayeObject
       return(this);
    }
 
-   public LayeObject prefix(LayeVM vm, String op)
+   public LayeObject prefix(LayeVM vm, Operator op)
    {
-      // FIXME(sekai): add type name
-      throw new LayeException(vm, "Attempt to perform prefix operation '%s' on type.", op);
+      LayeObject prefix = typedef.prefix.get(op);
+      if (prefix == null)
+      {
+         // FIXME(sekai): add type name
+         throw new LayeException(vm, "Attempt to perform prefix operation '%s' on type.", op.image);
+      }
+      return(vm.invoke(prefix, this));
    }
 
-   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, Operator op, LayeObject that)
    {
-      // FIXME(sekai): add type name
-      switch (op)
+      LayeObject infix = typedef.infix.get(op);
+      if (infix == null)
       {
-         case "==":
-         {
-            return compareEquals(vm, that) ? TRUE : FALSE;
-         }
-         case "!=":
-         {
-            return compareEquals(vm, that) ? FALSE : TRUE;
-         }
+         // FIXME(sekai): add type name
+         throw new LayeException(vm, "Attempt to perform infix operation '%s' on type.", op.image);
       }
-      throw new LayeException(vm, "Attempt to perform infix operation '%s' on %s.", op,
-            getClass().getSimpleName());
+      return(vm.invoke(infix, this, that));
    }
 }

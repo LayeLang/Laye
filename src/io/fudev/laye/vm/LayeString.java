@@ -23,12 +23,13 @@
  */
 package io.fudev.laye.vm;
 
+import io.fudev.laye.struct.Operator;
 import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) 
+public @EqualsAndHashCode(callSuper = true) 
 class LayeString extends LayeObject
 {
    public final String value;
@@ -45,9 +46,9 @@ class LayeString extends LayeObject
    }
 
    @Override
-   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, Operator op, LayeObject that)
    {
-      switch (op)
+      switch (op.image)
       {
          case "<>":
          {

@@ -24,12 +24,13 @@
 package io.fudev.laye.vm;
 
 import io.fudev.laye.LayeException;
+import io.fudev.laye.struct.Operator;
 import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode(callSuper = false) 
+public final @EqualsAndHashCode(callSuper = true) 
 class LayeFloat extends LayeObject
 {
    public static final LayeFloat FM1 = new LayeFloat(-1.0);
@@ -85,9 +86,9 @@ class LayeFloat extends LayeObject
    }
    
    @Override
-   public LayeObject prefix(LayeVM vm, String op)
+   public LayeObject prefix(LayeVM vm, Operator op)
    {
-      switch (op)
+      switch (op.image)
       {
          case "+": return(this);
          case "-": return(new LayeFloat(-value));
@@ -96,11 +97,11 @@ class LayeFloat extends LayeObject
    }
 
    @Override
-   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, Operator op, LayeObject that)
    {
       if (that.isNumeric(vm))
       {
-         switch (op)
+         switch (op.image)
          {
             case "+":
             {

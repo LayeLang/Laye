@@ -31,7 +31,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false)
+public @EqualsAndHashCode(callSuper = true)
 class LayeTuple extends LayeObject
 {
    private final LayeObject[] values;

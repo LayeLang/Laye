@@ -23,6 +23,8 @@
  */
 package io.fudev.laye.vm;
 
+import io.fudev.laye.struct.Operator;
+
 /**
  * @author Sekai Kyoretsuna
  */
@@ -30,9 +32,9 @@ public
 abstract class LayeComposable extends LayeObject
 {
    @Override
-   public LayeObject infix(LayeVM vm, String op, LayeObject that)
+   public LayeObject infix(LayeVM vm, Operator op, LayeObject that)
    {
-      switch (op)
+      switch (op.image)
       {
          case "|>":
          {

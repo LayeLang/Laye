@@ -29,7 +29,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false)
+public @EqualsAndHashCode(callSuper = true)
 class LayeClosure extends LayeComposable
 {
    public final FunctionPrototype proto;
@@ -45,6 +45,12 @@ class LayeClosure extends LayeComposable
    public String toString()
    {
       return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
+   }
+
+   @Override
+   public boolean isFunction(LayeVM vm)
+   {
+      return(true);
    }
 
    @Override

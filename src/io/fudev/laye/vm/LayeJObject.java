@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode(callSuper = false)
+public final @EqualsAndHashCode(callSuper = true)
 class LayeJObject extends LayeObject
 {
    final Object instance;

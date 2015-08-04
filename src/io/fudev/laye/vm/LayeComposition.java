@@ -29,7 +29,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) @AllArgsConstructor
+public @EqualsAndHashCode(callSuper = true) @AllArgsConstructor
 class LayeComposition extends LayeObject
 {
    private LayeObject first, second;
@@ -38,6 +38,12 @@ class LayeComposition extends LayeObject
    public String toString()
    {
       return("Composition:TODO"); // TODO(sekai): toString() for compositions
+   }
+
+   @Override
+   public boolean isFunction(LayeVM vm)
+   {
+      return(true);
    }
 
    @Override

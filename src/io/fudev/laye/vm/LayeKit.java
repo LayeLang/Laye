@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false) 
+public @EqualsAndHashCode(callSuper = true) 
 class LayeKit extends LayeObject
 {
    public LayeKit()

@@ -23,7 +23,10 @@
  */
 package io.fudev.laye.vm;
 
+import java.util.HashMap;
+
 import io.fudev.laye.struct.Identifier;
+import io.fudev.laye.struct.Operator;
 
 /**
  * @author Sekai Kyoretsuna
@@ -31,12 +34,26 @@ import io.fudev.laye.struct.Identifier;
 public
 class LayeTypeDef
 {
+   HashMap<Identifier, LayeObject> methods = new HashMap<>();
+   HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
+   private HashMap<Identifier, LayeObject> ctors = new HashMap<>();
+   
    public LayeTypeDef()
    {
    }
    
    public LayeObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
    {
-      return(null);
+      LayeObject result = new LayeObject(this);
+      return(result);
+   }
+   
+   public void addMethod(Identifier name, LayeObject value)
+   {
+      if (methods.get(name) != null)
+      {
+         return;
+      }
+      methods.put(name, value);
    }
 }

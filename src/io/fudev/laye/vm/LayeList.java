@@ -37,7 +37,7 @@ import net.fudev.faxlib.collections.List;
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = false)
+public @EqualsAndHashCode(callSuper = true)
 class LayeList extends LayeObject implements Iterable<LayeObject>
 {
    private final List<LayeObject> list = new List<>();
