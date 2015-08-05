@@ -35,6 +35,7 @@ import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Keyword;
 import io.fudev.laye.struct.Operator;
+import io.fudev.laye.util.Pair;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
 import io.fudev.laye.vm.LayeString;
@@ -169,7 +170,15 @@ class Parser
             {
                case Keyword.STR_FN:
                {
+                  if (peekCheck(1, Token.Type.OPEN_BRACE))
+                  {
+                     break;
+                  }
                   return(parseFunctionDefinition());
+               }
+               case Keyword.STR_TYPE:
+               {
+                  return(parseTypeDefinition());
                }
                default:
                {
@@ -422,7 +431,6 @@ class Parser
          {
             // nom '.'
             next();
-            Location location = getLocation();
             Identifier ident = expectIdentifier();
             node = postfix(new NodeLoadField(node.location, node, ident));
          } break;
@@ -623,6 +631,58 @@ class Parser
       next();
       
       def.data = getFunctionData();
+      
+      return(def);
+   }
+   
+   private TypeData getTypeData()
+   {
+      TypeData data = new TypeData();
+
+      // nom '{'
+      expect(Token.Type.OPEN_CURLY_BRACE);
+      
+      while (!check(Token.Type.CLOSE_CURLY_BRACE))
+      {
+         switch (token.type)
+         {
+            case KEYWORD:
+            {
+               switch(((Keyword)token.data).image)
+               {
+                  case Keyword.STR_VAR:
+                  {
+                     NodeVariableDef vars = parseVariableDefinition();
+                     data.publicFields.append(vars);
+                  } break;
+               }
+            } continue;
+            default:
+            {
+               // TODO(sekai): error, encountered unexpected token!
+               next();
+            } continue;
+         }
+      }
+
+      // nom '}'
+      expect(Token.Type.CLOSE_CURLY_BRACE);
+      
+      return(data);
+   }
+   
+   private NodeTypeDef parseTypeDefinition()
+   {
+      NodeTypeDef def = new NodeTypeDef(getLocation());
+      
+      // nom 'type'
+      next();
+      
+      def.name = expectIdentifier();
+      
+      // TODO(sekai): check for extension (when implemented)
+      
+      def.data = getTypeData();
       
       return(def);
    }

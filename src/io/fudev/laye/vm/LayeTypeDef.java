@@ -39,7 +39,7 @@ class LayeTypeDef extends LayeObject
    HashMap<Identifier, LayeObject> methods = new HashMap<>();
    HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
    
-   private LayeObject varCtor = null;
+   private LayeObject initCtor = null;
    private HashMap<Identifier, LayeObject> ctors = new HashMap<>();
    
    public LayeTypeDef()
@@ -50,9 +50,9 @@ class LayeTypeDef extends LayeObject
    public LayeObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);
-      if (varCtor != null)
+      if (initCtor != null)
       {
-         vm.invoke(varCtor, result);
+         vm.invoke(initCtor, result);
       }
       LayeObject ctor = ctors.get(ctorName);
       if (ctor == null)
