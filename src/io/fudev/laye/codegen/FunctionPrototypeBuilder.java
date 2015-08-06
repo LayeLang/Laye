@@ -42,8 +42,6 @@ import net.fudev.faxlib.collections.List;
 public @RequiredArgsConstructor
 class FunctionPrototypeBuilder
 {
-   // TODO(sekai): Maybe consolidate these?
-   
    private final @RequiredArgsConstructor
    class Scope
    {

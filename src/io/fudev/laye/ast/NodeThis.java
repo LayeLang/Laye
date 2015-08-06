@@ -39,12 +39,13 @@ public class NodeThis extends NodeExpression
    @Override
    public void accept(IASTVisitor visitor)
    {
-      visitor.visit(this);
+      // TODO(sekai): visitor.visit(this);
    }
    
    @Override
    public ASTNode accept(ASTProcessor processor)
    {
-      return(processor.process(this));
+      // TODO(sekai): return(processor.process(this));
+      return(null);
    }
 }

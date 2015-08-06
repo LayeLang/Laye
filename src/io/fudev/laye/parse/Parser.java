@@ -163,7 +163,6 @@ class Parser
    {
       switch (token.type)
       {
-         // TODO(sekai): Statements
          case KEYWORD:
          {
             switch (((Keyword)token.data).image)
@@ -387,9 +386,6 @@ class Parser
          {
          } break;
       }
-      // TODO(sekai): is this needed? I think callers should error check!
-//      logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
-//            "Failed to parse expression on token '%s'\n", token.toString());
       return(null);
    }
    
@@ -527,7 +523,6 @@ class Parser
        return(expr);
    }
    
-   // TODO add precedence
    private NodeExpression factorRHS(NodeExpression left, int minp)
    {
       while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence >= minp)

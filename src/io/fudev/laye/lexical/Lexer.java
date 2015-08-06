@@ -46,8 +46,6 @@ import io.fudev.laye.vm.LayeInt;
 import io.fudev.laye.vm.LayeString;
 
 /**
- * TODO(sekai): all unicode characters should eventually be supported in here, plz.
- * 
  * @author Sekai Kyoretsuna
  */
 public class Lexer

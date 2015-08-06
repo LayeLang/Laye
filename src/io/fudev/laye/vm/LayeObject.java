@@ -158,8 +158,8 @@ class LayeObject
       LayeObject prefix = typedef.prefix.get(op);
       if (prefix == null)
       {
-         // FIXME(sekai): add type name
-         throw new LayeException(vm, "Attempt to perform prefix operation '%s' on type.", op.image);
+         throw new LayeException(vm, "Attempt to perform prefix operation '%s' on %s.",
+               op.image, getClass().getSimpleName());
       }
       return(vm.invoke(prefix, this));
    }
@@ -169,8 +169,8 @@ class LayeObject
       LayeObject infix = typedef.infix.get(op);
       if (infix == null)
       {
-         // FIXME(sekai): add type name
-         throw new LayeException(vm, "Attempt to perform infix operation '%s' on type.", op.image);
+         throw new LayeException(vm, "Attempt to perform infix operation '%s' on %s.",
+               op.image, getClass().getSimpleName());
       }
       return(vm.invoke(infix, this, that));
    }

@@ -206,7 +206,6 @@ class LayeInt extends LayeObject
             {
                if (that instanceof LayeInt)
                {
-                  // TODO(sekai): make sure this works, it should but make sure.
                   long pow = ((LayeInt)that).value;
                   boolean negative = pow < 0L;
                   if (negative)
@@ -359,8 +358,8 @@ class LayeInt extends LayeObject
             default: return(super.infix(vm, op, that));
          }
       }
-      // FIXME(sekai): add type name
       throw new LayeException(vm, 
-            "Attempt to perform infix operation '%s' on type with type.", op);
+            "Attempt to perform infix operation '%s' on %s with %s.", op,
+            getClass().getSimpleName(), that.getClass().getSimpleName());
    }
 }

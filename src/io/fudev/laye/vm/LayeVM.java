@@ -89,7 +89,7 @@ class LayeVM extends LayeObject
    @Override
    public String toString()
    {
-      return "LayeVM:TODO"; // FIXME(sekai): Add a toString to LayeVM.
+      return "LayeVM:TODO"; // TODO(sekai): Add a toString to LayeVM.
    }
    
    /**
@@ -239,8 +239,6 @@ class LayeVM extends LayeObject
             top.dup();
          } return;
          
-         // TODO(sekai): stores DON'T pop the value.
-
          case OP_LOAD_LOCAL:
          {
             top.push(top.load(insn >>> POS_C));

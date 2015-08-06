@@ -63,7 +63,10 @@ class LayeReference extends LayeObject
    @Override
    public boolean compareEquals(LayeVM vm, LayeObject that)
    {
-      // FIXME(sekai): check references first, then dereference.
+      if (that instanceof LayeReference && this.equals(that))
+      {
+         return(true);
+      }
       return(deref(vm).compareEquals(vm, that));
    }
 
