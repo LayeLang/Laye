@@ -26,7 +26,7 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import net.fudev.faxlib.collections.List;
+import io.fudev.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

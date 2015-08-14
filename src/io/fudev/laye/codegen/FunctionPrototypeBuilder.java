@@ -25,6 +25,7 @@ package io.fudev.laye.codegen;
 
 import static io.fudev.laye.vm.Instruction.*;
 
+import io.fudev.collections.List;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.LocalValueInfo;
@@ -32,7 +33,6 @@ import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

@@ -23,8 +23,8 @@
  */
 package io.fudev.laye.ast;
 
+import io.fudev.collections.List;
 import io.fudev.laye.struct.Identifier;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

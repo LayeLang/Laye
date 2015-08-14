@@ -23,15 +23,14 @@
  */
 package io.fudev.laye.vm;
 
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Spliterator;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
+import java.util.function.Function;
 
+import io.fudev.collections.List;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
@@ -80,7 +79,7 @@ class LayeList
       {
          // FIXME(sekai): proper error checking plz
          LayeObject value = args[0];
-         ((LayeList)thisObject).append(value);
+         ((LayeList)thisObject).list.append(value);
          return(NULL);
       }));
    }
@@ -166,33 +165,23 @@ class LayeList
       }
       return true;
    }
-
-   public void append(LayeObject value)
+   
+   public void append(LayeObject object)
    {
-      list.append(value);
+      list.append(object);
    }
-
-   public void appendAll(LayeObject[] values)
-   {
-      list.appendAll(values);
-   }
-
-   public void clear()
-   {
-      list.clear();
-   }
-
-   public boolean contains(LayeObject value)
-   {
-      return list.contains(value);
-   }
-
+   
    @Override
    public void forEach(Consumer<? super LayeObject> action)
    {
       list.forEach(action);
    }
-   
+
+   public List<LayeObject> map(Function<? super LayeObject, ? extends LayeObject> action)
+   {
+      return list.map(action);
+   }
+
    @Override
    public LayeObject load(LayeVM vm, LayeObject key)
    {
@@ -208,85 +197,10 @@ class LayeList
       return(super.load(vm, key));
    }
 
-   public LayeObject get(int index)
-   {
-      return list.get(index);
-   }
-
-   public int indexOf(LayeObject value)
-   {
-      return list.indexOf(value);
-   }
-
-   public void insert(LayeObject value, int index)
-   {
-      list.insert(value, index);
-   }
-
-   public boolean isEmpty()
-   {
-      return list.isEmpty();
-   }
-
    @Override
    public Iterator<LayeObject> iterator()
    {
       return list.iterator();
-   }
-
-   public int lastIndexOf(LayeObject value)
-   {
-      return list.lastIndexOf(value);
-   }
-
-   public void prepend(LayeObject value)
-   {
-      list.prepend(value);
-   }
-
-   public void prependAll(LayeObject[] values)
-   {
-      list.prependAll(values);
-   }
-
-   public boolean remove(LayeObject value)
-   {
-      return list.remove(value);
-   }
-
-   public int removeAll(LayeObject value)
-   {
-      return list.removeAll(value);
-   }
-
-   public int removeAll(LayeObject[] values)
-   {
-      return list.removeAll(values);
-   }
-
-   public int removeAll(Predicate<LayeObject> predicate)
-   {
-      return list.removeAll(predicate);
-   }
-
-   public LayeObject removeAt(int index)
-   {
-      return list.removeAt(index);
-   }
-
-   public int retainAll(LayeObject value)
-   {
-      return list.retainAll(value);
-   }
-
-   public int retainAll(LayeObject[] values)
-   {
-      return list.retainAll(values);
-   }
-
-   public int retainAll(Predicate<LayeObject> predicate)
-   {
-      return list.retainAll(predicate);
    }
    
    @Override
@@ -307,29 +221,9 @@ class LayeList
       }
    }
 
-   public LayeObject set(int index, LayeObject value)
-   {
-      return list.set(index, value);
-   }
-
-   public void sort()
-   {
-      list.sort();
-   }
-
-   public void sort(Comparator<? super LayeObject> comparator)
-   {
-      list.sort(comparator);
-   }
-
    @Override
    public Spliterator<LayeObject> spliterator()
    {
       return list.spliterator();
-   }
-
-   public LayeObject[] toArray()
-   {
-      return list.toArray();
    }
 }

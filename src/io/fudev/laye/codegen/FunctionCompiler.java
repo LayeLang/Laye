@@ -23,7 +23,10 @@
  */
 package io.fudev.laye.codegen;
 
-import static io.fudev.laye.log.LogMessageID.*;
+import static io.fudev.laye.log.LogMessageID.ERROR_DUPLICATE_CASE;
+import static io.fudev.laye.log.LogMessageID.ERROR_INVALID_ASSIGNMENT;
+import static io.fudev.laye.log.LogMessageID.ERROR_INVALID_CASE;
+import static io.fudev.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 
 import java.util.HashMap;
 
@@ -32,7 +35,6 @@ import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.vm.LayeObject;
-import io.fudev.laye.vm.LayeString;
 
 /**
  * @author Sekai Kyoretsuna

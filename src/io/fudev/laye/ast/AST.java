@@ -25,8 +25,8 @@ package io.fudev.laye.ast;
 
 import java.util.Iterator;
 
+import io.fudev.collections.List;
 import io.fudev.laye.process.ASTProcessor;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

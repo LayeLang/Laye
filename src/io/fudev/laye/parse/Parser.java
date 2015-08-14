@@ -27,6 +27,7 @@ import static io.fudev.laye.log.LogMessageID.ERROR_UNEXPECTED_TOKEN;
 import static io.fudev.laye.log.LogMessageID.ERROR_UNFINISHED_INFIX;
 import static io.fudev.laye.log.LogMessageID.ERROR_UNFINISHED_SCOPE;
 
+import io.fudev.collections.List;
 import io.fudev.laye.ast.*;
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.lexical.Token;
@@ -35,11 +36,9 @@ import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Keyword;
 import io.fudev.laye.struct.Operator;
-import io.fudev.laye.util.Pair;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
 import io.fudev.laye.vm.LayeString;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

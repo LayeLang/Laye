@@ -23,7 +23,7 @@
  */
 package io.fudev.laye;
 
-import net.fudev.faxlib.collections.List;
+import io.fudev.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

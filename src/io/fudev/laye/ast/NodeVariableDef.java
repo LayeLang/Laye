@@ -25,11 +25,11 @@ package io.fudev.laye.ast;
 
 import java.util.Iterator;
 
+import io.fudev.collections.List;
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.util.Pair;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

@@ -28,8 +28,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
+import io.fudev.collections.List;
 import io.fudev.laye.struct.Identifier;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna

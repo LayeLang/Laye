@@ -25,9 +25,9 @@ package io.fudev.laye.process;
 
 import static io.fudev.laye.log.LogMessageID.ERROR_INVALID_BLOCK;
 
+import io.fudev.collections.List;
 import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
-import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
