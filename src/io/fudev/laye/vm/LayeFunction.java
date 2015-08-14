@@ -23,14 +23,12 @@
  */
 package io.fudev.laye.vm;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeFunction extends LayeComposable
+public
+class LayeFunction
+   extends LayeComposable
 {
    public static @FunctionalInterface
    interface Callback
@@ -40,10 +38,52 @@ class LayeFunction extends LayeComposable
    
    public final Callback callback;
    
+   public LayeFunction(Callback callback)
+   {
+      this.callback = callback;
+   }
+   
    @Override
    public String toString()
    {
       return ("function:TODO");
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      return prime + ((callback == null) ? 0 : callback.hashCode());
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeFunction))
+      {
+         return false;
+      }
+      LayeFunction other = (LayeFunction) obj;
+      if (callback == null)
+      {
+         if (other.callback != null)
+         {
+            return false;
+         }
+      }
+      else if (!callback.equals(other.callback))
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override

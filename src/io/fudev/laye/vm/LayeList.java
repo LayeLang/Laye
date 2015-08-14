@@ -31,14 +31,15 @@ import java.util.function.Predicate;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
-import lombok.EqualsAndHashCode;
 import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true)
-class LayeList extends LayeObject implements Iterable<LayeObject>
+public
+class LayeList
+   extends LayeObject
+   implements Iterable<LayeObject>
 {
    private static final LayeTypeDef TYPEDEF_LIST = new LayeTypeDef();
    
@@ -125,6 +126,45 @@ class LayeList extends LayeObject implements Iterable<LayeObject>
    public String toString()
    {
       return(list.toString());
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((list == null) ? 0 : list.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeList))
+      {
+         return false;
+      }
+      LayeList other = (LayeList) obj;
+      if (list == null)
+      {
+         if (other.list != null)
+         {
+            return false;
+         }
+      }
+      else if (!list.equals(other.list))
+      {
+         return false;
+      }
+      return true;
    }
 
    public void append(LayeObject value)

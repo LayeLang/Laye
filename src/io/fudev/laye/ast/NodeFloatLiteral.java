@@ -31,7 +31,8 @@ import io.fudev.laye.vm.LayeFloat;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFloatLiteral extends NodeExpression
+class NodeFloatLiteral
+   extends NodeExpression
 {
    public LayeFloat value;
    

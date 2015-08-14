@@ -31,7 +31,8 @@ import io.fudev.laye.struct.Operator;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeInfixExpression extends NodeExpression
+class NodeInfixExpression
+   extends NodeExpression
 {
    public NodeExpression left = null, right = null;
    public Operator operator;

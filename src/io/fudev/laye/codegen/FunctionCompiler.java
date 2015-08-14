@@ -38,7 +38,8 @@ import io.fudev.laye.vm.LayeString;
  * @author Sekai Kyoretsuna
  */
 public
-class FunctionCompiler implements IASTVisitor
+class FunctionCompiler
+   implements IASTVisitor
 {
    public final DetailLogger logger;
    public FunctionPrototypeBuilder builder;

@@ -31,7 +31,8 @@ import io.fudev.laye.struct.Identifier;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFunctionDef extends ASTNode
+class NodeFunctionDef
+   extends ASTNode
 {
    public Identifier name = null;
    public FunctionData data = new FunctionData();

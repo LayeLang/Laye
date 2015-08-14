@@ -31,7 +31,8 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeScope extends NodeExpression
+class NodeScope
+   extends NodeExpression
 {
    public List<ASTNode> body = new List<ASTNode>();
    

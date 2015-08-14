@@ -32,7 +32,9 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class AST extends ASTNode implements Iterable<ASTNode>
+class AST
+   extends ASTNode
+   implements Iterable<ASTNode>
 {
    public List<ASTNode> children = new List<>();
    

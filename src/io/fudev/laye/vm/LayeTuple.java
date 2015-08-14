@@ -26,13 +26,13 @@ package io.fudev.laye.vm;
 import java.util.Arrays;
 
 import io.fudev.laye.LayeException;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true)
-class LayeTuple extends LayeObject
+public
+class LayeTuple
+   extends LayeObject
 {
    private final LayeObject[] values;
    
@@ -54,6 +54,38 @@ class LayeTuple extends LayeObject
          result.append(values[i].toString());
       }
       return(result.append(')').toString());
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + Arrays.hashCode(values);
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeTuple))
+      {
+         return false;
+      }
+      LayeTuple other = (LayeTuple) obj;
+      if (!Arrays.equals(values, other.values))
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override

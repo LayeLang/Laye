@@ -35,7 +35,8 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class LayeJTypeDef extends LayeTypeDef
+class LayeJTypeDef
+   extends LayeTypeDef
 {
    public static LayeJTypeDef get(Class<?> _class)
    {

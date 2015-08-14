@@ -31,7 +31,8 @@ import io.fudev.laye.struct.Identifier;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeLoadField extends NodeExpression
+class NodeLoadField
+   extends NodeExpression
 {
    public NodeExpression target;
    public Identifier index;

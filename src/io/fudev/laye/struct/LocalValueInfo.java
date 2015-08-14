@@ -18,12 +18,10 @@
  */
 package io.fudev.laye.struct;
 
-import lombok.AllArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @AllArgsConstructor
+public
 class LocalValueInfo
 {
    private static final int IS_OUTER_VALUE = -1;
@@ -43,6 +41,14 @@ class LocalValueInfo
       this(that.name, that.location, that.startOp, that.endOp);
    }
    
+   public LocalValueInfo(Identifier name, int location, int startOp, int endOp)
+   {
+      this.name = name;
+      this.location = location;
+      this.startOp = startOp;
+      this.endOp = endOp;
+   }
+
    public void markAsOuterValue()
    {
       endOp = IS_OUTER_VALUE;
@@ -51,5 +57,59 @@ class LocalValueInfo
    public boolean isOuterValue()
    {
       return(endOp == IS_OUTER_VALUE);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + endOp;
+      result = prime * result + location;
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + startOp;
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LocalValueInfo))
+      {
+         return false;
+      }
+      LocalValueInfo other = (LocalValueInfo) obj;
+      if (endOp != other.endOp)
+      {
+         return false;
+      }
+      if (location != other.location)
+      {
+         return false;
+      }
+      if (name == null)
+      {
+         if (other.name != null)
+         {
+            return false;
+         }
+      }
+      else if (!name.equals(other.name))
+      {
+         return false;
+      }
+      if (startOp != other.startOp)
+      {
+         return false;
+      }
+      return true;
    }
 }

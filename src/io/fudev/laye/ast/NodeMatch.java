@@ -31,7 +31,8 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeMatch extends NodeExpression
+class NodeMatch
+   extends NodeExpression
 {
    public NodeExpression match = null;
    // NOTE: the expressions MUST evaluate to LayeObject constants.

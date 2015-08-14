@@ -23,6 +23,8 @@
  */
 package io.fudev.laye.struct;
 
+import java.util.Arrays;
+
 /**
  * @author Sekai Kyoretsuna
  */
@@ -37,4 +39,71 @@ class FunctionPrototype
    public Object[] consts = null;
    public OuterValueInfo[] outerValues = null;
    public FunctionPrototype[] nestedClosures = null;
+   
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + Arrays.hashCode(code);
+      result = prime * result + Arrays.hashCode(consts);
+      result = prime * result + maxLocals;
+      result = prime * result + maxStackSize;
+      result = prime * result + Arrays.hashCode(nestedClosures);
+      result = prime * result + numParams;
+      result = prime * result + Arrays.hashCode(outerValues);
+      result = prime * result + (vargs ? 1231 : 1237);
+      return result;
+   }
+   
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof FunctionPrototype))
+      {
+         return false;
+      }
+      FunctionPrototype other = (FunctionPrototype) obj;
+      if (!Arrays.equals(code, other.code))
+      {
+         return false;
+      }
+      if (!Arrays.equals(consts, other.consts))
+      {
+         return false;
+      }
+      if (maxLocals != other.maxLocals)
+      {
+         return false;
+      }
+      if (maxStackSize != other.maxStackSize)
+      {
+         return false;
+      }
+      if (!Arrays.equals(nestedClosures, other.nestedClosures))
+      {
+         return false;
+      }
+      if (numParams != other.numParams)
+      {
+         return false;
+      }
+      if (!Arrays.equals(outerValues, other.outerValues))
+      {
+         return false;
+      }
+      if (vargs != other.vargs)
+      {
+         return false;
+      }
+      return true;
+   }
 }

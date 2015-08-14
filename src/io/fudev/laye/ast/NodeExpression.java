@@ -28,8 +28,9 @@ import io.fudev.laye.lexical.Location;
 /**
  * @author Sekai Kyoretsuna
  */
-public
-abstract class NodeExpression extends ASTNode
+public abstract
+class NodeExpression
+   extends ASTNode
 {
    public boolean isResultRequired = true;
    

@@ -23,13 +23,12 @@
  */
 package io.fudev.laye.vm;
 
-import lombok.EqualsAndHashCode;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode(callSuper = true)
-class LayeJObject extends LayeObject
+public final
+class LayeJObject
+   extends LayeObject
 {
    final Object instance;
    
@@ -51,5 +50,44 @@ class LayeJObject extends LayeObject
    public String toString()
    {
       return("JavaObject:TODO"); // TODO(sekai): toString() for LayeJObjects
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((instance == null) ? 0 : instance.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeJObject))
+      {
+         return false;
+      }
+      LayeJObject other = (LayeJObject) obj;
+      if (instance == null)
+      {
+         if (other.instance != null)
+         {
+            return false;
+         }
+      }
+      else if (!instance.equals(other.instance))
+      {
+         return false;
+      }
+      return true;
    }
 }

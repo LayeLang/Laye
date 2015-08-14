@@ -23,16 +23,17 @@
  */
 package io.fudev.laye.vm;
 
+import java.util.Arrays;
+
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public abstract
-class LayeReference extends LayeObject
+class LayeReference
+   extends LayeObject
 {
    public abstract void store(LayeVM vm, LayeObject value);
 
@@ -119,11 +120,17 @@ class LayeReference extends LayeObject
    }
 }
 
-@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeGlobalReference extends LayeReference
+class LayeGlobalReference
+   extends LayeReference
 {
    private final SharedState state;
    private final String key;
+
+   public LayeGlobalReference(SharedState state, String key)
+   {
+      this.state = state;
+      this.key = key;
+   }
 
    @Override
    public String toString()
@@ -131,6 +138,57 @@ class LayeGlobalReference extends LayeReference
       return(state.load(key).toString());
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((key == null) ? 0 : key.hashCode());
+      result = prime * result + ((state == null) ? 0 : state.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeGlobalReference))
+      {
+         return false;
+      }
+      LayeGlobalReference other = (LayeGlobalReference) obj;
+      if (key == null)
+      {
+         if (other.key != null)
+         {
+            return false;
+         }
+      }
+      else if (!key.equals(other.key))
+      {
+         return false;
+      }
+      if (state == null)
+      {
+         if (other.state != null)
+         {
+            return false;
+         }
+      }
+      else if (!state.equals(other.state))
+      {
+         return false;
+      }
+      return true;
+   }
+
    @Override
    public LayeObject deref(LayeVM vm)
    {
@@ -144,16 +202,59 @@ class LayeGlobalReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeOuterReference extends LayeReference
+class LayeOuterReference
+   extends LayeReference
 {
    private final OuterValue[] captures;
    private final int index;
+
+   public LayeOuterReference(OuterValue[] captures, int index)
+   {
+      this.captures = captures;
+      this.index = index;
+   }
 
    @Override
    public String toString()
    {
       return(captures[index].getValue().toString());
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + Arrays.hashCode(captures);
+      result = prime * result + index;
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeOuterReference))
+      {
+         return false;
+      }
+      LayeOuterReference other = (LayeOuterReference) obj;
+      if (!Arrays.equals(captures, other.captures))
+      {
+         return false;
+      }
+      if (index != other.index)
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override
@@ -169,16 +270,66 @@ class LayeOuterReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeLocalReference extends LayeReference
+class LayeLocalReference
+   extends LayeReference
 {
    private final StackFrame frame;
    private final int index;
+
+   public LayeLocalReference(StackFrame frame, int index)
+   {
+      this.frame = frame;
+      this.index = index;
+   }
 
    @Override
    public String toString()
    {
       return(frame.load(index).toString());
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((frame == null) ? 0 : frame.hashCode());
+      result = prime * result + index;
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeLocalReference))
+      {
+         return false;
+      }
+      LayeLocalReference other = (LayeLocalReference) obj;
+      if (frame == null)
+      {
+         if (other.frame != null)
+         {
+            return false;
+         }
+      }
+      else if (!frame.equals(other.frame))
+      {
+         return false;
+      }
+      if (index != other.index)
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override
@@ -194,12 +345,19 @@ class LayeLocalReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeIndexReference extends LayeReference
+class LayeIndexReference
+   extends LayeReference
 {
    private final LayeVM vm;
    private final LayeObject object;
    private final LayeObject key;
+
+   public LayeIndexReference(LayeVM vm, LayeObject object, LayeObject key)
+   {
+      this.vm = vm;
+      this.object = object;
+      this.key = key;
+   }
 
    @Override
    public String toString()
@@ -207,6 +365,69 @@ class LayeIndexReference extends LayeReference
       return(object.load(vm, key).toString());
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((key == null) ? 0 : key.hashCode());
+      result = prime * result + ((object == null) ? 0 : object.hashCode());
+      result = prime * result + ((vm == null) ? 0 : vm.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeIndexReference))
+      {
+         return false;
+      }
+      LayeIndexReference other = (LayeIndexReference) obj;
+      if (key == null)
+      {
+         if (other.key != null)
+         {
+            return false;
+         }
+      }
+      else if (!key.equals(other.key))
+      {
+         return false;
+      }
+      if (object == null)
+      {
+         if (other.object != null)
+         {
+            return false;
+         }
+      }
+      else if (!object.equals(other.object))
+      {
+         return false;
+      }
+      if (vm == null)
+      {
+         if (other.vm != null)
+         {
+            return false;
+         }
+      }
+      else if (!vm.equals(other.vm))
+      {
+         return false;
+      }
+      return true;
+   }
+
    @Override
    public LayeObject deref(LayeVM vm)
    {
@@ -220,12 +441,19 @@ class LayeIndexReference extends LayeReference
    }
 }
 
-@EqualsAndHashCode(callSuper = true) @RequiredArgsConstructor
-class LayeFieldReference extends LayeReference
+class LayeFieldReference
+   extends LayeReference
 {
    private final LayeVM vm;
    private final LayeObject object;
    private final Identifier key;
+
+   public LayeFieldReference(LayeVM vm, LayeObject object, Identifier key)
+   {
+      this.vm = vm;
+      this.object = object;
+      this.key = key;
+   }
 
    @Override
    public String toString()
@@ -233,6 +461,69 @@ class LayeFieldReference extends LayeReference
       return(object.getField(vm, key).toString());
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((key == null) ? 0 : key.hashCode());
+      result = prime * result + ((object == null) ? 0 : object.hashCode());
+      result = prime * result + ((vm == null) ? 0 : vm.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeFieldReference))
+      {
+         return false;
+      }
+      LayeFieldReference other = (LayeFieldReference) obj;
+      if (key == null)
+      {
+         if (other.key != null)
+         {
+            return false;
+         }
+      }
+      else if (!key.equals(other.key))
+      {
+         return false;
+      }
+      if (object == null)
+      {
+         if (other.object != null)
+         {
+            return false;
+         }
+      }
+      else if (!object.equals(other.object))
+      {
+         return false;
+      }
+      if (vm == null)
+      {
+         if (other.vm != null)
+         {
+            return false;
+         }
+      }
+      else if (!vm.equals(other.vm))
+      {
+         return false;
+      }
+      return true;
+   }
+
    @Override
    public LayeObject deref(LayeVM vm)
    {

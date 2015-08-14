@@ -28,13 +28,13 @@ import java.util.HashMap;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true)
-class LayeTypeDef extends LayeObject
+public
+class LayeTypeDef
+   extends LayeObject
 {
    HashMap<Identifier, LayeObject> methods = new HashMap<>();
    HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
@@ -47,6 +47,93 @@ class LayeTypeDef extends LayeObject
       super(null);
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((ctors == null) ? 0 : ctors.hashCode());
+      result = prime * result + ((infix == null) ? 0 : infix.hashCode());
+      result = prime * result + ((initCtor == null) ? 0 : initCtor.hashCode());
+      result = prime * result + ((methods == null) ? 0 : methods.hashCode());
+      result = prime * result + ((prefix == null) ? 0 : prefix.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeTypeDef))
+      {
+         return false;
+      }
+      LayeTypeDef other = (LayeTypeDef) obj;
+      if (ctors == null)
+      {
+         if (other.ctors != null)
+         {
+            return false;
+         }
+      }
+      else if (!ctors.equals(other.ctors))
+      {
+         return false;
+      }
+      if (infix == null)
+      {
+         if (other.infix != null)
+         {
+            return false;
+         }
+      }
+      else if (!infix.equals(other.infix))
+      {
+         return false;
+      }
+      if (initCtor == null)
+      {
+         if (other.initCtor != null)
+         {
+            return false;
+         }
+      }
+      else if (!initCtor.equals(other.initCtor))
+      {
+         return false;
+      }
+      if (methods == null)
+      {
+         if (other.methods != null)
+         {
+            return false;
+         }
+      }
+      else if (!methods.equals(other.methods))
+      {
+         return false;
+      }
+      if (prefix == null)
+      {
+         if (other.prefix != null)
+         {
+            return false;
+         }
+      }
+      else if (!prefix.equals(other.prefix))
+      {
+         return false;
+      }
+      return true;
+   }
+
    public LayeObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);

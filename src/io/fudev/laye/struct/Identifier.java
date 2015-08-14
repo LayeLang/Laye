@@ -26,12 +26,11 @@ package io.fudev.laye.struct;
 import java.util.HashMap;
 
 import io.fudev.laye.lexical.Token;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode
+public final
 class Identifier
 {
    private static final HashMap<String, Identifier> idents = new HashMap<>();
@@ -94,5 +93,44 @@ class Identifier
    public String toString()
    {
       return(image);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((image == null) ? 0 : image.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof Identifier))
+      {
+         return false;
+      }
+      Identifier other = (Identifier) obj;
+      if (image == null)
+      {
+         if (other.image != null)
+         {
+            return false;
+         }
+      }
+      else if (!image.equals(other.image))
+      {
+         return false;
+      }
+      return true;
    }
 }

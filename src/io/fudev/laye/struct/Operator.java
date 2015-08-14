@@ -26,12 +26,10 @@ package io.fudev.laye.struct;
 import java.util.HashMap;
 import java.util.Map;
 
-import lombok.EqualsAndHashCode;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode
+public final
 class Operator
 {
    private static final Map<String, Operator> operators = new HashMap<String, Operator>();
@@ -125,5 +123,49 @@ class Operator
    public String toString()
    {
       return(image);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((image == null) ? 0 : image.hashCode());
+      result = prime * result + precedence;
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof Operator))
+      {
+         return false;
+      }
+      Operator other = (Operator) obj;
+      if (image == null)
+      {
+         if (other.image != null)
+         {
+            return false;
+         }
+      }
+      else if (!image.equals(other.image))
+      {
+         return false;
+      }
+      if (precedence != other.precedence)
+      {
+         return false;
+      }
+      return true;
    }
 }

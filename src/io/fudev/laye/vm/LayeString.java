@@ -24,15 +24,15 @@
 package io.fudev.laye.vm;
 
 import io.fudev.laye.struct.Operator;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true) 
-class LayeString extends LayeObject
+public
+class LayeString
+   extends LayeObject
 {
-   public final String value;
+   private final String value;
    
    public LayeString(String value)
    {
@@ -43,6 +43,45 @@ class LayeString extends LayeObject
    public String toString()
    {
       return(value);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((value == null) ? 0 : value.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeString))
+      {
+         return false;
+      }
+      LayeString other = (LayeString) obj;
+      if (value == null)
+      {
+         if (other.value != null)
+         {
+            return false;
+         }
+      }
+      else if (!value.equals(other.value))
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override

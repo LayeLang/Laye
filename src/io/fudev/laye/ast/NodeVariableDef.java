@@ -35,7 +35,9 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeVariableDef extends NodeExpression implements Iterable<Pair<Identifier, NodeExpression>>
+class NodeVariableDef
+   extends NodeExpression
+      implements Iterable<Pair<Identifier, NodeExpression>>
 {
    public List<Identifier> names = new List<>();
    public List<NodeExpression> values = new List<>();

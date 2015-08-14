@@ -29,13 +29,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode @RequiredArgsConstructor
+public
 class ScriptFile
 {
    /**
@@ -112,6 +109,13 @@ class ScriptFile
     */
    public final Charset encoding;
    
+   public ScriptFile(String path, boolean isResource, Charset encoding)
+   {
+      this.path = path;
+      this.isResource = isResource;
+      this.encoding = encoding;
+   }
+
    public InputStreamReader read() throws IOException
    {
       if (isResource)
@@ -119,5 +123,61 @@ class ScriptFile
          return(new InputStreamReader(ScriptFile.class.getResourceAsStream(path), encoding));
       }
       return(new InputStreamReader(new FileInputStream(new File(path)), encoding));
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((encoding == null) ? 0 : encoding.hashCode());
+      result = prime * result + (isResource ? 1231 : 1237);
+      result = prime * result + ((path == null) ? 0 : path.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof ScriptFile))
+      {
+         return false;
+      }
+      ScriptFile other = (ScriptFile) obj;
+      if (encoding == null)
+      {
+         if (other.encoding != null)
+         {
+            return false;
+         }
+      }
+      else if (!encoding.equals(other.encoding))
+      {
+         return false;
+      }
+      if (isResource != other.isResource)
+      {
+         return false;
+      }
+      if (path == null)
+      {
+         if (other.path != null)
+         {
+            return false;
+         }
+      }
+      else if (!path.equals(other.path))
+      {
+         return false;
+      }
+      return true;
    }
 }

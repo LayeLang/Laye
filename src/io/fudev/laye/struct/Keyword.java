@@ -24,14 +24,12 @@
 package io.fudev.laye.struct;
 
 import java.util.HashMap;
-
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
+import java.util.Objects;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode
+public
 class Keyword
 {
    private static final HashMap<String, Keyword> keywords = new HashMap<String, Keyword>();
@@ -129,8 +127,9 @@ class Keyword
       return(keywords.containsKey(image));
    }
    
-   public static Keyword get(@NonNull String image)
+   public static Keyword get(String image)
    {
+      Objects.requireNonNull(image);
       return(keywords.get(image));
    }
    
@@ -147,5 +146,44 @@ class Keyword
    public String toString()
    {
       return(image);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((image == null) ? 0 : image.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof Keyword))
+      {
+         return false;
+      }
+      Keyword other = (Keyword) obj;
+      if (image == null)
+      {
+         if (other.image != null)
+         {
+            return false;
+         }
+      }
+      else if (!image.equals(other.image))
+      {
+         return false;
+      }
+      return true;
    }
 }

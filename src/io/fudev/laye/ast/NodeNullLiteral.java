@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeNullLiteral extends NodeExpression
+class NodeNullLiteral
+   extends NodeExpression
 {
    public NodeNullLiteral(Location location)
    {

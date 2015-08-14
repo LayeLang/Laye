@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeFunction extends NodeExpression
+class NodeFunction
+   extends NodeExpression
 {
    public FunctionData data = new FunctionData();
    

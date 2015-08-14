@@ -32,21 +32,78 @@ import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @RequiredArgsConstructor
+public
 class FunctionPrototypeBuilder
 {
-   private final @RequiredArgsConstructor
+   private final
    class Scope
    {
       public final Scope previous;
       public int initialLocalsSize = locals;
+
+      public Scope(Scope previous)
+      {
+         this.previous = previous;
+      }
+
+      @Override
+      public int hashCode()
+      {
+         final int prime = 31;
+         int result = 1;
+         result = prime * result + getOuterType().hashCode();
+         result = prime * result + initialLocalsSize;
+         result = prime * result + ((previous == null) ? 0 : previous.hashCode());
+         return result;
+      }
+
+      @Override
+      public boolean equals(Object obj)
+      {
+         if (this == obj)
+         {
+            return true;
+         }
+         if (obj == null)
+         {
+            return false;
+         }
+         if (!(obj instanceof Scope))
+         {
+            return false;
+         }
+         Scope other = (Scope) obj;
+         if (!getOuterType().equals(other.getOuterType()))
+         {
+            return false;
+         }
+         if (initialLocalsSize != other.initialLocalsSize)
+         {
+            return false;
+         }
+         if (previous == null)
+         {
+            if (other.previous != null)
+            {
+               return false;
+            }
+         }
+         else if (!previous.equals(other.previous))
+         {
+            return false;
+         }
+         return true;
+      }
+
+      private FunctionPrototypeBuilder getOuterType()
+      {
+         return FunctionPrototypeBuilder.this;
+      }
    }
    
    public final FunctionPrototypeBuilder parent;
@@ -57,7 +114,7 @@ class FunctionPrototypeBuilder
    private int locals = 0;
    private int maxLocals = 0;
    
-   private @Getter int stackSize = 0;
+   private int stackSize = 0;
    private int maxStackSize = 0;
    
    private int outerValueCount = 0;
@@ -71,6 +128,157 @@ class FunctionPrototypeBuilder
    
    private Scope scope = null;
    
+   public FunctionPrototypeBuilder(FunctionPrototypeBuilder parent)
+   {
+      this.parent = parent;
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((code == null) ? 0 : code.hashCode());
+      result = prime * result + ((consts == null) ? 0 : consts.hashCode());
+      result = prime * result + ((localValues == null) ? 0 : localValues.hashCode());
+      result = prime * result + locals;
+      result = prime * result + maxLocals;
+      result = prime * result + maxStackSize;
+      result = prime * result + ((nested == null) ? 0 : nested.hashCode());
+      result = prime * result + numParams;
+      result = prime * result + outerValueCount;
+      result = prime * result + ((outerValues == null) ? 0 : outerValues.hashCode());
+      result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+      result = prime * result + ((scope == null) ? 0 : scope.hashCode());
+      result = prime * result + stackSize;
+      result = prime * result + (vargs ? 1231 : 1237);
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof FunctionPrototypeBuilder))
+      {
+         return false;
+      }
+      FunctionPrototypeBuilder other = (FunctionPrototypeBuilder) obj;
+      if (code == null)
+      {
+         if (other.code != null)
+         {
+            return false;
+         }
+      }
+      else if (!code.equals(other.code))
+      {
+         return false;
+      }
+      if (consts == null)
+      {
+         if (other.consts != null)
+         {
+            return false;
+         }
+      }
+      else if (!consts.equals(other.consts))
+      {
+         return false;
+      }
+      if (localValues == null)
+      {
+         if (other.localValues != null)
+         {
+            return false;
+         }
+      }
+      else if (!localValues.equals(other.localValues))
+      {
+         return false;
+      }
+      if (locals != other.locals)
+      {
+         return false;
+      }
+      if (maxLocals != other.maxLocals)
+      {
+         return false;
+      }
+      if (maxStackSize != other.maxStackSize)
+      {
+         return false;
+      }
+      if (nested == null)
+      {
+         if (other.nested != null)
+         {
+            return false;
+         }
+      }
+      else if (!nested.equals(other.nested))
+      {
+         return false;
+      }
+      if (numParams != other.numParams)
+      {
+         return false;
+      }
+      if (outerValueCount != other.outerValueCount)
+      {
+         return false;
+      }
+      if (outerValues == null)
+      {
+         if (other.outerValues != null)
+         {
+            return false;
+         }
+      }
+      else if (!outerValues.equals(other.outerValues))
+      {
+         return false;
+      }
+      if (parent == null)
+      {
+         if (other.parent != null)
+         {
+            return false;
+         }
+      }
+      else if (!parent.equals(other.parent))
+      {
+         return false;
+      }
+      if (scope == null)
+      {
+         if (other.scope != null)
+         {
+            return false;
+         }
+      }
+      else if (!scope.equals(other.scope))
+      {
+         return false;
+      }
+      if (stackSize != other.stackSize)
+      {
+         return false;
+      }
+      if (vargs != other.vargs)
+      {
+         return false;
+      }
+      return true;
+   }
+
    public FunctionPrototype build()
    {
       int[] code = new int[this.code.size()];

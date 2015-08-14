@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeLoadIndex extends NodeExpression
+class NodeLoadIndex
+   extends NodeExpression
 {
    public NodeExpression target, index;
    

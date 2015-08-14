@@ -29,7 +29,9 @@ import io.fudev.laye.process.ASTProcessor;
 /**
  * @author Sekai Kyoretsuna
  */
-public class NodeThis extends NodeExpression
+public
+class NodeThis
+   extends NodeExpression
 {
    public NodeThis(Location location)
    {

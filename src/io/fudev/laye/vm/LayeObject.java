@@ -28,12 +28,11 @@ import java.util.HashMap;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode
+public
 class LayeObject
 {
    public static final LayeNull NULL = LayeNull.INSTANCE;
@@ -59,6 +58,57 @@ class LayeObject
       return "LayeObject:TODO"; // TODO(sekai): toString() for LayeObject
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((fields == null) ? 0 : fields.hashCode());
+      result = prime * result + ((typedef == null) ? 0 : typedef.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeObject))
+      {
+         return false;
+      }
+      LayeObject other = (LayeObject) obj;
+      if (fields == null)
+      {
+         if (other.fields != null)
+         {
+            return false;
+         }
+      }
+      else if (!fields.equals(other.fields))
+      {
+         return false;
+      }
+      if (typedef == null)
+      {
+         if (other.typedef != null)
+         {
+            return false;
+         }
+      }
+      else if (!typedef.equals(other.typedef))
+      {
+         return false;
+      }
+      return true;
+   }
+
    public boolean isNumeric(LayeVM vm)
    {
       return(false);

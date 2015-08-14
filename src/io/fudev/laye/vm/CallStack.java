@@ -23,15 +23,13 @@
  */
 package io.fudev.laye.vm;
 
-import lombok.Getter;
-
 /**
  * @author Sekai Kyoretsuna
  */
 public
 class CallStack
 {
-   private @Getter StackFrame top = null;
+   private StackFrame top = null;
    
    public void pushFrame(LayeClosure closure, LayeObject thisObject)
    {
@@ -41,5 +39,10 @@ class CallStack
    public void popFrame()
    {
       top = top.previous;
+   }
+   
+   public StackFrame getTop()
+   {
+      return top;
    }
 }

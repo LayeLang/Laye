@@ -24,13 +24,13 @@
 package io.fudev.laye.vm;
 
 import io.fudev.laye.struct.Identifier;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true) 
-class LayeKit extends LayeObject
+public
+class LayeKit
+   extends LayeObject
 {
    public LayeKit()
    {

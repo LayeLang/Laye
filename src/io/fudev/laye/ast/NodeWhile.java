@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeWhile extends NodeExpression
+class NodeWhile 
+   extends NodeExpression
 {
    public NodeExpression condition, pass, initialFail;
    

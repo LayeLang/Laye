@@ -27,16 +27,20 @@ import static io.fudev.laye.log.LogMessageID.ERROR_INVALID_BLOCK;
 
 import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
-import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */ // TODO(sekai): Constant folding!
-public @RequiredArgsConstructor
+public
 class ASTProcessor
 {
    private final DetailLogger logger;
+   
+   public ASTProcessor(DetailLogger logger)
+   {
+      this.logger = logger;
+   }
    
    public AST process(AST node)
    {

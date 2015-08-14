@@ -26,13 +26,12 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
-import lombok.RequiredArgsConstructor;
 import net.fudev.faxlib.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @RequiredArgsConstructor
+public
 class SharedState
 {
    final LayeVM mainThread;
@@ -40,6 +39,11 @@ class SharedState
    private final HashMap<String, LayeObject> shared = new HashMap<>();
    private final HashMap<String, LayeKit> registeredKits = new HashMap<>();
    private final List<LayeVM> sideThreads = new List<>();
+   
+   public SharedState(LayeVM mainThread)
+   {
+      this.mainThread = mainThread;
+   }
    
    public LayeObject load(String key)
    {

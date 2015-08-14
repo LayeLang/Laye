@@ -29,7 +29,9 @@ import io.fudev.laye.process.ASTProcessor;
 /**
  * @author Sekai Kyoretsuna
  */
-public class NodeReference extends NodeExpression
+public
+class NodeReference
+   extends NodeExpression
 {
    public NodeExpression expression = null;
    

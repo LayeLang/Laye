@@ -33,15 +33,15 @@ import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
-import lombok.EqualsAndHashCode;
 
 /**
  * The Laye virtual machine.
  * 
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true)
-class LayeVM extends LayeObject
+public
+class LayeVM
+   extends LayeObject
 {
    private static OuterValue findOuterValue(LayeObject[] locals, int idx, OuterValue[] openUps)
    {
@@ -92,6 +92,81 @@ class LayeVM extends LayeObject
       return "LayeVM:TODO"; // TODO(sekai): Add a toString to LayeVM.
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((haltValue == null) ? 0 : haltValue.hashCode());
+      result = prime * result + ((parent == null) ? 0 : parent.hashCode());
+      result = prime * result + ((stack == null) ? 0 : stack.hashCode());
+      result = prime * result + ((state == null) ? 0 : state.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeVM))
+      {
+         return false;
+      }
+      LayeVM other = (LayeVM) obj;
+      if (haltValue == null)
+      {
+         if (other.haltValue != null)
+         {
+            return false;
+         }
+      }
+      else if (!haltValue.equals(other.haltValue))
+      {
+         return false;
+      }
+      if (parent == null)
+      {
+         if (other.parent != null)
+         {
+            return false;
+         }
+      }
+      else if (!parent.equals(other.parent))
+      {
+         return false;
+      }
+      if (stack == null)
+      {
+         if (other.stack != null)
+         {
+            return false;
+         }
+      }
+      else if (!stack.equals(other.stack))
+      {
+         return false;
+      }
+      if (state == null)
+      {
+         if (other.state != null)
+         {
+            return false;
+         }
+      }
+      else if (!state.equals(other.state))
+      {
+         return false;
+      }
+      return true;
+   }
+
    /**
     * Attempts to invoke the target LayeObject. This is equivalent to calling the
     * {@link LayeObject#invoke(LayeVM, LayeObject, LayeObject...)} method using this

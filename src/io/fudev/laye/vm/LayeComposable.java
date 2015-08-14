@@ -28,8 +28,9 @@ import io.fudev.laye.struct.Operator;
 /**
  * @author Sekai Kyoretsuna
  */
-public
-abstract class LayeComposable extends LayeObject
+public abstract
+class LayeComposable
+   extends LayeObject
 {
    @Override
    public LayeObject infix(LayeVM vm, Operator op, LayeObject that)

@@ -31,7 +31,8 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeInvoke extends NodeExpression
+class NodeInvoke
+   extends NodeExpression
 {
    public NodeExpression target = null;
    public List<NodeExpression> args = null;

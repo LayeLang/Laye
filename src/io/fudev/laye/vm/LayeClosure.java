@@ -23,14 +23,16 @@
  */
 package io.fudev.laye.vm;
 
+import java.util.Arrays;
+
 import io.fudev.laye.struct.FunctionPrototype;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public @EqualsAndHashCode(callSuper = true)
-class LayeClosure extends LayeComposable
+public
+class LayeClosure
+   extends LayeComposable
 {
    public final FunctionPrototype proto;
    public OuterValue[] captures = null;
@@ -45,6 +47,50 @@ class LayeClosure extends LayeComposable
    public String toString()
    {
       return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + Arrays.hashCode(captures);
+      result = prime * result + ((proto == null) ? 0 : proto.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeClosure))
+      {
+         return false;
+      }
+      LayeClosure other = (LayeClosure) obj;
+      if (!Arrays.equals(captures, other.captures))
+      {
+         return false;
+      }
+      if (proto == null)
+      {
+         if (other.proto != null)
+         {
+            return false;
+         }
+      }
+      else if (!proto.equals(other.proto))
+      {
+         return false;
+      }
+      return true;
    }
 
    @Override

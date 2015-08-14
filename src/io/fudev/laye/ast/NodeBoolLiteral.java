@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeBoolLiteral extends NodeExpression
+class NodeBoolLiteral
+   extends NodeExpression
 {
    public boolean value;
    

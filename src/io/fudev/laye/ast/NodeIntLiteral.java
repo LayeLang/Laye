@@ -31,7 +31,8 @@ import io.fudev.laye.vm.LayeInt;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeIntLiteral extends NodeExpression
+class NodeIntLiteral
+   extends NodeExpression
 {
    public LayeInt value;
    

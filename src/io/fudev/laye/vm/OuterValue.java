@@ -23,6 +23,8 @@
  */
 package io.fudev.laye.vm;
 
+import java.util.Arrays;
+
 /**
  * @author Sekai Kyoretsuna
  */
@@ -43,6 +45,43 @@ class OuterValue
       return "[" + index + "/" + values.length + "] " + values[index];
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + index;
+      result = prime * result + Arrays.hashCode(values);
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof OuterValue))
+      {
+         return false;
+      }
+      OuterValue other = (OuterValue) obj;
+      if (index != other.index)
+      {
+         return false;
+      }
+      if (!Arrays.equals(values, other.values))
+      {
+         return false;
+      }
+      return true;
+   }
+
    public LayeObject getValue()
    {
       return values[index];

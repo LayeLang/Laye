@@ -30,7 +30,8 @@ import io.fudev.laye.process.ASTProcessor;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeWildcard extends NodeExpression
+class NodeWildcard
+   extends NodeExpression
 {
    public NodeWildcard(Location location)
    {

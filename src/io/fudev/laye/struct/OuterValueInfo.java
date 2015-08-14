@@ -18,12 +18,10 @@
  */
 package io.fudev.laye.struct;
 
-import lombok.AllArgsConstructor;
-
 /**
  * @author Sekai Kyoretsuna
  */
-public @AllArgsConstructor
+public
 class OuterValueInfo
 {
    public static
@@ -36,8 +34,64 @@ class OuterValueInfo
    public final int pos;
    public Type type;
    
+   public OuterValueInfo(Identifier name, int pos, Type type)
+   {
+      this.name = name;
+      this.pos = pos;
+      this.type = type;
+   }
+
    public OuterValueInfo(OuterValueInfo other)
    {
       this(other.name, other.pos, other.type);
+   }
+
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = 1;
+      result = prime * result + ((name == null) ? 0 : name.hashCode());
+      result = prime * result + pos;
+      result = prime * result + ((type == null) ? 0 : type.hashCode());
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (obj == null)
+      {
+         return false;
+      }
+      if (!(obj instanceof OuterValueInfo))
+      {
+         return false;
+      }
+      OuterValueInfo other = (OuterValueInfo) obj;
+      if (name == null)
+      {
+         if (other.name != null)
+         {
+            return false;
+         }
+      }
+      else if (!name.equals(other.name))
+      {
+         return false;
+      }
+      if (pos != other.pos)
+      {
+         return false;
+      }
+      if (type != other.type)
+      {
+         return false;
+      }
+      return true;
    }
 }

@@ -29,7 +29,8 @@ import io.fudev.laye.vm.LayeVM;
  * @author Sekai Kyoretsuna
  */
 public
-class LayeException extends RuntimeException
+class LayeException
+   extends RuntimeException
 {
    private static final long serialVersionUID = -5918678362546476679L;
 

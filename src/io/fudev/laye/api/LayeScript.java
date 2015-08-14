@@ -38,8 +38,6 @@ import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.vm.LayeClosure;
 import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * @author Sekai Kyoretsuna
@@ -49,7 +47,7 @@ class LayeScript
 {
    private final LayeVM vm;
    
-   private @Getter @Setter DetailLogger logger;
+   private DetailLogger logger;
    
    public LayeScript()
    {

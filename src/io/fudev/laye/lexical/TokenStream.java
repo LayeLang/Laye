@@ -29,7 +29,8 @@ import net.fudev.faxlib.collections.List;
  * @author Sekai Kyoretsuna
  */
 public
-class TokenStream extends List<Token>
+class TokenStream
+   extends List<Token>
 {
    private int internalStreamOffset = 0;
    

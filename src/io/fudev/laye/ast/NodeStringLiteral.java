@@ -31,7 +31,8 @@ import io.fudev.laye.vm.LayeString;
  * @author Sekai Kyoretsuna
  */
 public
-class NodeStringLiteral extends NodeExpression
+class NodeStringLiteral
+   extends NodeExpression
 {
    public LayeString value;
    

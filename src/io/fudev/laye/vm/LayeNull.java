@@ -27,7 +27,8 @@ package io.fudev.laye.vm;
  * @author Sekai Kyoretsuna
  */
 public
-class LayeNull extends LayeObject
+class LayeNull
+   extends LayeObject
 {
    static final LayeNull INSTANCE = new LayeNull();
    

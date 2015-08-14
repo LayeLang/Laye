@@ -27,7 +27,8 @@ package io.fudev.laye.vm;
  * @author Sekai Kyoretsuna
  */
 public
-class LayeBool extends LayeObject
+class LayeBool
+   extends LayeObject
 {
    static final LayeBool BOOL_TRUE  = new LayeBool(true);
    static final LayeBool BOOL_FALSE = new LayeBool(false);

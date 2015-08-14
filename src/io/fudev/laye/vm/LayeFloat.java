@@ -25,13 +25,13 @@ package io.fudev.laye.vm;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Operator;
-import lombok.EqualsAndHashCode;
 
 /**
  * @author Sekai Kyoretsuna
  */
-public final @EqualsAndHashCode(callSuper = true) 
-class LayeFloat extends LayeObject
+public final
+class LayeFloat
+   extends LayeObject
 {
    public static final LayeFloat FM1 = new LayeFloat(-1.0);
    public static final LayeFloat F0  = new LayeFloat(0.0);
@@ -51,6 +51,40 @@ class LayeFloat extends LayeObject
       return(Double.toString(value));
    }
    
+   @Override
+   public int hashCode()
+   {
+      final int prime = 31;
+      int result = super.hashCode();
+      long temp;
+      temp = Double.doubleToLongBits(value);
+      result = prime * result + (int) (temp ^ (temp >>> 32));
+      return result;
+   }
+
+   @Override
+   public boolean equals(Object obj)
+   {
+      if (this == obj)
+      {
+         return true;
+      }
+      if (!super.equals(obj))
+      {
+         return false;
+      }
+      if (!(obj instanceof LayeFloat))
+      {
+         return false;
+      }
+      LayeFloat other = (LayeFloat) obj;
+      if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
+      {
+         return false;
+      }
+      return true;
+   }
+
    @Override
    public boolean isNumeric(LayeVM vm)
    {
