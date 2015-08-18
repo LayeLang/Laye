@@ -166,7 +166,7 @@ public class Lexer
       }
       else
       {
-         // FIXME(sekai): check other characters that don't have a width
+         // FIXME(kai): check other characters that don't have a width
          switch (currentChar)
          {
             case '\r':
@@ -410,11 +410,11 @@ public class Lexer
       else
       {
          putChar(lastChar);
-         // TODO(sekai): Make sure '_' is handled in all places.
+         // TODO(kai): Make sure '_' is handled in all places.
          while ((Character.isDigit(currentChar) || currentChar == '_' ||
                 currentChar == '.' || currentChar == 'e' || currentChar == 'E') && !eof)
          {
-            // TODO(sekai): This looks like it can be put into a switch/case.
+            // TODO(kai): This looks like it can be put into a switch/case.
             if (currentChar == '.')
             {
                if (lastChar == '_')
@@ -545,6 +545,6 @@ public class Lexer
       {
          return(new Token(Token.Type.KEYWORD, Keyword.get(image), location));
       }
-      return(new Token(Token.Type.IDENTIFIER, Identifier.get(image), location));
+      return(new Token(Token.Type.IDENTIFIER, image, location));
    }
 }

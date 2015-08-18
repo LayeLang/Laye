@@ -76,7 +76,7 @@ class SharedState
       LayeKit kit = registeredKits.get(kitKey);
       kit.fields.forEach((key, value) ->
       {
-         shared.put(key.image, value);
+         shared.put(key, value);
       });
    }
    

@@ -99,9 +99,9 @@ class ScriptFile
    
    /**
     * The path to the file.
-    */ // TODO(sekai): more information.
+    */ // TODO(kai): more information.
    public final String path;
-   // TODO(sekai): enums? I don't like having a bool here.
+   // TODO(kai): enums? I don't like having a bool here.
    private final boolean isResource;
    
    /**

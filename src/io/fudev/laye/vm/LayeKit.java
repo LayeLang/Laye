@@ -23,8 +23,6 @@
  */
 package io.fudev.laye.vm;
 
-import io.fudev.laye.struct.Identifier;
-
 /**
  * @author Sekai Kyoretsuna
  */
@@ -41,19 +39,9 @@ class LayeKit
    {
       return(null);
    }
-   
-   public void setField(LayeVM vm, String key, LayeObject obj)
-   {
-      setField(vm, Identifier.get(key), obj);
-   }
-   
+
    public void setField(LayeVM vm, String key, LayeFunction.Callback callback)
    {
-      setField(vm, Identifier.get(key), new LayeFunction(callback));
-   }
-   
-   public LayeObject getField(LayeVM vm, String key)
-   {
-      return(getField(vm, Identifier.get(key)));
+      setField(vm, key, new LayeFunction(callback));
    }
 }

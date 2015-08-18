@@ -26,7 +26,6 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 
 /**
@@ -41,7 +40,7 @@ class LayeObject
    public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
    final LayeTypeDef typedef;
-   final HashMap<Identifier, LayeObject> fields = new HashMap<>();
+   final HashMap<String, LayeObject> fields = new HashMap<>();
    
    public LayeObject()
    {
@@ -55,7 +54,7 @@ class LayeObject
    
    public String toString()
    {
-      return "LayeObject:TODO"; // TODO(sekai): toString() for LayeObject
+      return "LayeObject:TODO"; // TODO(kai): toString() for LayeObject
    }
    
    @Override
@@ -156,11 +155,11 @@ class LayeObject
    
    public boolean compareEquals(LayeVM vm, LayeObject that)
    {
-      // FIXME(sekai): call operator == overloads
+      // FIXME(kai): call operator == overloads
       return(this.equals(that)); 
    }
    
-   public LayeObject getField(LayeVM vm, Identifier key)
+   public LayeObject getField(LayeVM vm, String key)
    {
       LayeObject result = fields.get(key);
       if (result == null)
@@ -173,7 +172,7 @@ class LayeObject
       return(result);
    }
    
-   public void setField(LayeVM vm, Identifier key, LayeObject object)
+   public void setField(LayeVM vm, String key, LayeObject object)
    {
       fields.put(key, object);
    }
@@ -193,7 +192,7 @@ class LayeObject
       throw new LayeException(vm, "Attempt to call %s.", getClass().getSimpleName());
    }
    
-   public LayeObject invokeMethod(LayeVM vm, Identifier methodIndex, LayeObject... args)
+   public LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
    {
       return vm.invoke(getField(vm, methodIndex), this, args);
    }

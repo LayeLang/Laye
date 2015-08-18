@@ -25,7 +25,6 @@ package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -34,7 +33,7 @@ public
 class NodeTypeDef
    extends ASTNode
 {
-   public Identifier name = null;
+   public String name = null;
    public TypeData data = new TypeData();
    
    public NodeTypeDef(Location location)
@@ -45,13 +44,13 @@ class NodeTypeDef
    @Override
    public void accept(IASTVisitor visitor)
    {
-      // TODO(sekai): visitor.visit(this);
+      // TODO(kai): visitor.visit(this);
    }
    
    @Override
    public ASTNode accept(ASTProcessor processor)
    {
-      // TODO(sekai): return(processor.process(this));
+      // TODO(kai): return(processor.process(this));
       return(null);
    }
 }

@@ -30,7 +30,6 @@ import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
 
@@ -89,7 +88,7 @@ class LayeVM
    @Override
    public String toString()
    {
-      return "LayeVM:TODO"; // TODO(sekai): Add a toString to LayeVM.
+      return "LayeVM:TODO"; // TODO(kai): Add a toString to LayeVM.
    }
    
    @Override
@@ -377,11 +376,11 @@ class LayeVM
          } return;
          case OP_LOAD_FIELD:
          {
-            top.push(top.pop().getField(this, (Identifier)consts[insn >>> POS_C]));
+            top.push(top.pop().getField(this, (String)consts[insn >>> POS_C]));
          } return;
          case OP_STORE_FIELD:
          {
-            Identifier index = (Identifier)consts[insn >>> POS_C];
+            String index = (String)consts[insn >>> POS_C];
             LayeObject value = top.pop(), target = top.pop(), temp;
             if ((temp = target.getField(this, index)) instanceof LayeReference)
             {
@@ -478,7 +477,7 @@ class LayeVM
          } return;
          case OP_TYPE:
          {
-            // TODO(sekai): create types in the vm
+            // TODO(kai): create types in the vm
          } return;
 
          case OP_CLOSE_OUTERS:
@@ -499,13 +498,13 @@ class LayeVM
          } return;
          case OP_INVOKE_METHOD:
          {
-            Identifier index = (Identifier)consts[(insn >>> POS_A) & MAX_A];
+            String index = (String)consts[(insn >>> POS_A) & MAX_A];
             LayeObject args[] = top.popCount((insn >>> POS_B) & MAX_B);
             top.push(top.pop().invokeMethod(this, index, args));
          } return;
          case OP_INVOKE_BASE:
          {
-            // TODO(sekai): invoke base in the vm
+            // TODO(kai): invoke base in the vm
          } return;
          
          case OP_JUMP:
@@ -627,11 +626,11 @@ class LayeVM
                case 4: // Field
                {
                   top.push(new LayeFieldReference(this, top.pop(),
-                        (Identifier)consts[(insn >>> POS_B) & MAX_B]));
+                        (String)consts[(insn >>> POS_B) & MAX_B]));
                } return;
                default:
                {
-                  // TODO(sekai): error when invalid reference type
+                  // TODO(kai): error when invalid reference type
                }
             }
          } return;

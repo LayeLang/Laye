@@ -41,7 +41,7 @@ class LayeComposition
    @Override
    public String toString()
    {
-      return("Composition:TODO"); // TODO(sekai): toString() for compositions
+      return("Composition:TODO"); // TODO(kai): toString() for compositions
    }
 
    @Override

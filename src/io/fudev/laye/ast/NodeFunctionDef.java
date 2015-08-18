@@ -25,7 +25,6 @@ package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -34,7 +33,7 @@ public
 class NodeFunctionDef
    extends ASTNode
 {
-   public Identifier name = null;
+   public String name = null;
    public FunctionData data = new FunctionData();
    
    public NodeFunctionDef(Location location)

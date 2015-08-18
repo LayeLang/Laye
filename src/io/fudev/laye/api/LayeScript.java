@@ -90,7 +90,7 @@ class LayeScript
       AST ast = parser.getAST(tokens);
       logDetails(file, "Syntax tree generation");
       
-      // ===== TODO(sekai): Semantic Analysis
+      // ===== TODO(kai): Semantic Analysis
       
       // ===== Final AST processing
       ast = processor.process(ast);

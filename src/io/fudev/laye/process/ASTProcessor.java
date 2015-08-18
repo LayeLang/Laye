@@ -31,7 +31,7 @@ import io.fudev.laye.log.DetailLogger;
 
 /**
  * @author Sekai Kyoretsuna
- */ // TODO(sekai): Constant folding!
+ */ // TODO(kai): Constant folding!
 public
 class ASTProcessor
 {
@@ -239,7 +239,7 @@ class ASTProcessor
       {
          node.fail.isResultRequired = node.isResultRequired;
       }
-      // FIXME(sekai): only accept values if they're used, save time.
+      // FIXME(kai): only accept values if they're used, save time.
       NodeExpression pass = (NodeExpression)node.pass.accept(this);
       NodeExpression fail = node.fail == null && node.isResultRequired ?
             new NodeNullLiteral(null) : (NodeExpression)node.fail.accept(this);
@@ -276,7 +276,7 @@ class ASTProcessor
 
    public ASTNode process(NodeNot node)
    {
-      // TODO(sekai): check special cases
+      // TODO(kai): check special cases
       NodeNot result = new NodeNot(node.location,
             (NodeExpression)node.expression.accept(this));
       result.isResultRequired = node.isResultRequired;
@@ -285,7 +285,7 @@ class ASTProcessor
 
    public ASTNode process(NodeAnd node)
    {
-      // TODO(sekai): check special cases
+      // TODO(kai): check special cases
       NodeAnd result = new NodeAnd(node.location, (NodeExpression)node.left.accept(this),
             (NodeExpression)node.right.accept(this));
       result.isResultRequired = node.isResultRequired;
@@ -294,7 +294,7 @@ class ASTProcessor
 
    public ASTNode process(NodeOr node)
    {
-      // TODO(sekai): check special cases
+      // TODO(kai): check special cases
       NodeOr result = new NodeOr(node.location, (NodeExpression)node.left.accept(this),
             (NodeExpression)node.right.accept(this));
       result.isResultRequired = node.isResultRequired;
@@ -309,7 +309,7 @@ class ASTProcessor
       {
          node.initialFail.isResultRequired = isResultRequired;
       }
-      // FIXME(sekai): only accept values if they're used, save time.
+      // FIXME(kai): only accept values if they're used, save time.
       NodeExpression pass = (NodeExpression)node.pass.accept(this);
       NodeExpression initialFail = node.initialFail == null ? null :
          (NodeExpression)node.initialFail.accept(this);

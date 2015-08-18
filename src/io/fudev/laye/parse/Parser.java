@@ -33,7 +33,6 @@ import io.fudev.laye.lexical.Location;
 import io.fudev.laye.lexical.Token;
 import io.fudev.laye.lexical.TokenStream;
 import io.fudev.laye.log.DetailLogger;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Keyword;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.vm.LayeFloat;
@@ -136,14 +135,14 @@ class Parser
       return(true);
    }
    
-   private Identifier expectIdentifier()
+   private String expectIdentifier()
    {
       Token last = token;
       if (!expect(Token.Type.IDENTIFIER))
       {
          return(null);
       }
-      return((Identifier)last.data);
+      return((String)last.data);
    }
    
    private boolean expectKeyword(Keyword keyword)
@@ -376,7 +375,7 @@ class Parser
          }
          case IDENTIFIER:
          {
-            Identifier ident = (Identifier)token.data;
+            String ident = (String)token.data;
             // nom ident
             next();
             return(postfix(new NodeIdentifier(location, ident)));
@@ -426,7 +425,7 @@ class Parser
          {
             // nom '.'
             next();
-            Identifier ident = expectIdentifier();
+            String ident = expectIdentifier();
             node = postfix(new NodeLoadField(node.location, node, ident));
          } break;
          case KEYWORD:
@@ -571,8 +570,8 @@ class Parser
       
       while (!check(Token.Type.CLOSE_BRACE))
       {
-         // TODO(sekai): smarter error handling, check for args after a varg.
-         Identifier param = expectIdentifier();
+         // TODO(kai): smarter error handling, check for args after a varg.
+         String param = expectIdentifier();
          if (check(Token.Type.VARGS))
          {
             // nom '..'
@@ -580,7 +579,7 @@ class Parser
             data.vargs = true;
          }
          
-         // TODO(sekai): check defaults
+         // TODO(kai): check defaults
          
          data.params.append(param);
          data.defaults.append(null);
@@ -653,7 +652,7 @@ class Parser
             } continue;
             default:
             {
-               // TODO(sekai): error, encountered unexpected token!
+               // TODO(kai): error, encountered unexpected token!
                next();
             } continue;
          }
@@ -674,7 +673,7 @@ class Parser
       
       def.name = expectIdentifier();
       
-      // TODO(sekai): check for extension (when implemented)
+      // TODO(kai): check for extension (when implemented)
       
       def.data = getTypeData();
       
@@ -690,7 +689,7 @@ class Parser
       
       do
       {
-         Identifier varName = expectIdentifier();
+         String varName = expectIdentifier();
          NodeExpression varValue;
          
          if (check(Token.Type.ASSIGN))
@@ -710,7 +709,7 @@ class Parser
             varValue = new NodeNullLiteral(null);
          }
          
-         // TODO(sekai): Do something with null values? expect() calls already error.
+         // TODO(kai): Do something with null values? expect() calls already error.
          def.addDefinition(varName, varValue);
          
          if (check(Token.Type.COMMA))

@@ -30,7 +30,6 @@ import java.util.function.Function;
 
 import io.fudev.collections.List;
 import io.fudev.laye.LayeException;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -44,17 +43,17 @@ class LayeList
    
    static
    {
-      TYPEDEF_LIST.addMethod(Identifier.get("ForEach"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("ForEach", new LayeFunction((vm, thisObject, args) ->
       {
-         // FIXME(sekai): proper error checking plz
+         // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
          LayeObject fn = args[0];
          list.forEach(value -> fn.invoke(vm, null, value));
          return(NULL);
       }));
-      TYPEDEF_LIST.addMethod(Identifier.get("Map"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("Map", new LayeFunction((vm, thisObject, args) ->
       {
-         // FIXME(sekai): proper error checking plz
+         // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
          LayeList result = new LayeList();
          LayeObject fn = args[0];
@@ -64,9 +63,9 @@ class LayeList
          }
          return(result);
       }));
-      TYPEDEF_LIST.addMethod(Identifier.get("Replace"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("Replace", new LayeFunction((vm, thisObject, args) ->
       {
-         // FIXME(sekai): proper error checking plz
+         // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
          LayeObject fn = args[0];
          for (int i = 0; i < list.size(); i++)
@@ -75,9 +74,9 @@ class LayeList
          }
          return(thisObject);
       }));
-      TYPEDEF_LIST.addMethod(Identifier.get("Append"), new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("Append", new LayeFunction((vm, thisObject, args) ->
       {
-         // FIXME(sekai): proper error checking plz
+         // FIXME(kai): proper error checking plz
          LayeObject value = args[0];
          ((LayeList)thisObject).list.append(value);
          return(NULL);

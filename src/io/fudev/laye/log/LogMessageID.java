@@ -31,7 +31,7 @@ import java.util.HashMap;
 public final
 class LogMessageID
 {
-   // TODO(sekai): I think this should take descriptions, for user help.
+   // TODO(kai): I think this should take descriptions, for user help.
    
    private static final HashMap<Integer, LogMessageID> ids = new HashMap<>();
    

@@ -52,7 +52,7 @@ class LayeWindow extends JFrame
    //@LayeSetter(name = "size")
    public void setSize(LayeVM vm, LayeObject arg)
    {
-      // TODO(sekai): error checks
+      // TODO(kai): error checks
       LayeObject widthObj = arg.load(vm, LayeInt.I0), heightObj = arg.load(vm, LayeInt.I1);
       int width = widthObj.intValue(vm), height = heightObj.intValue(vm);
       super.setSize(width, height);

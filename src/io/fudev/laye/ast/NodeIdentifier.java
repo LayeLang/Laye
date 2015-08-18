@@ -25,7 +25,6 @@ package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -34,9 +33,9 @@ public
 class NodeIdentifier
    extends NodeExpression
 {
-   public Identifier value;
+   public String value;
    
-   public NodeIdentifier(Location location, Identifier value)
+   public NodeIdentifier(Location location, String value)
    {
       super(location);
       this.value = value;

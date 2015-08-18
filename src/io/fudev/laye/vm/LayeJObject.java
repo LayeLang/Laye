@@ -49,7 +49,7 @@ class LayeJObject
    @Override
    public String toString()
    {
-      return("JavaObject:TODO"); // TODO(sekai): toString() for LayeJObjects
+      return("JavaObject:TODO"); // TODO(kai): toString() for LayeJObjects
    }
 
    @Override

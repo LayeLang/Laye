@@ -25,7 +25,6 @@ package io.fudev.laye.vm;
 
 import java.util.Arrays;
 
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 
 /**
@@ -72,13 +71,13 @@ class LayeReference
    }
 
    @Override
-   public LayeObject getField(LayeVM vm, Identifier key)
+   public LayeObject getField(LayeVM vm, String key)
    {
       return(deref(vm).getField(vm, key));
    }
 
    @Override
-   public void setField(LayeVM vm, Identifier key, LayeObject object)
+   public void setField(LayeVM vm, String key, LayeObject object)
    {
       deref(vm).setField(vm, key, object);
    }
@@ -102,7 +101,7 @@ class LayeReference
    }
 
    @Override
-   public LayeObject invokeMethod(LayeVM vm, Identifier methodIndex, LayeObject... args)
+   public LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
    {
       return(deref(vm).invokeMethod(vm, methodIndex, args));
    }
@@ -446,9 +445,9 @@ class LayeFieldReference
 {
    private final LayeVM vm;
    private final LayeObject object;
-   private final Identifier key;
+   private final String key;
 
-   public LayeFieldReference(LayeVM vm, LayeObject object, Identifier key)
+   public LayeFieldReference(LayeVM vm, LayeObject object, String key)
    {
       this.vm = vm;
       this.object = object;

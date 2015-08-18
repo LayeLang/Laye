@@ -46,7 +46,7 @@ class LayeClosure
    @Override
    public String toString()
    {
-      return "LayeClosure:TODO"; // FIXME(sekai): give closures toString()
+      return "LayeClosure:TODO"; // FIXME(kai): give closures toString()
    }
 
    @Override

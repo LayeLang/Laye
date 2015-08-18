@@ -26,11 +26,11 @@ class LocalValueInfo
 {
    private static final int IS_OUTER_VALUE = -1;
    
-   public Identifier name;
+   public String name;
    public int location;
    public int startOp = 0, endOp = 0;
    
-   public LocalValueInfo(Identifier name, int location)
+   public LocalValueInfo(String name, int location)
    {
       this.location = location;
       this.name = name;
@@ -41,7 +41,7 @@ class LocalValueInfo
       this(that.name, that.location, that.startOp, that.endOp);
    }
    
-   public LocalValueInfo(Identifier name, int location, int startOp, int endOp)
+   public LocalValueInfo(String name, int location, int startOp, int endOp)
    {
       this.name = name;
       this.location = location;

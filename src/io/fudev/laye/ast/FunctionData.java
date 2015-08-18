@@ -24,7 +24,6 @@
 package io.fudev.laye.ast;
 
 import io.fudev.collections.List;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -32,7 +31,7 @@ import io.fudev.laye.struct.Identifier;
 public
 class FunctionData
 {
-   public List<Identifier> params = new List<>();
+   public List<String> params = new List<>();
    public List<NodeExpression> defaults = new List<>();
    public NodeExpression body = null;
    public boolean vargs = false;

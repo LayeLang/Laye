@@ -30,11 +30,11 @@ class OuterValueInfo
       LOCAL, OUTER
    }
    
-   public final Identifier name;
+   public final String name;
    public final int pos;
    public Type type;
    
-   public OuterValueInfo(Identifier name, int pos, Type type)
+   public OuterValueInfo(String name, int pos, Type type)
    {
       this.name = name;
       this.pos = pos;

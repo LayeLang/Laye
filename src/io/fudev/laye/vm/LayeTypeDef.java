@@ -26,7 +26,6 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 
 /**
@@ -36,11 +35,11 @@ public
 class LayeTypeDef
    extends LayeObject
 {
-   HashMap<Identifier, LayeObject> methods = new HashMap<>();
+   HashMap<String, LayeObject> methods = new HashMap<>();
    HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
    
    private LayeObject initCtor = null;
-   private HashMap<Identifier, LayeObject> ctors = new HashMap<>();
+   private HashMap<String, LayeObject> ctors = new HashMap<>();
    
    public LayeTypeDef()
    {
@@ -134,7 +133,7 @@ class LayeTypeDef
       return true;
    }
 
-   public LayeObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
+   public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);
       if (initCtor != null)
@@ -146,7 +145,7 @@ class LayeTypeDef
       {
          if (ctorName != null)
          {
-            throw new LayeException(vm, "ctor '%s' does not exist.", ctorName.image);
+            throw new LayeException(vm, "ctor '%s' does not exist.", ctorName);
          }
          throw new LayeException(vm, "default ctor does not exist.");
       }
@@ -154,7 +153,7 @@ class LayeTypeDef
       return(result);
    }
    
-   public void addMethod(Identifier name, LayeObject value)
+   public void addMethod(String name, LayeObject value)
    {
       if (methods.get(name) != null)
       {

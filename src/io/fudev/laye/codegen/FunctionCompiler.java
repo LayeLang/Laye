@@ -33,7 +33,6 @@ import java.util.HashMap;
 import io.fudev.laye.ast.*;
 import io.fudev.laye.log.DetailLogger;
 import io.fudev.laye.struct.FunctionPrototype;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.vm.LayeObject;
 
 /**
@@ -75,7 +74,7 @@ class FunctionCompiler
    {
       for (int i = 0; i < node.names.size(); i++)
       {
-         Identifier name = node.names.get(i);
+         String name = node.names.get(i);
          builder.defineVariable(name);
          node.values.get(i).accept(this);
          builder.visitSetVariable(name);
@@ -303,12 +302,12 @@ class FunctionCompiler
    public void visit(NodeIf node)
    {
       node.condition.accept(this);
-      // TODO(sekai): check for the NOT keyword and do a jumpTrue otherwise.
-      // TODO(sekai): check ==, !=
+      // TODO(kai): check for the NOT keyword and do a jumpTrue otherwise.
+      // TODO(kai): check ==, !=
       int jump = builder.opJumpFalse(0);
       node.pass.accept(this);
       int ifEnd;
-      // TODO(sekai): when we process the AST, we should check for cases where we need to add a null literal as the fail case.
+      // TODO(kai): when we process the AST, we should check for cases where we need to add a null literal as the fail case.
       if (node.fail != null)
       {
          ifEnd = builder.opJump(0);
@@ -388,7 +387,7 @@ class FunctionCompiler
       int appendConst = -1;
       if (isResultRequired)
       {
-         appendConst = builder.addConstant(Identifier.get("Append"));
+         appendConst = builder.addConstant("Append");
          builder.opDup();
       }
       node.pass.accept(this);
@@ -480,7 +479,7 @@ class FunctionCompiler
    {
       if (node.expression instanceof NodeIdentifier)
       {
-         Identifier name = ((NodeIdentifier)node.expression).value;
+         String name = ((NodeIdentifier)node.expression).value;
          int index;
          if ((index = builder.getLocalLocation(name)) != -1)
          {
@@ -492,7 +491,7 @@ class FunctionCompiler
          }
          else
          {
-            builder.opRef(0, builder.addConstant(name.image));
+            builder.opRef(0, builder.addConstant(name));
          }
       }
       else if (node.expression instanceof NodeLoadIndex)
@@ -502,9 +501,10 @@ class FunctionCompiler
          load.index.accept(this);
          builder.opRef(3, 0);
       }
+      // FIXME(kai): field references
       else
       {
-         // FIXME(sekai): error!
+         // FIXME(kai): error!
       }
    }
    

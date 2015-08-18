@@ -27,7 +27,6 @@ import static io.fudev.laye.vm.Instruction.*;
 
 import io.fudev.collections.List;
 import io.fudev.laye.struct.FunctionPrototype;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.LocalValueInfo;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
@@ -124,7 +123,7 @@ class FunctionPrototypeBuilder
    private final List<OuterValueInfo> outerValues = new List<>();
    private final List<LocalValueInfo> localValues = new List<>();
    private final List<FunctionPrototype> nested = new List<>();
-   // TODO(sekai): add jump tables for match expressions
+   // TODO(kai): add jump tables for match expressions
    
    private Scope scope = null;
    
@@ -328,13 +327,13 @@ class FunctionPrototypeBuilder
    
    // ===== Locals
    
-   public int addParameter(Identifier name)
+   public int addParameter(String name)
    {
       numParams++;
       return(addLocal(name));
    }
    
-   public int addLocal(Identifier name)
+   public int addLocal(String name)
    {
       final int local = allocateLocal(name);
       if (local == -1)
@@ -345,7 +344,7 @@ class FunctionPrototypeBuilder
       return(local);
    }
    
-   public int getLocalLocation(Identifier name)
+   public int getLocalLocation(String name)
    {
       for (final LocalValueInfo var : localValues)
       {
@@ -357,7 +356,7 @@ class FunctionPrototypeBuilder
       return(-1);
    }
    
-   public Identifier getLocalName(int local)
+   public String getLocalName(int local)
    {
       for (final LocalValueInfo var : localValues)
       {
@@ -389,7 +388,7 @@ class FunctionPrototypeBuilder
       outerValueCount++;
    }
    
-   private int allocateLocal(Identifier name)
+   private int allocateLocal(String name)
    {
       if (name == null)
       {
@@ -413,7 +412,7 @@ class FunctionPrototypeBuilder
    
    // ===== Outers
    
-   public int getOuterLocation(Identifier name)
+   public int getOuterLocation(String name)
    {
       final int outerSize = outerValues.size();
       for (int i = 0; i < outerSize; i++)
@@ -446,7 +445,7 @@ class FunctionPrototypeBuilder
       return(-1);
    }
    
-   public Identifier getOuterName(int outer)
+   public String getOuterName(int outer)
    {
       for (final OuterValueInfo var : outerValues)
       {
@@ -525,7 +524,7 @@ class FunctionPrototypeBuilder
       code.set(index, op | ((c & MAX_C) << POS_C));
    }
    
-   public void defineVariable(Identifier name)
+   public void defineVariable(String name)
    {
       if (parent != null)
       {
@@ -533,7 +532,7 @@ class FunctionPrototypeBuilder
       }
    }
    
-   public void visitGetVariable(Identifier name)
+   public void visitGetVariable(String name)
    {
       int pos;
       if ((pos = getLocalLocation(name)) != -1)
@@ -546,11 +545,11 @@ class FunctionPrototypeBuilder
       }
       else
       {
-         opLoadGlobal(addConstant(name.image));
+         opLoadGlobal(addConstant(name));
       }
    }
    
-   public void visitSetVariable(Identifier name)
+   public void visitSetVariable(String name)
    {
       int pos;
       if ((pos = getLocalLocation(name)) != -1)
@@ -563,7 +562,7 @@ class FunctionPrototypeBuilder
       }
       else
       {
-         opStoreGlobal(addConstant(name.image));
+         opStoreGlobal(addConstant(name));
       }
    }
    
@@ -754,7 +753,7 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   // TODO(sekai): opType
+   // TODO(kai): opType
    
    public int opCloseOuters(int index)
    {
@@ -776,7 +775,7 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   // TODO(sekai): opInvokeBase
+   // TODO(kai): opInvokeBase
    
    public int opJump(int to)
    {

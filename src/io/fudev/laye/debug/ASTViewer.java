@@ -148,7 +148,7 @@ class ASTViewer
       else
       {
          print("VAR ");
-         print(node.names.get(0).image);
+         print(node.names.get(0));
          print(" = ");
          node.values.get(0).accept(this);
       }
@@ -225,7 +225,7 @@ class ASTViewer
    public void visit(NodeFunctionDef node)
    {
       print("FUNCTION ");
-      print(node.name.image);
+      print(node.name);
       print(" (");
       for (int i = 0; i < node.data.params.size(); i++)
       {
@@ -233,7 +233,7 @@ class ASTViewer
          {
             print(", ");
          }
-         print(node.data.params.get(i).image);
+         print(node.data.params.get(i));
       }
       if (node.data.vargs)
       {
@@ -253,7 +253,7 @@ class ASTViewer
          {
             print(", ");
          }
-         print(node.data.params.get(i).image);
+         print(node.data.params.get(i));
       }
       if (node.data.vargs)
       {
@@ -275,7 +275,7 @@ class ASTViewer
    @Override
    public void visit(NodeIdentifier node)
    {
-      print(node.value.image);
+      print(node.value);
    }
    
    @Override
@@ -354,7 +354,7 @@ class ASTViewer
       print("(");
       node.target.accept(this);
       print(").");
-      print(node.index.image);
+      print(node.index);
    }
    
    @Override

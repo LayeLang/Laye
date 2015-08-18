@@ -23,8 +23,6 @@
  */
 package io.fudev.laye.struct;
 
-import java.util.HashMap;
-
 import io.fudev.laye.lexical.Token;
 
 /**
@@ -33,23 +31,6 @@ import io.fudev.laye.lexical.Token;
 public final
 class Identifier
 {
-   private static final HashMap<String, Identifier> idents = new HashMap<>();
-   
-   public static Identifier get(String image)
-   {
-      if (!isIdentifier(image))
-      {
-         return(null);
-      }
-      Identifier result = idents.get(image);
-      if (result == null)
-      {
-         result = new Identifier(image);
-         idents.put(image, result);
-      }
-      return(result);
-   }
-   
    public static boolean isIdentifier(String image)
    {
       if (image == null || image.length() == 0 || image.equals("_"))
@@ -80,57 +61,5 @@ class Identifier
    public static boolean isIdentifierPart(int c)
    {
       return(Character.isDigit(c) || isIdentifierStart(c));
-   }
-   
-   public final String image;
-   
-   private Identifier(String image)
-   {
-      this.image = image;
-   }
-   
-   @Override
-   public String toString()
-   {
-      return(image);
-   }
-
-   @Override
-   public int hashCode()
-   {
-      final int prime = 31;
-      int result = 1;
-      result = prime * result + ((image == null) ? 0 : image.hashCode());
-      return result;
-   }
-
-   @Override
-   public boolean equals(Object obj)
-   {
-      if (this == obj)
-      {
-         return true;
-      }
-      if (obj == null)
-      {
-         return false;
-      }
-      if (!(obj instanceof Identifier))
-      {
-         return false;
-      }
-      Identifier other = (Identifier) obj;
-      if (image == null)
-      {
-         if (other.image != null)
-         {
-            return false;
-         }
-      }
-      else if (!image.equals(other.image))
-      {
-         return false;
-      }
-      return true;
    }
 }

@@ -29,7 +29,6 @@ import java.lang.reflect.Modifier;
 import java.util.HashMap;
 
 import io.fudev.collections.List;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -50,7 +49,7 @@ class LayeJTypeDef
    
    Class<?> _class;
    
-   private final HashMap<Identifier, Method> ctors = new HashMap<>();
+   private final HashMap<String, Method> ctors = new HashMap<>();
    
    private LayeJTypeDef(Class<?> _class)
    {
@@ -58,13 +57,13 @@ class LayeJTypeDef
    }
    
    @Override
-   public LayeJObject instantiate(LayeVM vm, Identifier ctorName, LayeObject... args)
+   public LayeJObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       LayeJObject result = new LayeJObject(this);
       Method ctor = ctors.get(ctorName);
       if (ctor == null)
       {
-         // TODO(sekai): throw exception.
+         // TODO(kai): throw exception.
       }
       try
       {

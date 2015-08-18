@@ -69,7 +69,7 @@ class Operator
     * @param precedence
     * @return
     */
-   public static Operator get(String image, int precedence)
+   private static Operator get(String image, int precedence)
    {
       assert(precedence > 0);
       if (!isOperatorImage(image))

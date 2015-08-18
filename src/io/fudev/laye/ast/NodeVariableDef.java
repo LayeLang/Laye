@@ -28,7 +28,6 @@ import java.util.Iterator;
 import io.fudev.collections.List;
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.util.Pair;
 
 /**
@@ -37,9 +36,9 @@ import io.fudev.laye.util.Pair;
 public
 class NodeVariableDef
    extends NodeExpression
-      implements Iterable<Pair<Identifier, NodeExpression>>
+      implements Iterable<Pair<String, NodeExpression>>
 {
-   public List<Identifier> names = new List<>();
+   public List<String> names = new List<>();
    public List<NodeExpression> values = new List<>();
    
    public NodeVariableDef(Location location)
@@ -47,7 +46,7 @@ class NodeVariableDef
       super(location);
    }
    
-   public void addDefinition(Identifier name, NodeExpression value)
+   public void addDefinition(String name, NodeExpression value)
    {
       names.append(name);
       values.append(value);
@@ -66,11 +65,11 @@ class NodeVariableDef
    }
 
    @Override
-   public Iterator<Pair<Identifier, NodeExpression>> iterator()
+   public Iterator<Pair<String, NodeExpression>> iterator()
    {
-      return(new Iterator<Pair<Identifier,NodeExpression>>()
+      return(new Iterator<Pair<String, NodeExpression>>()
       {
-         private final List<Identifier> names = new List<>(NodeVariableDef.this.names);
+         private final List<String> names = new List<>(NodeVariableDef.this.names);
          private final List<NodeExpression> values = new List<>(NodeVariableDef.this.values);
 
          private final int length = names.size();
@@ -83,7 +82,7 @@ class NodeVariableDef
          }
 
          @Override
-         public Pair<Identifier, NodeExpression> next()
+         public Pair<String, NodeExpression> next()
          {
             return(new Pair<>(names.get(index), values.get(index++)));
          }

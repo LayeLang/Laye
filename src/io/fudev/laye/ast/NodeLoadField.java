@@ -25,7 +25,6 @@ package io.fudev.laye.ast;
 
 import io.fudev.laye.lexical.Location;
 import io.fudev.laye.process.ASTProcessor;
-import io.fudev.laye.struct.Identifier;
 
 /**
  * @author Sekai Kyoretsuna
@@ -35,9 +34,9 @@ class NodeLoadField
    extends NodeExpression
 {
    public NodeExpression target;
-   public Identifier index;
+   public String index;
    
-   public NodeLoadField(Location location, NodeExpression target, Identifier index)
+   public NodeLoadField(Location location, NodeExpression target, String index)
    {
       super(location);
       this.target = target;

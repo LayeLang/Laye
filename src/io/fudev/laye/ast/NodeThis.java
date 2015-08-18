@@ -41,13 +41,13 @@ class NodeThis
    @Override
    public void accept(IASTVisitor visitor)
    {
-      // TODO(sekai): visitor.visit(this);
+      // TODO(kai): visitor.visit(this);
    }
    
    @Override
    public ASTNode accept(ASTProcessor processor)
    {
-      // TODO(sekai): return(processor.process(this));
+      // TODO(kai): return(processor.process(this));
       return(null);
    }
 }
