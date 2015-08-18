@@ -1,4 +1,4 @@
-fn WhileTest(a, b)
+fn whileTest(a, b)
    while a < b
    {
       var res = a
@@ -7,7 +7,7 @@ fn WhileTest(a, b)
    }
    el "a > b"
 
-PrintLn("> 5, 10")
-PrintLn(WhileTest(5,  10))
-PrintLn("\n> 20, 10")
-PrintLn(WhileTest(20,  10))
+println("> 5, 10")
+println(whileTest(5,  10))
+println("\n> 20, 10")
+println(whileTest(20,  10))

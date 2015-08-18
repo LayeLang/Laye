@@ -14,14 +14,14 @@ var a # Define a global variable
 
 # Define a function that sets an output variable to 10.
 # The output variable is expected to be a reference.
-fn SetToTen(out)
+fn setToTen(out)
    out = 10
 
 # Define a function that returns another function.
 # The returned function swaps the values of b and c,
 # assuming both are references.
 # The returned function will be referred to as the 'swap function' later.
-fn OuterFunction(b)
+fn outerFunction(b)
    # In the scope of this function, note how b is an outer
    # value and c is a local value.
    fn(c)
@@ -33,20 +33,20 @@ fn OuterFunction(b)
 
 # To show auto-dereferencing, let's reference our function and
 # give it a better name:
-var GenerateSwap = ref OuterFunction
+var generateSwap = ref outerFunction
 
 # define two more variables that we'll use as arguments later.
 var five = 5, seventeen = 17
 # Initial output, should be "null, 5, 17"
-PrintLn(a, five, seventeen)
-# Set a to 10 via the SetToTen function using a reference to a
-SetToTen(ref a)
+println(a, five, seventeen)
+# Set a to 10 via the setToTen function using a reference to a
+setToTen(ref a)
 # Get the previously mentioned swap function, which is auto-dereferenced from
 # our nifty little variable, passing a reference to five
-var NewFunction = GenerateSwap(ref five)
+var newFunction = generateSwap(ref five)
 # Call the swap function, passing a reference to seventeen
-NewFunction(ref seventeen)
+newFunction(ref seventeen)
 # Final output, should be "10, 17, 5"
-PrintLn(a, five, seventeen)
+println(a, five, seventeen)
 # One more show of auto-dereferencing, this will yield a number (17 + 5 = 22)
-PrintLn(five + seventeen)
+println(five + seventeen)

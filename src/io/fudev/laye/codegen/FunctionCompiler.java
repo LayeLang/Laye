@@ -387,7 +387,7 @@ class FunctionCompiler
       int appendConst = -1;
       if (isResultRequired)
       {
-         appendConst = builder.addConstant("Append");
+         appendConst = builder.addConstant("append");
          builder.opDup();
       }
       node.pass.accept(this);

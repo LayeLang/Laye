@@ -1,4 +1,4 @@
-fn Respond(a)
+fn respond(a)
    a match
    {
       _: "Something else"
@@ -7,4 +7,4 @@ fn Respond(a)
       2: "Two"
    }
 
-(0 -> 4).ForEach(Respond |> PrintLn)
+(0 -> 4).forEach(respond |> println)

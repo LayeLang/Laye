@@ -1,6 +1,6 @@
-fn Factorial(n)
+fn factorial(n)
    if n == 0
       1
-   el n * Factorial(n - 1)
+   el n * factorial(n - 1)
 
-PrintLn(Factorial(7))
+println(factorial(7))

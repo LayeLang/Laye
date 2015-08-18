@@ -1,6 +1,6 @@
-fn Fibonacci(n)
+fn fibonacci(n)
    if n <= 1
       n
-   el Fibonacci(n - 1) + Fibonacci(n - 2)
+   el fibonacci(n - 1) + fibonacci(n - 2)
 
-(1 -> 10).ForEach(Fibonacci |> PrintLn)
+(1 -> 10).forEach(fibonacci |> println)

@@ -43,7 +43,7 @@ class LayeList
    
    static
    {
-      TYPEDEF_LIST.addMethod("ForEach", new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("forEach", new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
@@ -51,7 +51,7 @@ class LayeList
          list.forEach(value -> fn.invoke(vm, null, value));
          return(NULL);
       }));
-      TYPEDEF_LIST.addMethod("Map", new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("map", new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
@@ -63,7 +63,7 @@ class LayeList
          }
          return(result);
       }));
-      TYPEDEF_LIST.addMethod("Replace", new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("replace", new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(kai): proper error checking plz
          List<LayeObject> list = ((LayeList)thisObject).list;
@@ -74,7 +74,7 @@ class LayeList
          }
          return(thisObject);
       }));
-      TYPEDEF_LIST.addMethod("Append", new LayeFunction((vm, thisObject, args) ->
+      TYPEDEF_LIST.addMethod("append", new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(kai): proper error checking plz
          LayeObject value = args[0];

@@ -1,2 +1,2 @@
-var List = (1 -> 11)
-List.ForEach(PrintLn <| fn(value) List[value - 1])
+var list = (1 -> 11)
+list.forEach(println <| fn(value) list[value - 1])

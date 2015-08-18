@@ -1,1 +1,1 @@
-PrintLn('Hello, world')
+println('Hello, world')

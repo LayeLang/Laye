@@ -39,10 +39,10 @@ class KitLaye extends LayeKit
    
    public KitLaye(LayeVM vm)
    {
-      setField(vm, "PrintLn", this::PrintLn);
+      setField(vm, "println", this::println);
    }
    
-   public LayeObject PrintLn(LayeVM vm, LayeObject thisObject, LayeObject[] args)
+   public LayeObject println(LayeVM vm, LayeObject thisObject, LayeObject[] args)
    {
       StringBuilder result = new StringBuilder();
       for (int i = 0; i < args.length; i++)
