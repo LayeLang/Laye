@@ -548,7 +548,8 @@ class Parser
             if ((right = parsePrimaryExpression()) != null)
             {
                while (check(Token.Type.OPERATOR) &&
-                     ((Operator)token.data).precedence > ((Operator)thisToken.data).precedence)
+                     ((Operator)token.data).precedence > (isOperator ?
+                           ((Operator)thisToken.data).precedence : Operator.DEFAULT_PRECEDENCE))
                {
                   right = factorRHS(right, ((Operator)token.data).precedence);
                }

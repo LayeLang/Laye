@@ -1,1 +1,5 @@
-println('Hello, world!')
+var file = io.open("cmdtest.laye", "a+")
+println(file.readLines() join "\n" <> "\n")
+file write "# I added a comment!\n"
+println(file.readLines() join "\n")
+file.close()

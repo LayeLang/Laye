@@ -38,6 +38,18 @@ class LayeString
    {
       this.value = value;
    }
+
+   @Override
+   public boolean isString(LayeVM vm)
+   {
+      return(true);
+   }
+
+   @Override
+   public String checkString(LayeVM vm)
+   {
+      return(value);
+   }
    
    @Override
    public String toString()

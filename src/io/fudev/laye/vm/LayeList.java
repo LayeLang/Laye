@@ -51,6 +51,22 @@ class LayeList
          list.forEach(value -> fn.invoke(vm, null, value));
          return(NULL);
       }));
+      TYPEDEF_LIST.addMethod("join", new LayeFunction((vm, thisObject, args) ->
+      {
+         StringBuilder result = new StringBuilder();
+         // FIXME(kai): proper error checking plz
+         List<LayeObject> list = ((LayeList)thisObject).list;
+         String sep = args[0].checkString(vm);
+         for (int i = 0; i < list.size(); i++)
+         {
+            if (i > 0)
+            {
+               result.append(sep);
+            }
+            result.append(list.get(i));
+         }
+         return(new LayeString(result.toString()));
+      }));
       TYPEDEF_LIST.addMethod("map", new LayeFunction((vm, thisObject, args) ->
       {
          // FIXME(kai): proper error checking plz
@@ -83,11 +99,18 @@ class LayeList
       }));
    }
    
-   private final List<LayeObject> list = new List<>();
+   private final List<LayeObject> list;
    
    public LayeList()
    {
       super(TYPEDEF_LIST);
+      list = new List<>();
+   }
+   
+   public LayeList(int initialCapacity)
+   {
+      super(TYPEDEF_LIST);
+      list = new List<>(initialCapacity);
    }
    
    public LayeList(LayeObject... values)

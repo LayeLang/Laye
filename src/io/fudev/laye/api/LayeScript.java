@@ -28,6 +28,7 @@ import java.io.IOException;
 import io.fudev.laye.ast.AST;
 import io.fudev.laye.codegen.FunctionCompiler;
 import io.fudev.laye.file.ScriptFile;
+import io.fudev.laye.kit.KitIO;
 import io.fudev.laye.kit.KitLaye;
 import io.fudev.laye.lexical.Lexer;
 import io.fudev.laye.lexical.TokenStream;
@@ -60,6 +61,7 @@ class LayeScript
       vm = new LayeVM();
       vm.state.registerKit("Laye", new KitLaye(vm));
       vm.state.useAll("Laye");
+      vm.state.registerKit("io", new KitIO(vm));
    }
 
    private void logDetails(ScriptFile file, String name)

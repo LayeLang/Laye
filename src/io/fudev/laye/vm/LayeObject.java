@@ -118,9 +118,29 @@ class LayeObject
       return(false);
    }
    
+   public int checkInt(LayeVM vm)
+   {
+      throw new LayeException(vm, "could not convert " + getClass().getSimpleName() + " to int.");
+   }
+   
+   public long checkLong(LayeVM vm)
+   {
+      throw new LayeException(vm, "could not convert " + getClass().getSimpleName() + " to long.");
+   }
+   
    public boolean isFloat(LayeVM vm)
    {
       return(false);
+   }
+   
+   public boolean isString(LayeVM vm)
+   {
+      return(false);
+   }
+   
+   public String checkString(LayeVM vm)
+   {
+      throw new LayeException(vm, "could not convert " + getClass().getSimpleName() + " to string.");
    }
    
    public boolean isFunction(LayeVM vm)

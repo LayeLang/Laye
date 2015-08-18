@@ -78,6 +78,18 @@ class LayeInt
    }
    
    @Override
+   public int checkInt(LayeVM vm)
+   {
+      return((int)value);
+   }
+
+   @Override
+   public long checkLong(LayeVM vm)
+   {
+      return(value);
+   }
+   
+   @Override
    public String toString()
    {
       return(Long.toString(value));
