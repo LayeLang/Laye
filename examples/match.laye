@@ -7,4 +7,4 @@ fn respond(a)
       2: "Two"
    }
 
-(0 -> 4).forEach(respond |> println)
+(0 -> 4) forEach (respond |> println)

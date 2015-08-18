@@ -3,4 +3,4 @@ fn fibonacci(n)
       n
    el fibonacci(n - 1) + fibonacci(n - 2)
 
-(1 -> 10).forEach(fibonacci |> println)
+(1 -> 10) forEach (fibonacci |> println)

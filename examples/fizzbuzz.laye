@@ -7,4 +7,4 @@ fn fizzbuzz(value)
       'buzz'
    el value
 
-(1 -> 100).forEach(fizzbuzz |> println)
+(1 -> 100) forEach (fizzbuzz |> println)

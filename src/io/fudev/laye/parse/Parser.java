@@ -523,32 +523,47 @@ class Parser
    
    private NodeExpression factorRHS(NodeExpression left, int minp)
    {
-      while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence >= minp)
+      while ((check(Token.Type.OPERATOR) && ((Operator)token.data).precedence >= minp) ||
+             (check(Token.Type.IDENTIFIER) && Operator.DEFAULT_PRECEDENCE >= minp &&
+                token.location.line == left.location.line))
       {
+         final boolean isOperator = check(Token.Type.OPERATOR);
+         final Token thisToken = token;
          final Location location = token.location;
-         final Operator op = (Operator)token.data;
          // nom Operator
          next();
          // first, is this an assignment operator?
          NodeExpression right;
-         if (check(Token.Type.ASSIGN))
+         if (isOperator && check(Token.Type.ASSIGN))
          {
             // nom '='
             next();
             right = factor();
             return(new NodeAssignment(left.location, left,
-                  new NodeInfixExpression(left.location, left, right, op)));
+                  new NodeInfixExpression(left.location, left, right, (Operator)thisToken.data)));
          }
          else
          {
             // Load up the right hand side, if one exists
             if ((right = parsePrimaryExpression()) != null)
             {
-               while (check(Token.Type.OPERATOR) && ((Operator)token.data).precedence > op.precedence)
+               while (check(Token.Type.OPERATOR) &&
+                     ((Operator)token.data).precedence > ((Operator)thisToken.data).precedence)
                {
                   right = factorRHS(right, ((Operator)token.data).precedence);
                }
-               left = new NodeInfixExpression(left.location, left, right, op);
+               if (isOperator)
+               {
+                  left = new NodeInfixExpression(left.location, left, right,
+                        (Operator)thisToken.data);
+               }
+               else
+               {
+                  List<NodeExpression> args = new List<>();
+                  args.append(right);
+                  left = new NodeInvoke(left.location, new NodeLoadField(location, left,
+                              (String)thisToken.data), args);
+               }
             }
             else
             {
