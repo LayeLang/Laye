@@ -23,13 +23,47 @@
  */
 package io.fudev.laye;
 
+import java.io.IOException;
+import java.util.Arrays;
+
+import io.fudev.laye.api.LayeScript;
+import io.fudev.laye.file.ScriptFile;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
 class LayeCompilerCMD
 {
-   public static void main(String[] args)
+   public static void main(String[] args) throws IOException
    {
+      if (args.length == 0)
+      {
+         System.err.println("expected path to execute.");
+         return;
+      }
+      
+      String[] params = new String[0];
+      for (int i = 0; i < args.length; i++)
+      {
+         final String arg = args[i];
+         if (!arg.startsWith("-"))
+         {
+            params = Arrays.copyOfRange(args, 0, i);
+            break;
+         }
+      }
+      
+      if (args.length - params.length != 1)
+      {
+         System.err.println("expected location of one file to execute, multiple candidates detected.");
+         return;
+      }
+      
+      String filePath = args[args.length - 1];
+      LayeScript script = new LayeScript();
+      ScriptFile file = ScriptFile.fromFile(filePath);
+      
+      script.doFile(file);
    }
 }
