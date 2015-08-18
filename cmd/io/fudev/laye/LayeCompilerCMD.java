@@ -26,7 +26,8 @@ package io.fudev.laye;
 /**
  * @author Sekai Kyoretsuna
  */
-public class LayeCompilerCMD
+public
+class LayeCompilerCMD
 {
    public static void main(String[] args)
    {

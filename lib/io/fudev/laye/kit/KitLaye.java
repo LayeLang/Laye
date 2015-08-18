@@ -33,7 +33,8 @@ import io.fudev.laye.vm.LayeVM;
  * @author Sekai Kyoretsuna
  */
 public
-class KitLaye extends LayeKit
+class KitLaye
+   extends LayeKit
 {
    public PrintStream out = System.out;
    

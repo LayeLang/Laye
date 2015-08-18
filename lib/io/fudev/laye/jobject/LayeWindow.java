@@ -34,7 +34,8 @@ import io.fudev.laye.vm.LayeVM;
  * @author Sekai Kyoretsuna
  */
 public final
-class LayeWindow extends JFrame
+class LayeWindow
+   extends JFrame
 {
    private static final long serialVersionUID = -7218160507649582736L;
    
