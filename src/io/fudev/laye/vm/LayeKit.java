@@ -37,7 +37,7 @@ class LayeKit
    @Override
    public String toString()
    {
-      return(null);
+      return("LayeKit:" + hashCode());
    }
 
    public void setField(LayeVM vm, String key, LayeFunction.Callback callback)
