@@ -39,8 +39,20 @@ class LayeList
    extends LayeObject
    implements Iterable<LayeObject>
 {
-   private static final LayeTypeDef TYPEDEF_LIST = new LayeTypeDef();
-   
+   public static final LayeTypeDef TYPEDEF_LIST = new LayeTypeDef()
+   {
+      @Override
+      public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+      {
+         // TODO(kai): other ctors?
+         if (ctorName != null)
+         {
+            throw new LayeException(vm, "ctor '%s' does not exist.", ctorName);
+         }
+         return(new LayeList(args));
+      }
+   };
+
    static
    {
       TYPEDEF_LIST.addMethod("forEach", new LayeFunction((vm, thisObject, args) ->

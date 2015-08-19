@@ -376,4 +376,13 @@ class ASTProcessor
    {
       return(node);
    }
+   
+   public ASTNode process(NodeNewInstance node)
+   {
+      List<NodeExpression> args = node.args.map(arg -> (NodeExpression)arg.accept(this));
+      NodeNewInstance result = new NodeNewInstance(node.location,
+            (NodeExpression)node.target.accept(this), node.ctor, args);
+      result.isResultRequired = node.isResultRequired;
+      return(result);
+   }
 }

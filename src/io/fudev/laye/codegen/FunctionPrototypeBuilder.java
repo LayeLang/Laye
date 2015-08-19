@@ -899,4 +899,11 @@ class FunctionPrototypeBuilder
       appendOp_C(OP_MATCH, table);
       return(currentInsnPos());
    }
+   
+   public int opNewInstance(int ctorConst, int nargs)
+   {
+      changeStackSize(-nargs);
+      appendOp_AB(OP_NEW_INSTANCE, ctorConst, nargs);
+      return(currentInsnPos());
+   }
 }

@@ -113,6 +113,7 @@ class Instruction
 
    public static final byte OP_LOAD_FIELD       = 0x31;
    public static final byte OP_STORE_FIELD      = 0x32;
+   public static final byte OP_NEW_INSTANCE     = 0x33;
    
    private Instruction()
    {

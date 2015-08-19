@@ -506,6 +506,11 @@ class LayeVM
          {
             // TODO(kai): invoke base in the vm
          } return;
+         case OP_NEW_INSTANCE:
+         {
+            LayeObject[] args = top.popCount((insn >>> POS_B) & MAX_B);
+            top.push(top.pop().instantiate(this, (String)consts[(insn >>> POS_A) & MAX_A], args));
+         } return;
          
          case OP_JUMP:
          {

@@ -227,6 +227,11 @@ class LayeObject
    {
       return vm.invoke(getField(vm, methodIndex), this, args);
    }
+
+   public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+   {
+      throw new LayeException(vm, "Attempt to instantiate %s.", getClass().getSimpleName());
+   }
    
    public LayeObject deref(LayeVM vm)
    {

@@ -66,4 +66,9 @@ class TokenStream
    {
       return(get(internalStreamOffset + offset));
    }
+   
+   public Token previous()
+   {
+      return(get(internalStreamOffset - 1));
+   }
 }

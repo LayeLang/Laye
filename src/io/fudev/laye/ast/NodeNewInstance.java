@@ -21,58 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package io.fudev.laye.kit;
+package io.fudev.laye.ast;
 
-import java.io.PrintStream;
-
-import io.fudev.laye.vm.LayeKit;
-import io.fudev.laye.vm.LayeList;
-import io.fudev.laye.vm.LayeObject;
-import io.fudev.laye.vm.LayeVM;
+import io.fudev.collections.List;
+import io.fudev.laye.lexical.Location;
+import io.fudev.laye.process.ASTProcessor;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class KitLaye
-   extends LayeKit
+class NodeNewInstance
+   extends NodeExpression
 {
-   public PrintStream out = System.out;
+   public NodeExpression target = null;
+   public String ctor = null;
+   public List<NodeExpression> args = null;
    
-   public KitLaye(LayeVM vm)
+   public NodeNewInstance(Location location, NodeExpression target, String ctor, List<NodeExpression> args)
    {
-      setField(vm, "print", this::print);
-      setField(vm, "println", this::println);
-      setField(vm, "List", LayeList.TYPEDEF_LIST);
+      super(location);
+      this.target = target;
+      this.ctor = ctor;
+      this.args = args;
    }
    
-   public LayeObject print(LayeVM vm, LayeObject thisObject, LayeObject[] args)
+   @Override
+   public void accept(IASTVisitor visitor)
    {
-      StringBuilder result = new StringBuilder();
-      for (int i = 0; i < args.length; i++)
-      {
-         if (i > 0)
-         {
-            result.append(' ');
-         }
-         result.append(args[i]);
-      }
-      out.print(result.toString());
-      return(LayeObject.NULL);
+      visitor.visit(this);
    }
    
-   public LayeObject println(LayeVM vm, LayeObject thisObject, LayeObject[] args)
+   @Override
+   public ASTNode accept(ASTProcessor processor)
    {
-      StringBuilder result = new StringBuilder();
-      for (int i = 0; i < args.length; i++)
-      {
-         if (i > 0)
-         {
-            result.append(' ');
-         }
-         result.append(args[i]);
-      }
-      out.println(result.toString());
-      return(LayeObject.NULL);
+      return(processor.process(this));
    }
 }

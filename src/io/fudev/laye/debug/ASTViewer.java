@@ -447,4 +447,33 @@ class ASTViewer
    {
       print("_");
    }
+   
+   @Override
+   public void visit(NodeNewInstance node)
+   {
+      print("new ");
+      node.target.accept(this);
+      if (node.ctor != null)
+      {
+         print(":");
+         print(node.ctor);
+      }
+      if (node.args.size() > 0)
+      {
+         println(" (");
+         tabs++;
+         node.args.forEach(arg ->
+         {
+            tprint();
+            arg.accept(this);
+            println();
+         });
+         tabs--;
+         tprint(")");
+      }
+      else
+      {
+         println(" ()");
+      }
+   }
 }

@@ -71,9 +71,9 @@ class Keyword
 
    public static final String STR_FN = "fn";
    public static final String STR_CTOR = "ctor";
-   public static final String STR_OPERATOR = "operator";
    public static final String STR_INVOKE = "invoke";
    public static final String STR_TYPE = "type";
+   public static final String STR_NEW = "new";
    public static final String STR_USE = "use";
    public static final String STR_FROM = "from";
    public static final String STR_IMPORT = "import";
@@ -115,9 +115,9 @@ class Keyword
 
    public static final Keyword FN = new Keyword(STR_FN);
    public static final Keyword CTOR = new Keyword(STR_CTOR);
-   public static final Keyword OPERATOR = new Keyword(STR_OPERATOR);
    public static final Keyword INVOKE = new Keyword(STR_INVOKE);
    public static final Keyword TYPE = new Keyword(STR_TYPE);
+   public static final Keyword NEW = new Keyword(STR_NEW);
    public static final Keyword USE = new Keyword(STR_USE);
    public static final Keyword FROM = new Keyword(STR_FROM);
    public static final Keyword IMPORT = new Keyword(STR_IMPORT);

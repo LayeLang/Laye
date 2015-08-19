@@ -133,6 +133,7 @@ class LayeTypeDef
       return true;
    }
 
+   @Override
    public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);
@@ -160,5 +161,14 @@ class LayeTypeDef
          return;
       }
       methods.put(name, value);
+   }
+   
+   public void addCtor(String name, LayeObject value)
+   {
+      if (ctors.get(name) != null)
+      {
+         return;
+      }
+      ctors.put(name, value);
    }
 }

@@ -521,4 +521,16 @@ class FunctionCompiler
       logger.logError(node.location, ERROR_UNEXPECTED_TOKEN,
             "compiler encountered unexpected wildcard token.");
    }
+   
+   @Override
+   public void visit(NodeNewInstance node)
+   {
+      node.target.accept(this);
+      node.args.forEach(arg -> arg.accept(this));
+      builder.opNewInstance(builder.addConstant(node.ctor), node.args.size());
+      if (!node.isResultRequired)
+      {
+         builder.opPop();
+      }
+   }
 }

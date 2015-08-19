@@ -212,11 +212,16 @@ class Parser
       return exprs;
    }
    
+   private NodeExpression parsePrimaryExpression()
+   {
+      return(parsePrimaryExpression(true));
+   }
+   
    /**
     * DON'T call this directly, use {@link #factor()}
     * @return
     */
-   private NodeExpression parsePrimaryExpression()
+   private NodeExpression parsePrimaryExpression(boolean allowCall)
    {
       Location location = getLocation();
       switch (token.type)
@@ -233,7 +238,7 @@ class Parser
             }
             else
             {
-               return(postfix(new NodeTuple(location, values)));
+               return(postfix(new NodeTuple(location, values), allowCall));
             }
          }
          case OPEN_SQUARE_BRACE:
@@ -242,7 +247,7 @@ class Parser
             next();
             List<NodeExpression> values = commaFactor();
             expect(Token.Type.CLOSE_SQUARE_BRACE);
-            return postfix(new NodeList(location, values));
+            return postfix(new NodeList(location, values), allowCall);
          }
          case OPERATOR:
          {
@@ -263,23 +268,27 @@ class Parser
                {
                   return(parseLambdaFunction());
                }
+               case Keyword.STR_NEW:
+               {
+                  return(parseNewInstance());
+               }
                case Keyword.STR_NULL:
                {
                   // nom 'null'
                   next();
-                  return(postfix(new NodeNullLiteral(location)));
+                  return(postfix(new NodeNullLiteral(location), allowCall));
                }
                case Keyword.STR_TRUE:
                {
                   // nom 'null'
                   next();
-                  return(postfix(new NodeBoolLiteral(location, true)));
+                  return(postfix(new NodeBoolLiteral(location, true), allowCall));
                }
                case Keyword.STR_FALSE:
                {
                   // nom 'null'
                   next();
-                  return(postfix(new NodeBoolLiteral(location, false)));
+                  return(postfix(new NodeBoolLiteral(location, false), allowCall));
                }
                case Keyword.STR_NOT:
                {
@@ -353,7 +362,7 @@ class Parser
             LayeString value = (LayeString)token.data;
             // nom string
             next();
-            return(postfix(new NodeStringLiteral(location, value)));
+            return(postfix(new NodeStringLiteral(location, value), allowCall));
          }
          case OPEN_CURLY_BRACE:
          {
@@ -371,14 +380,14 @@ class Parser
             }
             // nom '}'
             expect(Token.Type.CLOSE_CURLY_BRACE);
-            return(postfix(scope));
+            return(postfix(scope, allowCall));
          }
          case IDENTIFIER:
          {
             String ident = (String)token.data;
             // nom ident
             next();
-            return(postfix(new NodeIdentifier(location, ident)));
+            return(postfix(new NodeIdentifier(location, ident), allowCall));
          }
          default:
          {
@@ -396,12 +405,16 @@ class Parser
    {
       if (token == null)
       {
-         return node;
+         return(node);
       }
       switch (token.type)
       {
          case OPEN_BRACE:
          {
+            if (!allowCall)
+            {
+               return(node);
+            }
             // '(' must be on the same line
             if (node.location.line != token.location.line)
             {
@@ -646,6 +659,44 @@ class Parser
       def.data = getFunctionData();
       
       return(def);
+   }
+   
+   private NodeExpression parseNewInstance()
+   {
+      Location location = getLocation();
+      
+      // nom 'new'
+      next();
+      
+      NodeExpression target = parsePrimaryExpression(false);
+      
+      String ctor = null;
+      if (check(Token.Type.COLON))
+      {
+         // nom ':'
+         ctor = expectIdentifier();
+      }
+      
+      List<NodeExpression> args;
+      if (check(Token.Type.OPEN_BRACE))
+      {
+         // nom '('
+         next();
+         args = commaFactor();
+         expect(Token.Type.CLOSE_BRACE);
+      }
+      else
+      {
+         args = new List<>();
+      }
+      
+      NodeExpression result = new NodeNewInstance(location, target, ctor, args);
+      if (tokens.previous().type == Token.Type.CLOSE_BRACE)
+      {
+         result = postfix(result);
+      }
+      
+      return(result);
    }
    
    private TypeData getTypeData()
