@@ -643,14 +643,14 @@ class FunctionPrototypeBuilder
    
    public int opLoadField(int constIndex)
    {
-      appendOp(OP_LOAD_FIELD);
+      appendOp_C(OP_LOAD_FIELD, constIndex);
       return(currentInsnPos());
    }
    
    public int opStoreField(int constIndex)
    {
       decreaseStackSize();
-      appendOp(OP_STORE_FIELD);
+      appendOp_C(OP_STORE_FIELD, constIndex);
       return(currentInsnPos());
    }
    
