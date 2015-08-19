@@ -424,7 +424,7 @@ class Parser
             next();
             List<NodeExpression> args = commaFactor();
             expect(Token.Type.CLOSE_BRACE);
-            node = postfix(new NodeInvoke(node.location, node, args));
+            node = postfix(new NodeInvoke(node.location, node, args), allowCall);
          } break;
          case OPEN_SQUARE_BRACE:
          {
@@ -432,14 +432,14 @@ class Parser
             next();
             NodeExpression index = factor();
             expect(Token.Type.CLOSE_SQUARE_BRACE);
-            node = postfix(new NodeLoadIndex(node.location, node, index));
+            node = postfix(new NodeLoadIndex(node.location, node, index), allowCall);
          } break;
          case DOT:
          {
             // nom '.'
             next();
             String ident = expectIdentifier();
-            node = postfix(new NodeLoadField(node.location, node, ident));
+            node = postfix(new NodeLoadField(node.location, node, ident), allowCall);
          } break;
          case KEYWORD:
          {
