@@ -23,14 +23,8 @@
  */
 package io.fudev.laye.kit;
 
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.Charset;
-
-import io.fudev.laye.LayeException;
 import io.fudev.laye.kit.io.LayeFile;
 import io.fudev.laye.vm.LayeKit;
-import io.fudev.laye.vm.LayeObject;
 import io.fudev.laye.vm.LayeVM;
 
 /**
@@ -42,35 +36,6 @@ class KitIO
 {
    public KitIO(LayeVM vm)
    {
-      setField(vm, "open", this::open);
-   }
-   
-   // TODO(kai): this will be replaced with "new io.File(path, mode, charset)" when that gets implemented.
-   public LayeObject open(LayeVM vm, LayeObject thisObject, LayeObject[] args)
-   {
-      String filePath = null;
-      String mode = "r+";
-      Charset charset = Charset.defaultCharset();
-      
-      switch (args.length)
-      {
-         case 0:
-         {
-            throw new LayeException(vm, "Expected file path.");
-         }
-         case 3: charset = Charset.forName(args[2].checkString(vm));
-         case 2: mode = args[1].checkString(vm);
-         case 1: filePath = args[0].checkString(vm);
-                 break;
-      }
-      
-      try
-      {
-         return(new LayeFile(vm, new File(filePath), mode, charset));
-      }
-      catch (IOException e)
-      {
-         throw new LayeException(vm, "failed to open file %s", filePath);
-      }
+      setField(vm, "File", LayeFile.TYPEDEF_FILE);
    }
 }

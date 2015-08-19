@@ -43,7 +43,53 @@ public
 class LayeFile
    extends LayeObject
 {
-   private static final LayeTypeDef TYPEDEF_FILE = new LayeTypeDef();
+   public static final String DEFAULT_MODE = "r+";
+   
+   public static final LayeTypeDef TYPEDEF_FILE = new LayeTypeDef()
+   {
+      @Override
+      public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+      {
+         try
+         {
+            if (ctorName == null)
+            {
+               return(LayeFile__ctor__default(vm, args));
+            }
+            else
+            {
+               switch(ctorName)
+               {
+                  default: break;
+               }
+            }
+         }
+         catch (Exception e)
+         {
+            throw new LayeException(vm, e.getMessage());
+         }
+         throw new LayeException(vm, "ctor '%s' does not exist.", ctorName);
+      }
+   };
+   
+   private static LayeFile LayeFile__ctor__default(LayeVM vm, LayeObject... args) throws IOException
+   {
+      String filePath = "";
+      String mode = DEFAULT_MODE;
+      Charset charset = Charset.defaultCharset();
+      
+      switch (args.length)
+      {
+         case 0: break;
+         default:
+         case 3: charset = Charset.forName(args[2].checkString(vm));
+         case 2: mode = args[1].checkString(vm);
+         case 1: filePath = args[0].checkString(vm);
+                 break;
+      }
+      
+      return(new LayeFile(vm, new File(filePath), mode, charset));
+   }
    
    static
    {
