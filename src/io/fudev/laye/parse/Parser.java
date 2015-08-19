@@ -472,53 +472,53 @@ class Parser
    
    private NodeExpression factor()
    {
-       NodeExpression expr;
-       if ((expr = parsePrimaryExpression()) == null)
-       {
-          return(null);
-       }
-       expr = factorRHS(expr, 0);
-       if (token != null)
-       {
-          switch (token.type)
-          {
-             case ASSIGN:
-             {
-                // nom '='
-                next();
-                NodeExpression value = factor();
-                // NOTE: Many left-expressions will fail, the code generator will check for us
-                expr = new NodeAssignment(expr.location, expr, value);
-             } break;
-             case KEYWORD:
-             {
-                switch (((Keyword)token.data).image)
-                {
-                   case Keyword.STR_AND:
-                   {
-                      // nom 'and'
-                      next();
-                      NodeExpression value = factor();
-                      expr = new NodeAnd(expr.location, expr, value);
-                   } break;
-                   case Keyword.STR_OR:
-                   {
-                      // nom 'or'
-                      next();
-                      NodeExpression value = factor();
-                      expr = new NodeOr(expr.location, expr, value);
-                   } break;
-                   default:
-                   {
-                   } break;
-                }
-             }
-             default:
-             {
-             } break;
-          }
-       }
-       return(expr);
+      NodeExpression expr;
+      if ((expr = parsePrimaryExpression()) == null)
+      {
+         return(null);
+      }
+      expr = factorRHS(expr, 0);
+      if (token != null)
+      {
+         switch (token.type)
+         {
+            case ASSIGN:
+            {
+               // nom '='
+               next();
+               NodeExpression value = factor();
+               // NOTE: Many left-expressions will fail, the code generator will check for us
+               expr = new NodeAssignment(expr.location, expr, value);
+            } break;
+            case KEYWORD:
+            {
+               switch (((Keyword)token.data).image)
+               {
+                  case Keyword.STR_AND:
+                  {
+                     // nom 'and'
+                     next();
+                     NodeExpression value = factor();
+                     expr = new NodeAnd(expr.location, expr, value);
+                  } break;
+                  case Keyword.STR_OR:
+                  {
+                     // nom 'or'
+                     next();
+                     NodeExpression value = factor();
+                     expr = new NodeOr(expr.location, expr, value);
+                  } break;
+                  default:
+                  {
+                  } break;
+               }
+            }
+            default:
+            {
+            } break;
+         }
+      }
+      return(expr);
    }
    
    private NodeExpression factorRHS(NodeExpression left, int minp)
@@ -547,11 +547,15 @@ class Parser
             // Load up the right hand side, if one exists
             if ((right = parsePrimaryExpression()) != null)
             {
-               while (check(Token.Type.OPERATOR) &&
-                     ((Operator)token.data).precedence > (isOperator ?
-                           ((Operator)thisToken.data).precedence : Operator.DEFAULT_PRECEDENCE))
+               int thisPrec = (isOperator ?
+                     ((Operator)thisToken.data).precedence : Operator.DEFAULT_PRECEDENCE);
+               while ((check(Token.Type.OPERATOR) &&
+                     ((Operator)token.data).precedence > thisPrec) ||
+                     (check(Token.Type.IDENTIFIER) && Operator.DEFAULT_PRECEDENCE > thisPrec &&
+                           token.location.line == left.location.line))
                {
-                  right = factorRHS(right, ((Operator)token.data).precedence);
+                  right = factorRHS(right, check(Token.Type.OPERATOR) ?
+                        ((Operator)token.data).precedence : Operator.DEFAULT_PRECEDENCE);
                }
                if (isOperator)
                {
