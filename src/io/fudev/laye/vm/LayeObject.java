@@ -25,6 +25,7 @@ package io.fudev.laye.vm;
 
 import java.util.HashMap;
 
+import io.fudev.collections.List;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Operator;
 
@@ -146,6 +147,16 @@ class LayeObject
    public boolean isFunction(LayeVM vm)
    {
       return(false);
+   }
+   
+   public boolean isList(LayeVM vm)
+   {
+      return(false);
+   }
+   
+   public List<LayeObject> checkList(LayeVM vm)
+   {
+      throw new LayeException(vm, "could not convert " + getClass().getSimpleName() + " to list.");
    }
    
    public int intValue(LayeVM vm)

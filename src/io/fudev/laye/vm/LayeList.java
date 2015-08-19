@@ -118,6 +118,18 @@ class LayeList
       this();
       list.appendAll(values);
    }
+   
+   @Override
+   public boolean isList(LayeVM vm)
+   {
+      return(true);
+   }
+   
+   @Override
+   public List<LayeObject> checkList(LayeVM vm)
+   {
+      return(new List<>(list));
+   }
 
    public int length()
    {

@@ -26,6 +26,7 @@ package io.fudev.laye.kit.io;
 import java.io.*;
 import java.nio.charset.Charset;
 
+import io.fudev.collections.List;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.vm.LayeFunction;
 import io.fudev.laye.vm.LayeInt;
@@ -50,6 +51,28 @@ class LayeFile
       {
          try
          {
+            if (args.length >= 1)
+            {
+               int count = args[0].checkInt(vm);
+               LayeFile f = (LayeFile)thisObject;
+               if (f.isBinary)
+               {
+                  byte[] bytes = new byte[count];
+                  f.read(bytes);
+                  LayeList result = new LayeList(bytes.length);
+                  for (byte b : bytes)
+                  {
+                     result.append(LayeInt.valueOf(b & 0xFFL));
+                  }
+                  return(result);
+               }
+               else
+               {
+                  char[] chars = new char[count];
+                  f.read(chars);
+                  return(new LayeString(new String(chars)));
+               }
+            }
             return(LayeInt.valueOf(((LayeFile)thisObject).read()));
          }
          catch (Exception e)
@@ -103,6 +126,16 @@ class LayeFile
             {
                String value = args[0].checkString(vm);
                ((LayeFile)thisObject).write(value);
+            }
+            else if (args[0].isList(vm))
+            {
+               List<LayeObject> byteList = args[0].checkList(vm);
+               byte[] bytes = new byte[byteList.size()];
+               for (int i = 0; i < bytes.length; i++)
+               {
+                  bytes[i] = (byte)(byteList.get(i).checkInt(vm));
+               }
+               ((LayeFile)thisObject).write(bytes);
             }
             else
             {
@@ -223,6 +256,34 @@ class LayeFile
       return(isBinary ? input.read() : inputReader.read());
    }
    
+   public synchronized int read(byte[] buf) throws IOException
+   {
+      if (!reading)
+      {
+         throw new IllegalStateException("this file is not available for reading.");
+      }
+      if (!isBinary)
+      {
+         throw new IllegalStateException("Cannot read bytes from a non-binary file.");
+      }
+      openInput();
+      return(input.read(buf));
+   }
+   
+   public synchronized int read(char[] buf) throws IOException
+   {
+      if (!reading)
+      {
+         throw new IllegalStateException("this file is not available for reading.");
+      }
+      if (isBinary)
+      {
+         throw new IllegalStateException("Cannot read chars from a binary file.");
+      }
+      openInput();
+      return(inputReader.read(buf));
+   }
+   
    public synchronized String readLine() throws IOException
    {
       if (!reading)
@@ -255,7 +316,7 @@ class LayeFile
    {
       if (!writing)
       {
-         throw new IllegalStateException("this file is not available for reading.");
+         throw new IllegalStateException("this file is not available for writing.");
       }
       openOutput();
       if (isBinary)
@@ -268,15 +329,29 @@ class LayeFile
       }
    }
    
+   public synchronized void write(byte[] bytes) throws IOException
+   {
+      if (!writing)
+      {
+         throw new IllegalStateException("this file is not available for writing.");
+      }
+      if (!isBinary)
+      {
+         throw new IllegalStateException("Cannot write bytes to a non-binary file.");
+      }
+      openOutput();
+      output.write(bytes);
+   }
+   
    public synchronized void write(String value) throws IOException
    {
       if (!writing)
       {
-         throw new IllegalStateException("this file is not available for reading.");
+         throw new IllegalStateException("this file is not available for writing.");
       }
       if (isBinary)
       {
-         throw new IllegalStateException("Cannot read a string to a binary file.");
+         throw new IllegalStateException("Cannot write a string to a binary file.");
       }
       openOutput();
       outputWriter.write(value);

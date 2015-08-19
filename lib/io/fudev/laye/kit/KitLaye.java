@@ -40,7 +40,23 @@ class KitLaye
    
    public KitLaye(LayeVM vm)
    {
+      setField(vm, "print", this::print);
       setField(vm, "println", this::println);
+   }
+   
+   public LayeObject print(LayeVM vm, LayeObject thisObject, LayeObject[] args)
+   {
+      StringBuilder result = new StringBuilder();
+      for (int i = 0; i < args.length; i++)
+      {
+         if (i > 0)
+         {
+            result.append(' ');
+         }
+         result.append(args[i]);
+      }
+      out.print(result.toString());
+      return(LayeObject.NULL);
    }
    
    public LayeObject println(LayeVM vm, LayeObject thisObject, LayeObject[] args)

@@ -1,5 +1,12 @@
-var file = io.open("cmdtest.laye", "a+")
-println(file.readLines() join "\n" <> "\n")
-file write "# I added a comment!\n"
-println(file.readLines() join "\n")
+# write to a binary file the numbers 0x10, 0x20, 0x30, and 0x40
+# then read in those bytes, format and print them.
+
+var file = io.open("binfile.idunno", "wb")
+file.write([0x10, 0x20, 0x30, 0x40])
+file.close()
+
+file = io.open("binfile.idunno", "rb")
+# read 4 bytes, map the list to hex strings, and concatenate
+# each value with a ' ' separator
+println(file read 4 map (fn(value) "0x" <> value.hexString()) join ' ')
 file.close()

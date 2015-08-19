@@ -33,6 +33,16 @@ public final
 class LayeInt
    extends LayeObject
 {
+   private static final LayeTypeDef TYPEDEF_INT = new LayeTypeDef();
+   
+   static
+   {
+      TYPEDEF_INT.addMethod("hexString", new LayeFunction((vm, thisObject, args) ->
+      {
+         return(new LayeString(Long.toHexString(((LayeInt)thisObject).value)));
+      }));
+   }
+   
    private static final int CACHE_LOW = -128;
    private static final int CACHE_HIGH = 127;
    
@@ -74,6 +84,7 @@ class LayeInt
     */
    public LayeInt(long value)
    {
+      super(TYPEDEF_INT);
       this.value = value;
    }
    
