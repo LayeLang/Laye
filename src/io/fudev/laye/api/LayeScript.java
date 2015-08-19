@@ -27,6 +27,7 @@ import java.io.IOException;
 
 import io.fudev.laye.ast.AST;
 import io.fudev.laye.codegen.FunctionCompiler;
+import io.fudev.laye.debug.ASTViewer;
 import io.fudev.laye.file.ScriptFile;
 import io.fudev.laye.kit.KitIO;
 import io.fudev.laye.kit.KitLaye;
@@ -59,8 +60,8 @@ class LayeScript
    {
       this.logger = logger;
       vm = new LayeVM();
-      vm.state.registerKit("Laye", new KitLaye(vm));
-      vm.state.useAll("Laye");
+      vm.state.registerKit("laye", new KitLaye(vm));
+      vm.state.useAll("laye");
       vm.state.registerKit("io", new KitIO(vm));
    }
 
@@ -97,6 +98,8 @@ class LayeScript
       // ===== Final AST processing
       ast = processor.process(ast);
       logDetails(file, "AST processing");
+      
+      new ASTViewer(System.out).visit(ast);
       
       // ===== Compile the program
       ast.accept(compiler);
