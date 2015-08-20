@@ -99,6 +99,8 @@ class LayeScript
       ast = processor.process(ast);
       logDetails(file, "AST processing");
       
+      new ASTViewer(System.out).visit(ast);
+      
       // ===== Compile the program
       ast.accept(compiler);
       FunctionPrototype proto = compiler.builder.build();

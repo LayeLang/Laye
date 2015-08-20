@@ -23,27 +23,14 @@
  */
 package io.fudev.laye.ast;
 
-import java.util.HashMap;
-
 import io.fudev.collections.List;
 
 /**
  * @author Sekai Kyoretsuna
  */
 public
-class TypeData
+class Constructor
+   extends FunctionData
 {
-   public List<String> privateFields = new List<>();
-   public List<String> publicFields = new List<>();
-
-   public HashMap<String, FunctionData> methods = new HashMap<>();
-   public HashMap<String, Constructor> ctors = new HashMap<>();
-   
-   public TypeData()
-   {
-   }
-   
-   public TypeData(TypeData that)
-   {
-   }
+   public List<String> autos = new List<>();
 }

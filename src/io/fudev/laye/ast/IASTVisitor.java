@@ -86,4 +86,6 @@ interface IASTVisitor
    void visit(NodeWildcard node);
 
    void visit(NodeNewInstance node);
+
+   void visit(NodeTypeDef node);
 }

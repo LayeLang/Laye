@@ -24,7 +24,10 @@
 package io.fudev.laye.debug;
 
 import java.io.PrintStream;
+import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.Set;
 
 import io.fudev.laye.ast.*;
 
@@ -451,7 +454,7 @@ class ASTViewer
    @Override
    public void visit(NodeNewInstance node)
    {
-      print("new ");
+      print("NEW ");
       node.target.accept(this);
       if (node.ctor != null)
       {
@@ -475,5 +478,99 @@ class ASTViewer
       {
          println(" ()");
       }
+   }
+   
+   private void printTypeInfo(TypeData data)
+   {
+      println("{");
+      tabs++;
+      if (data.privateFields.size() > 0)
+      {
+         tprint("PRIVATE ");
+         for (int i = 0; i < data.privateFields.size(); i++)
+         {
+            if (i > 0)
+            {
+               print(", ");
+            }
+            print(data.publicFields.get(i));
+         }
+         if (data.publicFields.size() > 0)
+         {
+            println();
+         }
+      }
+      
+      if (data.publicFields.size() > 0)
+      {
+         tprint();
+         for (int i = 0; i < data.publicFields.size(); i++)
+         {
+            if (i > 0)
+            {
+               print(", ");
+            }
+            print(data.publicFields.get(i));
+         }
+         if (data.ctors.size() > 0)
+         {
+            println();
+         }
+      }
+      
+      Set<Entry<String, Constructor>> ctors = data.ctors.entrySet();
+      Iterator<Entry<String, Constructor>> iter = ctors.iterator();
+      for (int i = 0; i < ctors.size(); i++)
+      {
+         Entry<String, Constructor> entry = iter.next();
+         
+         String name = entry.getKey();
+         Constructor ctor = entry.getValue();
+         
+         if (i > 0)
+         {
+            println();
+         }
+         
+         tprint("CTOR");
+         
+         if (name != null)
+         {
+            print(":");
+            print(name);
+         }
+         
+         print("(");
+         for (int j = 0; j < ctor.params.size(); j++)
+         {
+            if (j > 0)
+            {
+               print(", ");
+            }
+            if (ctor.autos.contains(ctor.params.get(i)))
+            {
+               print("@");
+            }
+            print(ctor.params.get(j));
+         }
+         if (ctor.vargs)
+         {
+            print("..");
+         }
+         print(") ");
+         ctor.body.accept(this);
+      }
+      tabs--;
+      println();
+      print("}");
+   }
+   
+   @Override
+   public void visit(NodeTypeDef node)
+   {
+      print("TYPE ");
+      print(node.name);
+      print(" ");
+      printTypeInfo(node.data);
    }
 }

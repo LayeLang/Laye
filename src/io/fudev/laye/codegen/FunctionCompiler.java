@@ -533,4 +533,24 @@ class FunctionCompiler
          builder.opPop();
       }
    }
+   
+   private void handleTypeData(TypeData data)
+   {
+      TypePrototypeBuilder typeBuilder = new TypePrototypeBuilder();
+      
+      
+      
+      int typeConst = builder.addConstant(typeBuilder.build());
+      builder.opCLoad(typeConst);
+   }
+   
+   @Override
+   public void visit(NodeTypeDef node)
+   {
+      builder.defineVariable(node.name);
+      handleTypeData(node.data);
+//      builder.opNLoad();
+      builder.visitSetVariable(node.name);
+      builder.opPop();
+   }
 }

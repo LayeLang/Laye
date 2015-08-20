@@ -34,7 +34,8 @@ class Token
               codepoint == '{'  || codepoint == '}' ||
               codepoint == ':'  || codepoint == ';' ||
               codepoint == ','  || codepoint == '.' ||
-              codepoint == '\'' || codepoint == '"');
+              codepoint == '\'' || codepoint == '"' ||
+              codepoint == '@'  || codepoint == '#');
    }
    
    public static enum Type
@@ -48,6 +49,7 @@ class Token
       
       ASSIGN("="),
       WILDCARD("_"),
+      AT("@"),
       OPEN_BRACE("("),
       CLOSE_BRACE(")"),
       OPEN_SQUARE_BRACE("["),

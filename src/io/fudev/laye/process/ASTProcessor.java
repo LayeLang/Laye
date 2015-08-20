@@ -385,4 +385,10 @@ class ASTProcessor
       result.isResultRequired = node.isResultRequired;
       return(result);
    }
+   
+   public ASTNode process(NodeTypeDef node)
+   {
+      // TODO(kai): process types
+      return(node);
+   }
 }

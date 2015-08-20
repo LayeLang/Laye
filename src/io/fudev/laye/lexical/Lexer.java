@@ -193,6 +193,9 @@ public class Lexer
             case '#':
                lexOutLineComment();
                return(lex());
+            case '@':
+               readChar();
+               return(new Token(Token.Type.AT, location));
             case '(':
                readChar();
                return(new Token(Token.Type.OPEN_BRACE, location));

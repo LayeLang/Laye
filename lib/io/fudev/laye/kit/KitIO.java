@@ -23,8 +23,14 @@
  */
 package io.fudev.laye.kit;
 
+import java.nio.file.Paths;
+
+import io.fudev.laye.LayeException;
 import io.fudev.laye.kit.io.LayeFile;
+import io.fudev.laye.vm.LayeFunction;
 import io.fudev.laye.vm.LayeKit;
+import io.fudev.laye.vm.LayeObject;
+import io.fudev.laye.vm.LayeString;
 import io.fudev.laye.vm.LayeVM;
 
 /**
@@ -34,8 +40,39 @@ public
 class KitIO
    extends LayeKit
 {
+   private static final LayeObject PATHS = new LayeObject();
+   
+   private static LayeObject PATHS__normalize(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      if (args.length == 0)
+      {
+         throw new LayeException(vm, "expected path to normalize");
+      }
+      String path = args[0].checkString(vm);
+      String normPath = Paths.get(path).normalize().toString();
+      return(new LayeString(normPath));
+   }
+   
+   private static LayeObject PATHS__absolute(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
+      if (args.length == 0)
+      {
+         throw new LayeException(vm, "expected path to make absolute");
+      }
+      String path = args[0].checkString(vm);
+      String absPath = Paths.get(path).toAbsolutePath().normalize().toString();
+      return(new LayeString(absPath));
+   }
+   
+   static
+   {
+      PATHS.setField(null, "normalize", new LayeFunction(KitIO::PATHS__normalize));
+      PATHS.setField(null, "absolute", new LayeFunction(KitIO::PATHS__absolute));
+   }
+   
    public KitIO(LayeVM vm)
    {
       setField(vm, "File", LayeFile.TYPEDEF_FILE);
+      setField(vm, "paths", PATHS);
    }
 }

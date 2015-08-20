@@ -23,10 +23,16 @@
  */
 package io.fudev.laye.codegen;
 
+import io.fudev.laye.struct.TypePrototype;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
 class TypePrototypeBuilder
 {
+   public TypePrototype build()
+   {
+      return(null);
+   }
 }

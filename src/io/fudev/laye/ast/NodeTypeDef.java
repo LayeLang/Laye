@@ -44,13 +44,12 @@ class NodeTypeDef
    @Override
    public void accept(IASTVisitor visitor)
    {
-      // TODO(kai): visitor.visit(this);
+      visitor.visit(this);
    }
    
    @Override
    public ASTNode accept(ASTProcessor processor)
    {
-      // TODO(kai): return(processor.process(this));
-      return(null);
+      return(processor.process(this));
    }
 }

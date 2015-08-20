@@ -714,16 +714,113 @@ class Parser
             {
                switch(((Keyword)token.data).image)
                {
-                  case Keyword.STR_VAR:
+                  case Keyword.STR_CTOR:
                   {
-                     NodeVariableDef vars = parseVariableDefinition();
-                     data.publicFields.append(vars);
-                  } break;
+                     // nom 'ctor'
+                     next();
+                     
+                     Constructor ctor = new Constructor();
+                     
+                     String name = null;
+                     if (check(Token.Type.COLON))
+                     {
+                        // nom ':'
+                        next();
+                        name = expectIdentifier();
+                     }
+                     
+                     // nom '('
+                     expect(Token.Type.OPEN_BRACE);
+                     
+                     while (!check(Token.Type.CLOSE_BRACE))
+                     {
+                        boolean autoSet = false;
+                        if (check(Token.Type.AT))
+                        {
+                           // nom '@'
+                           next();
+                           autoSet = true;
+                        }
+                        
+                        // TODO(kai): smarter error handling, check for args after a varg.
+                        String param = expectIdentifier();
+                        if (check(Token.Type.VARGS))
+                        {
+                           // nom '..'
+                           next();
+                           ctor.vargs = true;
+                        }
+                        
+                        // TODO(kai): check defaults
+                        
+                        ctor.params.append(param);
+                        ctor.defaults.append(null);
+                        if (autoSet)
+                        {
+                           ctor.autos.append(param);
+                        }
+                        
+                        if (!ctor.vargs && check(Token.Type.COMMA))
+                        {
+                           // nom ','
+                           next();
+                        }
+                        else
+                        {
+                           break;
+                        }
+                     }
+                     
+                     // nom ')'
+                     expect(Token.Type.CLOSE_BRACE);
+
+                     if (check(Token.Type.SEMI_COLON))
+                     {
+                        ctor.body = new NodeScope(getLocation());
+                        // nom ';'
+                        next();
+                     }
+                     else
+                     {
+                        ctor.body = factor();
+                     }
+                     data.ctors.put(name, ctor);
+                  } continue;
+               }
+            } continue;
+            case IDENTIFIER:
+            {
+               if (peekCheck(1, Token.Type.OPEN_BRACE))
+               {
+                  String name = expectIdentifier();
+                  FunctionData method = getFunctionData();
+                  data.methods.put(name, method);
+               }
+               else
+               {
+                  // TODO(kai): default values
+                  List<String> vars = new List<String>();
+                  while (true)
+                  {
+                     vars.append(expectIdentifier());
+                     if (check(Token.Type.COMMA))
+                     {
+                        // nom ','
+                        next();
+                     }
+                     else
+                     {
+                        break;
+                     }
+                  }
+                  data.publicFields.appendAll(vars);
                }
             } continue;
             default:
             {
                // TODO(kai): error, encountered unexpected token!
+               logger.logErrorf(getLocation(), ERROR_UNEXPECTED_TOKEN,
+                     "unexpected token %s.\n", token.toString());
                next();
             } continue;
          }
