@@ -1,12 +1,16 @@
 # write to a binary file the numbers 0x10, 0x20, 0x30, and 0x40
 # then read in those bytes, format and print them.
 
-var file = new io.File("binfile.idunno", "wb")
-file.write([0x10, 0x20, 0x30, 0x40])
-file.close()
+var file = new io.File("binfile.idunno")
 
-file = new io.File("binfile.idunno", "rb")
+# open the file for binary writing
+var stream = file.open("wb");
+stream.write([0x10, 0x20, 0x30, 0x40])
+stream.close()
+
+# open the file for binary reading
+stream = file.open("rb")
 # read 4 bytes, map the list to hex strings, and concatenate
 # each value with a ' ' separator
-println(file read 4 map (fn(value) "0x" <> value.hexString()) join ' ')
-file.close()
+println(stream read 4 map (fn(value) "0x" <> value.hexString()) join ' ')
+stream.close()

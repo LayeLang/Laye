@@ -23,16 +23,13 @@
  */
 package io.fudev.laye.kit.io;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.nio.charset.Charset;
 
-import io.fudev.collections.List;
 import io.fudev.laye.LayeException;
 import io.fudev.laye.vm.LayeFunction;
-import io.fudev.laye.vm.LayeInt;
-import io.fudev.laye.vm.LayeList;
 import io.fudev.laye.vm.LayeObject;
-import io.fudev.laye.vm.LayeString;
 import io.fudev.laye.vm.LayeTypeDef;
 import io.fudev.laye.vm.LayeVM;
 
@@ -74,7 +71,28 @@ class LayeFile
    
    private static LayeFile LayeFile__ctor__default(LayeVM vm, LayeObject... args) throws IOException
    {
-      String filePath = "";
+      switch (args.length)
+      {
+         case 0: return(new LayeFile(vm, new File("")));
+         default:
+         case 2: return(new LayeFile(vm, new File(args[0].checkString(vm),
+               args[1].checkString(vm))));
+         case 1: return(new LayeFile(vm, new File(args[0].checkString(vm))));
+      }
+   }
+   
+   private final File file;
+   
+   public LayeFile(LayeVM vm, File file) throws IOException
+   {
+      super(TYPEDEF_FILE);
+      this.file = file;
+      
+      setField(vm, "open", new LayeFunction(this::open));
+   }
+   
+   public LayeFileStream open(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   {
       String mode = DEFAULT_MODE;
       Charset charset = Charset.defaultCharset();
       
@@ -82,190 +100,12 @@ class LayeFile
       {
          case 0: break;
          default:
-         case 3: charset = Charset.forName(args[2].checkString(vm));
-         case 2: mode = args[1].checkString(vm);
-         case 1: filePath = args[0].checkString(vm);
+         case 2: charset = Charset.forName(args[1].checkString(vm));
+         case 1: mode = args[0].checkString(vm);
                  break;
       }
       
-      return(new LayeFile(vm, new File(filePath), mode, charset));
-   }
-   
-   static
-   {
-      TYPEDEF_FILE.addMethod("read", new LayeFunction((vm, thisObject, args) ->
-      {
-         try
-         {
-            if (args.length >= 1)
-            {
-               int count = args[0].checkInt(vm);
-               LayeFile f = (LayeFile)thisObject;
-               if (f.isBinary)
-               {
-                  byte[] bytes = new byte[count];
-                  f.read(bytes);
-                  LayeList result = new LayeList(bytes.length);
-                  for (byte b : bytes)
-                  {
-                     result.append(LayeInt.valueOf(b & 0xFFL));
-                  }
-                  return(result);
-               }
-               else
-               {
-                  char[] chars = new char[count];
-                  f.read(chars);
-                  return(new LayeString(new String(chars)));
-               }
-            }
-            return(LayeInt.valueOf(((LayeFile)thisObject).read()));
-         }
-         catch (Exception e)
-         {
-            throw new LayeException(vm, e.getMessage());
-         }
-      }));
-      TYPEDEF_FILE.addMethod("readLine", new LayeFunction((vm, thisObject, args) ->
-      {
-         try
-         {
-            String line = ((LayeFile)thisObject).readLine();
-            if (line == null)
-            {
-               return(NULL);
-            }
-            return(new LayeString(line));
-         }
-         catch (Exception e)
-         {
-            throw new LayeException(vm, e.getMessage());
-         }
-      }));
-      TYPEDEF_FILE.addMethod("readLines", new LayeFunction((vm, thisObject, args) ->
-      {
-         try
-         {
-            LayeFile file = (LayeFile)thisObject;
-            LayeList result = new LayeList();
-            String value;
-            while ((value = file.readLine()) != null)
-            {
-               result.append(new LayeString(value));
-            }
-            return(result);
-         }
-         catch (Exception e)
-         {
-            throw new LayeException(vm, e.getMessage());
-         }
-      }));
-      TYPEDEF_FILE.addMethod("write", new LayeFunction((vm, thisObject, args) ->
-      {
-         if (args.length == 0)
-         {
-            throw new LayeException(vm, "expected value to write.");
-         }
-         try
-         {
-            if (args[0].isString(vm))
-            {
-               String value = args[0].checkString(vm);
-               ((LayeFile)thisObject).write(value);
-            }
-            else if (args[0].isList(vm))
-            {
-               List<LayeObject> byteList = args[0].checkList(vm);
-               byte[] bytes = new byte[byteList.size()];
-               for (int i = 0; i < bytes.length; i++)
-               {
-                  bytes[i] = (byte)(byteList.get(i).checkInt(vm));
-               }
-               ((LayeFile)thisObject).write(bytes);
-            }
-            else
-            {
-               int value = args[0].checkInt(vm);
-               ((LayeFile)thisObject).write(value);
-            }
-            return(NULL);
-         }
-         catch (Exception e)
-         {
-            throw new LayeException(vm, e.getMessage());
-         }
-      }));
-      TYPEDEF_FILE.addMethod("close", new LayeFunction((vm, thisObject, args) ->
-      {
-         try
-         {
-            ((LayeFile)thisObject).close();
-            return(NULL);
-         }
-         catch (Exception e)
-         {
-            throw new LayeException(vm, e.getMessage());
-         }
-      }));
-   }
-   
-   private final boolean reading;
-   private final boolean writing;
-   
-   private final boolean isBinary;
-   private final boolean append;
-   
-   private final File file;
-   private final Charset charset;
-   
-   private InputStream input = null;
-   private Reader inputReader = null;
-   
-   private OutputStream output = null;
-   private Writer outputWriter = null;
-   
-   public LayeFile(LayeVM vm, File file, String mode, Charset charset) throws IOException
-   {
-      super(TYPEDEF_FILE);
-      this.file = file;
-      this.charset = charset;
-      
-      if (!mode.matches("(r|w|a)b?\\+?"))
-      {
-         throw new LayeException(vm, "unrecognized open mode '%s'", mode);
-      }
-      
-      isBinary = mode.contains("b");
-      append = mode.contains("a");
-      
-      reading = mode.contains("r") || mode.contains("+");
-      writing = mode.contains("w") || mode.contains("+") || append;
-   }
-   
-   private void openInput() throws IOException
-   {
-      if (input != null)
-      {
-         return; // already open
-      }
-      
-      close(); // the current ones
-      
-      input = new FileInputStream(file);
-      inputReader = new InputStreamReader(input, charset);
-   }
-   
-   private void openOutput() throws IOException
-   {
-      if (outputWriter != null)
-      {
-         return; // already open
-      }
-      
-      close(); // the current ones
-      
-      output = new FileOutputStream(file, append);
-      outputWriter = new OutputStreamWriter(output, charset);
+      return(new LayeFileStream(vm, file, mode, charset));
    }
    
    @Override
@@ -273,134 +113,43 @@ class LayeFile
    {
       return("File(" + file.getPath() + ")");
    }
-   
-   public synchronized void close() throws IOException
+
+   @Override
+   public int hashCode()
    {
-      if (input != null)
-      {
-         input.close();
-         input = null;
-         inputReader = null;
-      }
-      
-      if (output != null)
-      {
-         output.flush();
-         output.close();
-         output = null;
-         outputWriter = null;
-      }
+      final int prime = 31;
+      int result = super.hashCode();
+      result = prime * result + ((file == null) ? 0 : file.hashCode());
+      return result;
    }
-   
-   public synchronized int read() throws IOException
+
+   @Override
+   public boolean equals(Object obj)
    {
-      if (!reading)
+      if (this == obj)
       {
-         throw new IllegalStateException("this file is not available for reading.");
+         return true;
       }
-      openInput();
-      return(isBinary ? input.read() : inputReader.read());
-   }
-   
-   public synchronized int read(byte[] buf) throws IOException
-   {
-      if (!reading)
+      if (!super.equals(obj))
       {
-         throw new IllegalStateException("this file is not available for reading.");
+         return false;
       }
-      if (!isBinary)
+      if (!(obj instanceof LayeFile))
       {
-         throw new IllegalStateException("Cannot read bytes from a non-binary file.");
+         return false;
       }
-      openInput();
-      return(input.read(buf));
-   }
-   
-   public synchronized int read(char[] buf) throws IOException
-   {
-      if (!reading)
+      LayeFile other = (LayeFile) obj;
+      if (file == null)
       {
-         throw new IllegalStateException("this file is not available for reading.");
-      }
-      if (isBinary)
-      {
-         throw new IllegalStateException("Cannot read chars from a binary file.");
-      }
-      openInput();
-      return(inputReader.read(buf));
-   }
-   
-   public synchronized String readLine() throws IOException
-   {
-      if (!reading)
-      {
-         throw new IllegalStateException("this file is not available for reading.");
-      }
-      if (isBinary)
-      {
-         throw new IllegalStateException("Cannot read a line from a binary file.");
-      }
-      openInput();
-      int c = inputReader.read();
-      if (c != -1)
-      {
-         StringBuilder builder = new StringBuilder().appendCodePoint(c);
-         while ((c = inputReader.read()) != -1 && c != '\n')
+         if (other.file != null)
          {
-            if (c == '\r')
-            {
-               continue;
-            }
-            builder.appendCodePoint(c);
+            return false;
          }
-         return(builder.toString());
       }
-      return(null);
-   }
-   
-   public synchronized void write(int value) throws IOException
-   {
-      if (!writing)
+      else if (!file.equals(other.file))
       {
-         throw new IllegalStateException("this file is not available for writing.");
+         return false;
       }
-      openOutput();
-      if (isBinary)
-      {
-         output.write(value);
-      }
-      else
-      {
-         outputWriter.write(value);
-      }
-   }
-   
-   public synchronized void write(byte[] bytes) throws IOException
-   {
-      if (!writing)
-      {
-         throw new IllegalStateException("this file is not available for writing.");
-      }
-      if (!isBinary)
-      {
-         throw new IllegalStateException("Cannot write bytes to a non-binary file.");
-      }
-      openOutput();
-      output.write(bytes);
-   }
-   
-   public synchronized void write(String value) throws IOException
-   {
-      if (!writing)
-      {
-         throw new IllegalStateException("this file is not available for writing.");
-      }
-      if (isBinary)
-      {
-         throw new IllegalStateException("Cannot write a string to a binary file.");
-      }
-      openOutput();
-      outputWriter.write(value);
-      outputWriter.flush();
+      return true;
    }
 }
