@@ -583,7 +583,10 @@ class FunctionCompiler
             compiler.builder.opStoreField(compiler.builder.addConstant(param));
          });
 
-         ctor.body.accept(compiler);
+         if (ctor.body != null)
+         {
+            ctor.body.accept(compiler);
+         }
          
          FunctionPrototype proto = compiler.builder.build();
          typeBuilder.addPublicCtor(name, proto);

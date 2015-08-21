@@ -720,9 +720,89 @@ class Parser
       return(result);
    }
    
+   private Constructor parseConstructor()
+   {
+      return(parseConstructor(true));
+   }
+   
+   private Constructor parseConstructor(boolean withBody)
+   {
+      Constructor ctor = new Constructor();
+      
+      // nom '('
+      expect(Token.Type.OPEN_BRACE);
+      
+      while (!check(Token.Type.CLOSE_BRACE))
+      {
+         boolean autoSet = false;
+         if (check(Token.Type.AT))
+         {
+            // nom '@'
+            next();
+            autoSet = true;
+         }
+         
+         // TODO(kai): smarter error handling, check for args after a varg.
+         String param = expectIdentifier();
+         if (check(Token.Type.VARGS))
+         {
+            // nom '..'
+            next();
+            ctor.vargs = true;
+         }
+         
+         // TODO(kai): check defaults
+         
+         ctor.params.append(param);
+         ctor.defaults.append(null);
+         if (autoSet)
+         {
+            ctor.autos.append(param);
+         }
+         
+         if (!ctor.vargs && check(Token.Type.COMMA))
+         {
+            // nom ','
+            next();
+         }
+         else
+         {
+            break;
+         }
+      }
+      
+      // nom ')'
+      expect(Token.Type.CLOSE_BRACE);
+
+      if (withBody)
+      {
+         if (check(Token.Type.SEMI_COLON))
+         {
+            // nom ';'
+            next();
+         }
+         else
+         {
+            ctor.body = factor();
+         }
+      }
+      
+      return(ctor);
+   }
+   
    private TypeData getTypeData()
    {
       TypeData data = new TypeData();
+      
+      if (check(Token.Type.OPEN_BRACE))
+      {
+         data.publicCtors.put(null, parseConstructor(false));
+      }
+      
+      if (!check(Token.Type.OPEN_CURLY_BRACE))
+      {
+         return(data);
+      }
 
       // nom '{'
       expect(Token.Type.OPEN_CURLY_BRACE);
@@ -740,8 +820,6 @@ class Parser
                      // nom 'ctor'
                      next();
                      
-                     Constructor ctor = new Constructor();
-                     
                      String name = null;
                      if (check(Token.Type.COLON))
                      {
@@ -750,63 +828,8 @@ class Parser
                         name = expectIdentifier();
                      }
                      
-                     // nom '('
-                     expect(Token.Type.OPEN_BRACE);
-                     
-                     while (!check(Token.Type.CLOSE_BRACE))
-                     {
-                        boolean autoSet = false;
-                        if (check(Token.Type.AT))
-                        {
-                           // nom '@'
-                           next();
-                           autoSet = true;
-                        }
-                        
-                        // TODO(kai): smarter error handling, check for args after a varg.
-                        String param = expectIdentifier();
-                        if (check(Token.Type.VARGS))
-                        {
-                           // nom '..'
-                           next();
-                           ctor.vargs = true;
-                        }
-                        
-                        // TODO(kai): check defaults
-                        
-                        ctor.params.append(param);
-                        ctor.defaults.append(null);
-                        if (autoSet)
-                        {
-                           ctor.autos.append(param);
-                        }
-                        
-                        if (!ctor.vargs && check(Token.Type.COMMA))
-                        {
-                           // nom ','
-                           next();
-                        }
-                        else
-                        {
-                           break;
-                        }
-                     }
-                     
-                     // nom ')'
-                     expect(Token.Type.CLOSE_BRACE);
-
-                     if (check(Token.Type.SEMI_COLON))
-                     {
-                        ctor.body = new NodeScope(getLocation());
-                        // nom ';'
-                        next();
-                     }
-                     else
-                     {
-                        ctor.body = factor();
-                     }
                      // TODO(kai): check if the ctor already exists, error if so.
-                     data.publicCtors.put(name, ctor);
+                     data.publicCtors.put(name, parseConstructor());
                   } continue;
                   case Keyword.STR_INVOKE:
                   {

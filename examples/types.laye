@@ -1,13 +1,9 @@
-type Living
+type Living(@name)
 {
-   ctor(@name);
    speak() println("Hi, I'm", @name <> '!')
 }
 
-type Dead
-{
-   ctor(@name);
-}
+type Dead(@name)
 
 fn Living.beat()
 {
