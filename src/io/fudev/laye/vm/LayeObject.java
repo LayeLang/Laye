@@ -207,7 +207,7 @@ class LayeObject
       return(result);
    }
    
-   public LayeObject getMethod(LayeVM vm, String key)
+   private LayeObject getMethod(LayeVM vm, String key)
    {
       if (typedef != null)
       {
@@ -216,6 +216,11 @@ class LayeObject
          {
             return(result);
          }
+      }
+      LayeObject result = fields.get(key);
+      if (result != null)
+      {
+         return(result);
       }
       throw new LayeException(vm, "Method '" + key + "' does not exist.");
    }
