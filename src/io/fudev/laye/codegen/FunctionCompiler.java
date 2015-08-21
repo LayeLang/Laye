@@ -597,7 +597,10 @@ class FunctionCompiler
          typeBuilder.addPublicMethod(name, compileFunctionData(method));
       });
       
-      typeBuilder.invoke = compileFunctionData(data.invoke);
+      if (data.invoke != null)
+      {
+         typeBuilder.invoke = compileFunctionData(data.invoke);
+      }
       
       builder.opType(typeBuilder.build());
    }
