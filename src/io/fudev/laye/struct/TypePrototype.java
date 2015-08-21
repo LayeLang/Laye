@@ -34,4 +34,5 @@ class TypePrototype
    public String[] publicFields = null;
    public HashMap<String, FunctionPrototype> publicMethods = null;
    public HashMap<String, FunctionPrototype> publicCtors = null;
+   public FunctionPrototype invoke = null;
 }

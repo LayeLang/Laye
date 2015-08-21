@@ -238,6 +238,7 @@ class LayeVM
       
       for (int c = 0; c < args.length; c++)
       {
+         final int index = c;
          LayeObject arg;
          if (c < argc)
          {
@@ -245,6 +246,7 @@ class LayeVM
             {
                LayeList vargsList = new LayeList(Arrays.copyOfRange(args, c, args.length));
                arg = vargsList;
+               c = args.length;
             }
             else
             {
@@ -255,7 +257,7 @@ class LayeVM
          {
             arg = LayeNull.INSTANCE;
          }
-         top.store(c, arg);
+         top.store(index, arg);
       }
       
       int[] code = closure.proto.code;

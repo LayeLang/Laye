@@ -227,6 +227,10 @@ class LayeObject
    
    public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
+      if (typedef != null && typedef.invoke != null)
+      {
+         return(vm.invoke(typedef.invoke, this, args));
+      }
       throw new LayeException(vm, "Attempt to call %s.", getClass().getSimpleName());
    }
    

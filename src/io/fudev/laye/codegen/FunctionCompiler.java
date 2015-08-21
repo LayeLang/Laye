@@ -552,6 +552,17 @@ class FunctionCompiler
       }
    }
    
+   private FunctionPrototype compileFunctionData(FunctionData data)
+   {
+      FunctionCompiler compiler = new FunctionCompiler(logger, builder);
+      data.params.forEach(param -> compiler.builder.addParameter(param));
+      compiler.builder.vargs = data.vargs;
+
+      data.body.accept(compiler);
+      
+      return(compiler.builder.build());
+   }
+   
    private void handleTypeData(TypeData data)
    {
       TypePrototypeBuilder typeBuilder = new TypePrototypeBuilder();
@@ -583,15 +594,10 @@ class FunctionCompiler
       
       data.publicMethods.forEach((name, method) ->
       {
-         FunctionCompiler compiler = new FunctionCompiler(logger, builder);
-         method.params.forEach(param -> compiler.builder.addParameter(param));
-         compiler.builder.vargs = method.vargs;
-
-         method.body.accept(compiler);
-         
-         FunctionPrototype proto = compiler.builder.build();
-         typeBuilder.addPublicMethod(name, proto);
+         typeBuilder.addPublicMethod(name, compileFunctionData(method));
       });
+      
+      typeBuilder.invoke = compileFunctionData(data.invoke);
       
       builder.opType(typeBuilder.build());
    }

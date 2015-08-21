@@ -42,6 +42,8 @@ class TypeData
    public HashMap<String, Constructor> publicCtors = new HashMap<>();
    public HashMap<String, Constructor> privateCtors = new HashMap<>();
    
+   public FunctionData invoke = null;
+   
    public TypeData()
    {
    }

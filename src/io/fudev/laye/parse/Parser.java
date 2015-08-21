@@ -808,6 +808,13 @@ class Parser
                      // TODO(kai): check if the ctor already exists, error if so.
                      data.publicCtors.put(name, ctor);
                   } continue;
+                  case Keyword.STR_INVOKE:
+                  {
+                     // nom 'invoke'
+                     next();
+                     FunctionData method = getFunctionData();
+                     data.invoke = method;
+                  } continue;
                }
             } continue;
             case IDENTIFIER:

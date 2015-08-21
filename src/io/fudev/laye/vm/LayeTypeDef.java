@@ -39,6 +39,8 @@ class LayeTypeDef
    HashMap<String, LayeObject> methods = new HashMap<>();
    HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
    
+   LayeObject invoke = null;
+   
    private LayeObject initCtor = null;
    private HashMap<String, LayeObject> ctors = new HashMap<>();
    
@@ -66,6 +68,11 @@ class LayeTypeDef
       {
          methods.put(name, vm.buildClosure(method, openOuters));
       });
+      
+      if (proto.invoke != null)
+      {
+         invoke = vm.buildClosure(proto.invoke, openOuters);
+      }
    }
    
    @Override

@@ -40,6 +40,8 @@ class TypePrototypeBuilder
    private final HashMap<String, FunctionPrototype> publicMethods = new HashMap<>();
 
    private final HashMap<String, FunctionPrototype> publicCtors = new HashMap<>();
+
+   public FunctionPrototype invoke = null;
    
    public TypePrototype build()
    {
@@ -50,6 +52,7 @@ class TypePrototypeBuilder
       result.publicFields = publicFields;
       result.publicMethods = publicMethods;
       result.publicCtors = publicCtors;
+      result.invoke = invoke;
       
       return(result);
    }

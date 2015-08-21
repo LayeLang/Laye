@@ -1,24 +1,8 @@
-type Living
+type Printer
 {
-   name
-   ctor(@name);
-   speak() println("Hi, I'm", @name <> '!')
+   args
+   ctor(@args..);
+   invoke() println(@args)
 }
 
-type Dead
-{
-   name
-   ctor(@name);
-}
-
-fn Living.beat()
-{
-   println('Owwwww!')
-   new Dead(@name)
-}
-
-var dog = new Living('Fido')
-dog.speak()
-
-var deadDog = dog.beat()
-println('Now', deadDog.name, 'is dead, good job...')
+new Printer(1, 2, 3)()
