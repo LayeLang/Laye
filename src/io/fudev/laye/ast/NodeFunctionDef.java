@@ -33,7 +33,7 @@ public
 class NodeFunctionDef
    extends ASTNode
 {
-   public String name = null;
+   public NodeExpression target = null;
    public FunctionData data = new FunctionData();
    
    public NodeFunctionDef(Location location)

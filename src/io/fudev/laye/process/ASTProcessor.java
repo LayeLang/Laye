@@ -155,7 +155,7 @@ class ASTProcessor
       {
          NodeFunctionDef result = new NodeFunctionDef(node.location);
          result.data = new FunctionData(node.data);
-         result.name = node.name;
+         result.target = node.target;
          result.data.body = body;
          return(result);
       }

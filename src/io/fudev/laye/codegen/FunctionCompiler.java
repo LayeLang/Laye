@@ -179,9 +179,27 @@ class FunctionCompiler
    @Override
    public void visit(NodeFunctionDef node)
    {
-      builder.defineVariable(node.name);
-      handleFunctionData(node.data);
-      builder.visitSetVariable(node.name);
+      if (node.target instanceof NodeIdentifier)
+      {
+         builder.defineVariable(((NodeIdentifier)node.target).value);
+         handleFunctionData(node.data);
+         builder.visitSetVariable(((NodeIdentifier)node.target).value);
+      }
+      else if (node.target instanceof NodeLoadIndex)
+      {
+         NodeLoadIndex target = ((NodeLoadIndex)node.target);
+         target.target.accept(this);
+         target.index.accept(this);
+         handleFunctionData(node.data);
+         builder.opStoreIndex();
+      }
+      else if (node.target instanceof NodeLoadField)
+      {
+         NodeLoadField target = ((NodeLoadField)node.target);
+         target.target.accept(this);
+         handleFunctionData(node.data);
+         builder.opStoreField(builder.addConstant(target.index));
+      }
       builder.opPop();
    }
    

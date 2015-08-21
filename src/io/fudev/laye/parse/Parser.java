@@ -664,7 +664,7 @@ class Parser
       // nom 'fn'
       next();
       
-      def.name = expectIdentifier();
+      def.target = parsePrimaryExpression(false);
       def.data = getFunctionData();
       
       return(def);

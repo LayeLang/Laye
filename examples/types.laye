@@ -5,5 +5,20 @@ type Living
    speak() println("Hi, I'm", @name <> '!')
 }
 
+type Dead
+{
+   name
+   ctor(@name);
+}
+
+fn Living.beat()
+{
+   println('Owwwww!')
+   new Dead(@name)
+}
+
 var dog = new Living('Fido')
 dog.speak()
+
+var deadDog = dog.beat()
+println('Now', deadDog.name, 'is dead, good job...')

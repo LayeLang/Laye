@@ -194,7 +194,7 @@ class LayeObject
    
    public boolean hasField(LayeVM vm, String key)
    {
-      return(fields.containsKey(key) || typedef.methods.containsKey(key));
+      return(fields.containsKey(key) || (typedef != null ? typedef.methods.containsKey(key) : false));
    }
    
    public LayeObject getField(LayeVM vm, String key)

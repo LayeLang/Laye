@@ -156,6 +156,29 @@ class LayeTypeDef
    }
 
    @Override
+   public LayeObject getField(LayeVM vm, String key)
+   {
+      if (methods.containsKey(key))
+      {
+         return(methods.get(key));
+      }
+      return(super.getField(vm, key));
+   }
+
+   @Override
+   public void setField(LayeVM vm, String key, LayeObject object)
+   {
+      if (object instanceof LayeComposable)
+      {
+         methods.put(key, object);
+      }
+      else
+      {
+         super.setField(vm, key, object);
+      }
+   }
+
+   @Override
    public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);

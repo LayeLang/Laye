@@ -247,7 +247,7 @@ class ASTViewer
    public void visit(NodeFunctionDef node)
    {
       print("fn ");
-      print(node.name);
+      node.target.accept(this);
       handleFunction(node.data);
    }
 
