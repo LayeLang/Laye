@@ -1,13 +1,11 @@
 type Living
 {
-   name
    ctor(@name);
    speak() println("Hi, I'm", @name <> '!')
 }
 
 type Dead
 {
-   name
    ctor(@name);
 }
 
