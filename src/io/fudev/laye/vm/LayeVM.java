@@ -228,6 +228,43 @@ class LayeVM
    {
       stack.pushFrame(closure, thisObject);
       
+      // TODO(kai): this vargs check might be really slow, fix it?
+      
+      int newArgsSize = 0;
+      for (LayeObject arg : args)
+      {
+         if (arg instanceof LayeVargs)
+         {
+            newArgsSize += ((LayeVargs)arg).length();
+         }
+         else
+         {
+            newArgsSize++;
+         }
+      }
+      
+      if (newArgsSize != args.length)
+      {
+         LayeObject[] newArgs = new LayeObject[newArgsSize];
+         int index = 0;
+         for (LayeObject arg : args)
+         {
+            if (arg instanceof LayeVargs)
+            {
+               LayeVargs vargs = (LayeVargs)arg;
+               for (LayeObject obj : vargs)
+               {
+                  newArgs[index++] = obj;
+               }
+            }
+            else
+            {
+               newArgs[index++] = arg;
+            }
+         }
+         args = newArgs;
+      }
+      
       final OuterValue[] openOuters = closure.proto.nestedClosures.length != 0 ? 
             new OuterValue[closure.proto.maxStackSize] : null;
       
@@ -244,7 +281,7 @@ class LayeVM
          {
             if (c == argc - 1 && vargs)
             {
-               LayeList vargsList = new LayeList(Arrays.copyOfRange(args, c, args.length));
+               LayeList vargsList = new LayeVargs(Arrays.copyOfRange(args, c, args.length));
                arg = vargsList;
                c = args.length;
             }
