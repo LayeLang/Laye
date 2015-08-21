@@ -23,10 +23,14 @@
  */
 package io.fudev.laye.struct;
 
+import java.util.HashMap;
+
 /**
  * @author Sekai Kyoretsuna
  */
 public
 class TypePrototype
 {
+   public String[] publicFields = null;
+   public HashMap<String, FunctionPrototype> publicCtors = null;
 }

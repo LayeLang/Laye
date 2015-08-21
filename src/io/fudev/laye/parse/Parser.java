@@ -784,7 +784,8 @@ class Parser
                      {
                         ctor.body = factor();
                      }
-                     data.ctors.put(name, ctor);
+                     // TODO(kai): check if the ctor already exists, error if so.
+                     data.publicCtors.put(name, ctor);
                   } continue;
                }
             } continue;
@@ -794,7 +795,7 @@ class Parser
                {
                   String name = expectIdentifier();
                   FunctionData method = getFunctionData();
-                  data.methods.put(name, method);
+                  data.publicMethods.put(name, method);
                }
                else
                {

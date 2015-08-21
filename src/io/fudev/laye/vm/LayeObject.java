@@ -41,7 +41,9 @@ class LayeObject
    public static final LayeBool FALSE = LayeBool.BOOL_FALSE;
    
    final LayeTypeDef typedef;
+   
    final HashMap<String, LayeObject> fields = new HashMap<>();
+   final List<String> privateFields = new List<String>();
    
    public LayeObject()
    {
@@ -188,6 +190,11 @@ class LayeObject
    {
       // FIXME(kai): call operator == overloads
       return(this.equals(that)); 
+   }
+   
+   public boolean hasField(LayeVM vm, String key)
+   {
+      return(fields.containsKey(key) || typedef.methods.containsKey(key));
    }
    
    public LayeObject getField(LayeVM vm, String key)

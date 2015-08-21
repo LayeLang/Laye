@@ -27,6 +27,7 @@ import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.Operator;
+import io.fudev.laye.struct.TypePrototype;
 
 /**
  * @author Sekai Kyoretsuna
@@ -44,6 +45,22 @@ class LayeTypeDef
    public LayeTypeDef()
    {
       super(null);
+   }
+   
+   LayeTypeDef(LayeVM vm, TypePrototype proto, OuterValue[] openOuters)
+   {
+      this();
+      
+      for (String field : proto.publicFields)
+      {
+         setField(vm, field, NULL);
+      }
+      
+      // TODO(kai): separate public/private ctor access.
+      proto.publicCtors.forEach((name, ctor) ->
+      {
+         ctors.put(name, vm.buildClosure(ctor, openOuters));
+      });
    }
    
    @Override

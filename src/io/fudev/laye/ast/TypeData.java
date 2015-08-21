@@ -33,11 +33,14 @@ import io.fudev.collections.List;
 public
 class TypeData
 {
-   public List<String> privateFields = new List<>();
    public List<String> publicFields = new List<>();
+   public List<String> privateFields = new List<>();
 
-   public HashMap<String, FunctionData> methods = new HashMap<>();
-   public HashMap<String, Constructor> ctors = new HashMap<>();
+   public HashMap<String, FunctionData> publicMethods = new HashMap<>();
+   public HashMap<String, FunctionData> privateMethods = new HashMap<>();
+   
+   public HashMap<String, Constructor> publicCtors = new HashMap<>();
+   public HashMap<String, Constructor> privateCtors = new HashMap<>();
    
    public TypeData()
    {

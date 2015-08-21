@@ -5,4 +5,6 @@ type Living
 }
 
 var dog = new Living('Fido')
+
+println(dog)
 println(dog.name)

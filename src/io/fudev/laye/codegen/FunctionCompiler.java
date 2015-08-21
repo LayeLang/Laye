@@ -538,10 +538,32 @@ class FunctionCompiler
    {
       TypePrototypeBuilder typeBuilder = new TypePrototypeBuilder();
       
+      typeBuilder.addPublicFields(data.publicFields);
+      // TODO(kai): private fields
       
+      data.publicCtors.forEach((name, ctor) ->
+      {
+         FunctionCompiler compiler = new FunctionCompiler(logger, builder);
+         ctor.params.forEach(param -> compiler.builder.addParameter(param));
+         compiler.builder.vargs = ctor.vargs;
+         
+         ctor.autos.forEach(param ->
+         {
+            compiler.builder.opThis();
+            compiler.builder.opLoadLocal(compiler.builder.getLocalLocation(param));
+            compiler.builder.opStoreField(compiler.builder.addConstant(param));
+         });
+
+         ctor.body.accept(compiler);
+         
+         FunctionPrototype proto = compiler.builder.build();
+         typeBuilder.addPublicCtor(name, proto);
+         
+         // TODO(kai): temp
+         compiler.builder.opPop();
+      });
       
-      int typeConst = builder.addConstant(typeBuilder.build());
-      builder.opCLoad(typeConst);
+      builder.opType(typeBuilder.build());
    }
    
    @Override

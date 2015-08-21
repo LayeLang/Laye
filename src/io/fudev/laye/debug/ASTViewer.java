@@ -512,13 +512,13 @@ class ASTViewer
             }
             print(data.publicFields.get(i));
          }
-         if (data.ctors.size() > 0)
+         if (data.publicCtors.size() > 0)
          {
             println();
          }
       }
       
-      Set<Entry<String, Constructor>> ctors = data.ctors.entrySet();
+      Set<Entry<String, Constructor>> ctors = data.publicCtors.entrySet();
       Iterator<Entry<String, Constructor>> iter = ctors.iterator();
       for (int i = 0; i < ctors.size(); i++)
       {

@@ -23,6 +23,10 @@
  */
 package io.fudev.laye.codegen;
 
+import java.util.HashMap;
+
+import io.fudev.collections.List;
+import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.TypePrototype;
 
 /**
@@ -31,8 +35,31 @@ import io.fudev.laye.struct.TypePrototype;
 public
 class TypePrototypeBuilder
 {
+   private final List<String> publicFields = new List<>();
+
+   private final HashMap<String, FunctionPrototype> publicMethods = new HashMap<>();
+
+   private final HashMap<String, FunctionPrototype> publicCtors = new HashMap<>();
+   
    public TypePrototype build()
    {
-      return(null);
+      TypePrototype result = new TypePrototype();
+      
+      String[] publicFields = this.publicFields.toArray(new String[this.publicFields.size()]);
+      
+      result.publicFields = publicFields;
+      result.publicCtors = publicCtors;
+      
+      return(result);
+   }
+
+   public void addPublicFields(List<String> fields)
+   {
+      publicFields.appendAll(fields);
+   }
+
+   public void addPublicCtor(String name, FunctionPrototype ctor)
+   {
+      publicCtors.put(name, ctor);
    }
 }

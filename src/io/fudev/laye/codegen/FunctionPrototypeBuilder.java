@@ -30,6 +30,7 @@ import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.LocalValueInfo;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
+import io.fudev.laye.struct.TypePrototype;
 import io.fudev.laye.vm.LayeFloat;
 import io.fudev.laye.vm.LayeInt;
 
@@ -123,7 +124,7 @@ class FunctionPrototypeBuilder
    private final List<OuterValueInfo> outerValues = new List<>();
    private final List<LocalValueInfo> localValues = new List<>();
    private final List<FunctionPrototype> nested = new List<>();
-   // TODO(kai): add jump tables for match expressions
+   private final List<TypePrototype> types = new List<>();
    
    private Scope scope = null;
    
@@ -290,6 +291,8 @@ class FunctionPrototypeBuilder
             .toArray(new OuterValueInfo[this.outerValues.size()]);
       FunctionPrototype[] nested = this.nested
             .toArray(new FunctionPrototype[this.nested.size()]);
+      TypePrototype[] types = this.types
+            .toArray(new TypePrototype[this.types.size()]);
       
       FunctionPrototype result = new FunctionPrototype();
       result.numParams = numParams;
@@ -300,6 +303,7 @@ class FunctionPrototypeBuilder
       result.consts = consts;
       result.outerValues = outerValues;
       result.nestedClosures = nested;
+      result.definedTypes = types;
       
       return(result);
    }
@@ -753,7 +757,14 @@ class FunctionPrototypeBuilder
       return(currentInsnPos());
    }
    
-   // TODO(kai): opType
+   public int opType(TypePrototype prototype)
+   {
+      increaseStackSize();
+      int nIndex = types.size();
+      types.append(prototype);
+      appendOp_C(OP_TYPE, nIndex);
+      return(currentInsnPos());
+   }
    
    public int opCloseOuters(int index)
    {
@@ -904,6 +915,13 @@ class FunctionPrototypeBuilder
    {
       changeStackSize(-nargs);
       appendOp_AB(OP_NEW_INSTANCE, ctorConst, nargs);
+      return(currentInsnPos());
+   }
+   
+   public int opThis()
+   {
+      changeStackSize(1);
+      appendOp(OP_THIS);
       return(currentInsnPos());
    }
 }

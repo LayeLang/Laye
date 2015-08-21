@@ -39,6 +39,7 @@ class FunctionPrototype
    public Object[] consts = null;
    public OuterValueInfo[] outerValues = null;
    public FunctionPrototype[] nestedClosures = null;
+   public TypePrototype[] definedTypes = null;
    
    @Override
    public int hashCode()
@@ -47,6 +48,7 @@ class FunctionPrototype
       int result = 1;
       result = prime * result + Arrays.hashCode(code);
       result = prime * result + Arrays.hashCode(consts);
+      result = prime * result + Arrays.hashCode(definedTypes);
       result = prime * result + maxLocals;
       result = prime * result + maxStackSize;
       result = prime * result + Arrays.hashCode(nestedClosures);
@@ -77,6 +79,10 @@ class FunctionPrototype
          return false;
       }
       if (!Arrays.equals(consts, other.consts))
+      {
+         return false;
+      }
+      if (!Arrays.equals(definedTypes, other.definedTypes))
       {
          return false;
       }

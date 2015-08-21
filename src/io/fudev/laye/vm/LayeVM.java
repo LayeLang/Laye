@@ -32,6 +32,7 @@ import io.fudev.laye.LayeException;
 import io.fudev.laye.struct.FunctionPrototype;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.OuterValueInfo;
+import io.fudev.laye.struct.TypePrototype;
 
 /**
  * The Laye virtual machine.
@@ -166,6 +167,11 @@ class LayeVM
       return true;
    }
 
+   CallStack getCallStack()
+   {
+      return(stack);
+   }
+   
    /**
     * Attempts to invoke the target LayeObject. This is equivalent to calling the
     * {@link LayeObject#invoke(LayeVM, LayeObject, LayeObject...)} method using this
@@ -257,10 +263,11 @@ class LayeVM
       OuterValue[] captures = closure.captures;
       Object[] consts = closure.proto.consts;
       FunctionPrototype[] nested = closure.proto.nestedClosures;
+      TypePrototype[] types = closure.proto.definedTypes;
       
       while (top.ip < codeLength)
       {
-         executeInstruction(code[top.ip++], openOuters, captures, top, consts, nested);
+         executeInstruction(code[top.ip++], openOuters, captures, top, consts, nested, types);
       }
       
       if (openOuters != null)
@@ -288,8 +295,27 @@ class LayeVM
       return(result);
    }
    
+   LayeClosure buildClosure(FunctionPrototype proto, OuterValue[] openOuters)
+   {
+      StackFrame top = stack.getTop();
+      LayeClosure closure = new LayeClosure(proto);
+      OuterValueInfo[] protoOuters = proto.outerValues;
+      for (int i = 0; i < protoOuters.length; i++)
+      {
+         if (protoOuters[i].type == OuterValueInfo.Type.LOCAL)
+         {
+            closure.captures[i] = findOuterValue(top.getLocals(), protoOuters[i].pos, openOuters);
+         }
+         else
+         {
+            closure.captures[i] = top.closure.captures[protoOuters[i].pos];
+         }
+      }
+      return(closure);
+   }
+   
    private void executeInstruction(int insn, OuterValue[] openOuters, OuterValue[] captures,
-         StackFrame top, Object[] consts, FunctionPrototype[] nested)
+         StackFrame top, Object[] consts, FunctionPrototype[] nested, TypePrototype[] types)
    {
       //System.out.println(top.stackPointer + ": " + Arrays.toString(top.stack));
       //System.out.println(String.format("0x%02X\n", insn & MAX_OP));
@@ -382,7 +408,7 @@ class LayeVM
          {
             String index = (String)consts[insn >>> POS_C];
             LayeObject value = top.pop(), target = top.pop(), temp;
-            if ((temp = target.getField(this, index)) instanceof LayeReference)
+            if (target.hasField(this, index) && (temp = target.getField(this, index)) instanceof LayeReference)
             {
                ((LayeReference)temp).store(this, value);
             }
@@ -460,24 +486,12 @@ class LayeVM
          case OP_CLOSURE:
          {
             FunctionPrototype proto = nested[insn >>> POS_C];
-            LayeClosure closure = new LayeClosure(proto);
-            OuterValueInfo[] protoOuters = proto.outerValues;
-            for (int i = 0; i < protoOuters.length; i++)
-            {
-               if (protoOuters[i].type == OuterValueInfo.Type.LOCAL)
-               {
-                  closure.captures[i] = findOuterValue(top.getLocals(), protoOuters[i].pos, openOuters);
-               }
-               else
-               {
-                  closure.captures[i] = top.closure.captures[protoOuters[i].pos];
-               }
-            }
-            top.push(closure);
+            top.push(buildClosure(proto, openOuters));
          } return;
          case OP_TYPE:
          {
-            // TODO(kai): create types in the vm
+            TypePrototype proto = types[insn >>> POS_C];
+            top.push(new LayeTypeDef(this, proto, openOuters));
          } return;
 
          case OP_CLOSE_OUTERS:
@@ -663,6 +677,11 @@ class LayeVM
                jump = lookup.get(null);
             }
             top.ip = jump.intValue();
+         } return;
+         
+         case OP_THIS:
+         {
+            top.push(top.thisObject);
          } return;
       }
    }
