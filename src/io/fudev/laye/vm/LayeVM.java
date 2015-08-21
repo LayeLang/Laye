@@ -554,13 +554,13 @@ class LayeVM
          case OP_INVOKE:
          {
             LayeObject[] args = top.popCount(insn >>> POS_C);
-            top.push(top.pop().invoke(this, null, args));
+            top.push(top.pop().invoke(this, null, expandVargs(args)));
          } return;
          case OP_INVOKE_METHOD:
          {
             String index = (String)consts[(insn >>> POS_A) & MAX_A];
             LayeObject args[] = top.popCount((insn >>> POS_B) & MAX_B);
-            top.push(top.pop().invokeMethod(this, index, args));
+            top.push(top.pop().invokeMethod(this, index, expandVargs(args)));
          } return;
          case OP_INVOKE_BASE:
          {
@@ -569,7 +569,8 @@ class LayeVM
          case OP_NEW_INSTANCE:
          {
             LayeObject[] args = top.popCount((insn >>> POS_B) & MAX_B);
-            top.push(top.pop().instantiate(this, (String)consts[(insn >>> POS_A) & MAX_A], args));
+            top.push(top.pop().instantiate(this, (String)consts[(insn >>> POS_A) & MAX_A],
+                  expandVargs(args)));
          } return;
          
          case OP_JUMP:

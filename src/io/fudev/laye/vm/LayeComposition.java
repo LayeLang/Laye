@@ -102,7 +102,7 @@ class LayeComposition
    }
 
    @Override
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
       return(second.invoke(vm, thisObject, first.invoke(vm, thisObject, args)));
    }

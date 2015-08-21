@@ -93,7 +93,7 @@ class LayeFunction
    }
 
    @Override
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
       return(callback.invoke(vm, thisObject, args));
    }

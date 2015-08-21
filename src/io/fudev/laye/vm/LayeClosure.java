@@ -100,7 +100,7 @@ class LayeClosure
    }
 
    @Override
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
       return(vm.invoke(this, thisObject, args));
    }

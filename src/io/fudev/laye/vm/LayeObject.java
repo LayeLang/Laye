@@ -260,7 +260,7 @@ class LayeObject
       throw new LayeException(vm, "Attempt to index %s.", getClass().getSimpleName());
    }
    
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
       if (typedef != null && typedef.invoke != null)
       {
