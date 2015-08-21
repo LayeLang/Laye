@@ -172,6 +172,48 @@ class LayeVM
       return(stack);
    }
    
+   private LayeObject[] expandVargs(LayeObject[] args)
+   {
+      // TODO(kai): this vargs check might be really slow, fix it?
+      
+      int newArgsSize = 0;
+      for (LayeObject arg : args)
+      {
+         if (arg instanceof LayeVargs)
+         {
+            newArgsSize += ((LayeVargs)arg).length();
+         }
+         else
+         {
+            newArgsSize++;
+         }
+      }
+      
+      if (newArgsSize != args.length)
+      {
+         LayeObject[] newArgs = new LayeObject[newArgsSize];
+         int index = 0;
+         for (LayeObject arg : args)
+         {
+            if (arg instanceof LayeVargs)
+            {
+               LayeVargs vargs = (LayeVargs)arg;
+               for (LayeObject obj : vargs)
+               {
+                  newArgs[index++] = obj;
+               }
+            }
+            else
+            {
+               newArgs[index++] = arg;
+            }
+         }
+         return(newArgs);
+      }
+      
+      return(args);
+   }
+   
    /**
     * Attempts to invoke the target LayeObject. This is equivalent to calling the
     * {@link LayeObject#invoke(LayeVM, LayeObject, LayeObject...)} method using this
@@ -207,7 +249,7 @@ class LayeVM
     */
    public LayeObject invoke(LayeFunction target, LayeObject thisObject, LayeObject... args)
    {
-      return(target.invoke(this, thisObject, args));
+      return(target.invoke(this, thisObject, expandVargs(args)));
    }
 
    /**
@@ -228,42 +270,7 @@ class LayeVM
    {
       stack.pushFrame(closure, thisObject);
       
-      // TODO(kai): this vargs check might be really slow, fix it?
-      
-      int newArgsSize = 0;
-      for (LayeObject arg : args)
-      {
-         if (arg instanceof LayeVargs)
-         {
-            newArgsSize += ((LayeVargs)arg).length();
-         }
-         else
-         {
-            newArgsSize++;
-         }
-      }
-      
-      if (newArgsSize != args.length)
-      {
-         LayeObject[] newArgs = new LayeObject[newArgsSize];
-         int index = 0;
-         for (LayeObject arg : args)
-         {
-            if (arg instanceof LayeVargs)
-            {
-               LayeVargs vargs = (LayeVargs)arg;
-               for (LayeObject obj : vargs)
-               {
-                  newArgs[index++] = obj;
-               }
-            }
-            else
-            {
-               newArgs[index++] = arg;
-            }
-         }
-         args = newArgs;
-      }
+      args = expandVargs(args);
       
       final OuterValue[] openOuters = closure.proto.nestedClosures.length != 0 ? 
             new OuterValue[closure.proto.maxStackSize] : null;
