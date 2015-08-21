@@ -45,7 +45,7 @@ class LayeFile
    public static final LayeTypeDef TYPEDEF_FILE = new LayeTypeDef()
    {
       @Override
-      public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+      protected LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
       {
          try
          {

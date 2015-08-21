@@ -41,7 +41,6 @@ import io.fudev.laye.struct.TypePrototype;
  */
 public
 class LayeVM
-   extends LayeObject
 {
    private static OuterValue findOuterValue(LayeObject[] locals, int idx, OuterValue[] openUps)
    {
@@ -176,25 +175,23 @@ class LayeVM
    {
       // TODO(kai): this vargs check might be really slow, fix it?
       
-      int newArgsSize = 0;
+      int addArgsSize = 0;
       for (LayeObject arg : args)
       {
+         // make this arg.isVargs() or something?
          if (arg instanceof LayeVargs)
          {
-            newArgsSize += ((LayeVargs)arg).length();
-         }
-         else
-         {
-            newArgsSize++;
+            addArgsSize += ((LayeVargs)arg).length() - 1;
          }
       }
       
-      if (newArgsSize != args.length)
+      if (addArgsSize > 0)
       {
-         LayeObject[] newArgs = new LayeObject[newArgsSize];
+         LayeObject[] newArgs = new LayeObject[args.length + addArgsSize];
          int index = 0;
          for (LayeObject arg : args)
          {
+            // make this arg.isVargs() or something?
             if (arg instanceof LayeVargs)
             {
                LayeVargs vargs = (LayeVargs)arg;
@@ -214,6 +211,18 @@ class LayeVM
       return(args);
    }
    
+   // TODO(kai): invokeMethod and instantiate plz
+   
+   public LayeObject invokeMethod(LayeObject target, String methodIndex, LayeObject... args)
+   {
+      return(target.invokeMethod(this, methodIndex, expandVargs(args)));
+   }
+
+   public LayeObject instantiate(LayeObject target, String ctorName, LayeObject... args)
+   {
+      return(target.instantiate(this, ctorName, expandVargs(args)));
+   }
+   
    /**
     * Attempts to invoke the target LayeObject. This is equivalent to calling the
     * {@link LayeObject#invoke(LayeVM, LayeObject, LayeObject...)} method using this
@@ -230,6 +239,7 @@ class LayeVM
     */
    public LayeObject invoke(LayeObject target, LayeObject thisObject, LayeObject... args)
    {
+      // This means that invocations that come BACK through the VM get args expanding called twice..
       return(target.invoke(this, thisObject, expandVargs(args)));
    }
 
@@ -247,9 +257,9 @@ class LayeVM
     * @return
     *    The result of the invocation. {@link LayeObject#NULL} if no value is returned
     */
-   public LayeObject invoke(LayeFunction target, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeFunction target, LayeObject thisObject, LayeObject... args)
    {
-      return(target.invoke(this, thisObject, expandVargs(args)));
+      return(target.invoke(this, thisObject, args));
    }
 
    /**
@@ -266,11 +276,9 @@ class LayeVM
     * @return
     *    The result of the invocation. {@link LayeObject#NULL} if no value is returned
     */
-   public LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeClosure closure, LayeObject thisObject, LayeObject... args)
    {
       stack.pushFrame(closure, thisObject);
-      
-      args = expandVargs(args);
       
       final OuterValue[] openOuters = closure.proto.nestedClosures.length != 0 ? 
             new OuterValue[closure.proto.maxStackSize] : null;
@@ -334,7 +342,7 @@ class LayeVM
       }
       else
       {
-         result = NULL;
+         result = LayeObject.NULL;
       }
       stack.popFrame();
       
@@ -554,13 +562,13 @@ class LayeVM
          case OP_INVOKE:
          {
             LayeObject[] args = top.popCount(insn >>> POS_C);
-            top.push(top.pop().invoke(this, null, expandVargs(args)));
+            top.push(invoke(top.pop(), null, args));
          } return;
          case OP_INVOKE_METHOD:
          {
             String index = (String)consts[(insn >>> POS_A) & MAX_A];
             LayeObject args[] = top.popCount((insn >>> POS_B) & MAX_B);
-            top.push(top.pop().invokeMethod(this, index, expandVargs(args)));
+            top.push(invokeMethod(top.pop(), index, args));
          } return;
          case OP_INVOKE_BASE:
          {
@@ -569,8 +577,7 @@ class LayeVM
          case OP_NEW_INSTANCE:
          {
             LayeObject[] args = top.popCount((insn >>> POS_B) & MAX_B);
-            top.push(top.pop().instantiate(this, (String)consts[(insn >>> POS_A) & MAX_A],
-                  expandVargs(args)));
+            top.push(instantiate(top.pop(), (String)consts[(insn >>> POS_A) & MAX_A], args));
          } return;
          
          case OP_JUMP:
@@ -640,7 +647,7 @@ class LayeVM
          
          case OP_NOT:
          {
-            top.push(top.pop().toBool(this) ? FALSE : TRUE);
+            top.push(top.pop().toBool(this) ? LayeObject.FALSE : LayeObject.TRUE);
          } return;
          case OP_BOOL_AND:
          {
