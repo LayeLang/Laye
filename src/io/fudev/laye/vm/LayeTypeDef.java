@@ -236,7 +236,7 @@ class LayeTypeDef
    }
 
    @Override
-   public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+   LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       LayeObject result = new LayeObject(this);
       if (initCtor != null)

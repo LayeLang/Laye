@@ -95,16 +95,18 @@ class LayeReference
    }
 
    @Override
-   public LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
+   LayeObject invoke(LayeVM vm, LayeObject thisObject, LayeObject... args)
    {
       return(deref(vm).invoke(vm, thisObject, args));
    }
 
    @Override
-   public LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
+   LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
    {
       return(deref(vm).invokeMethod(vm, methodIndex, args));
    }
+   
+   // TODO(kai): instantiation, too
 
    @Override
    public LayeObject prefix(LayeVM vm, Operator op)

@@ -269,12 +269,12 @@ class LayeObject
       throw new LayeException(vm, "Attempt to call %s.", getClass().getSimpleName());
    }
    
-   public LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
+   LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
    {
       return vm.invoke(getMethod(vm, methodIndex), this, args);
    }
 
-   public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
+   LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
    {
       throw new LayeException(vm, "Attempt to instantiate %s.", getClass().getSimpleName());
    }
