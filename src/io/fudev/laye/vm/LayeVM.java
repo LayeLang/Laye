@@ -230,7 +230,7 @@ class LayeVM
     */
    public LayeObject invoke(LayeObject target, LayeObject thisObject, LayeObject... args)
    {
-      return(target.invoke(this, thisObject, args));
+      return(target.invoke(this, thisObject, expandVargs(args)));
    }
 
    /**
