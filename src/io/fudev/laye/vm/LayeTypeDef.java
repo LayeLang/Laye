@@ -61,6 +61,11 @@ class LayeTypeDef
       {
          ctors.put(name, vm.buildClosure(ctor, openOuters));
       });
+
+      proto.publicMethods.forEach((name, method) ->
+      {
+         methods.put(name, vm.buildClosure(method, openOuters));
+      });
    }
    
    @Override

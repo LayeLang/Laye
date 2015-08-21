@@ -391,4 +391,9 @@ class ASTProcessor
       // TODO(kai): process types
       return(node);
    }
+   
+   public ASTNode process(NodeThis node)
+   {
+      return(node);
+   }
 }

@@ -256,6 +256,21 @@ class Parser
             next();
             return(new NodePrefixExpression(location, parsePrimaryExpression(), op));
          }
+         case AT:
+         {
+            // nom '@'
+            next();
+            if (check(Token.Type.IDENTIFIER))
+            {
+               return(postfix(new NodeLoadField(location, new NodeThis(location),
+                      expectIdentifier())));
+            }
+            else
+            {
+               logger.logErrorf(location, ERROR_UNEXPECTED_TOKEN,
+                     "unexpected token '%s' after '@'", token.toString());
+            }
+         }
          case KEYWORD:
          {
             switch (((Keyword)token.data).image)
@@ -271,6 +286,12 @@ class Parser
                case Keyword.STR_NEW:
                {
                   return(parseNewInstance());
+               }
+               case Keyword.STR_THIS:
+               {
+                  // nom 'this'
+                  next();
+                  return(postfix(new NodeThis(location), allowCall));
                }
                case Keyword.STR_NULL:
                {

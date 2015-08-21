@@ -48,6 +48,7 @@ class TypePrototypeBuilder
       String[] publicFields = this.publicFields.toArray(new String[this.publicFields.size()]);
       
       result.publicFields = publicFields;
+      result.publicMethods = publicMethods;
       result.publicCtors = publicCtors;
       
       return(result);
@@ -56,6 +57,11 @@ class TypePrototypeBuilder
    public void addPublicFields(List<String> fields)
    {
       publicFields.appendAll(fields);
+   }
+
+   public void addPublicMethod(String name, FunctionPrototype method)
+   {
+      publicMethods.put(name, method);
    }
 
    public void addPublicCtor(String name, FunctionPrototype ctor)

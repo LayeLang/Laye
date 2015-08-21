@@ -2,9 +2,8 @@ type Living
 {
    name
    ctor(@name);
+   speak() println("Hi, I'm", @name <> '!')
 }
 
 var dog = new Living('Fido')
-
-println(dog)
-println(dog.name)
+dog.speak()

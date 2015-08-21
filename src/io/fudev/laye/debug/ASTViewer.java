@@ -224,46 +224,38 @@ class ASTViewer
       tprint("}");
    }
 
-   @Override
-   public void visit(NodeFunctionDef node)
+   private void handleFunction(FunctionData data)
    {
-      print("FUNCTION ");
-      print(node.name);
       print(" (");
-      for (int i = 0; i < node.data.params.size(); i++)
+      for (int i = 0; i < data.params.size(); i++)
       {
          if (i > 0)
          {
             print(", ");
          }
-         print(node.data.params.get(i));
+         print(data.params.get(i));
       }
-      if (node.data.vargs)
+      if (data.vargs)
       {
          print("..");
       }
       print(") ");
-      node.data.body.accept(this);
+      data.body.accept(this);
+   }
+   
+   @Override
+   public void visit(NodeFunctionDef node)
+   {
+      print("fn ");
+      print(node.name);
+      handleFunction(node.data);
    }
 
    @Override
    public void visit(NodeFunction node)
    {
-      print("FUNCTION (");
-      for (int i = 0; i < node.data.params.size(); i++)
-      {
-         if (i > 0)
-         {
-            print(", ");
-         }
-         print(node.data.params.get(i));
-      }
-      if (node.data.vargs)
-      {
-         print("..");
-      }
-      print(") ");
-      node.data.body.accept(this);
+      print("fn");
+      handleFunction(node.data);
    }
 
    @Override
@@ -363,14 +355,14 @@ class ASTViewer
    @Override
    public void visit(NodeIf node)
    {
-      print("IF ");
+      print("if ");
       node.condition.accept(this);
       print(" ");
       node.pass.accept(this);
       if (node.fail != null)
       {
          println();
-         tprint("ELSE ");
+         tprint("el ");
          node.fail.accept(this);
       }
    }
@@ -378,7 +370,7 @@ class ASTViewer
    @Override
    public void visit(NodeNot node)
    {
-      print("NOT ");
+      print("not ");
       node.expression.accept(this);
    }
    
@@ -386,7 +378,7 @@ class ASTViewer
    public void visit(NodeAnd node)
    {
       node.left.accept(this);
-      print(" AND ");
+      print(" and ");
       node.right.accept(this);
    }
    
@@ -394,21 +386,21 @@ class ASTViewer
    public void visit(NodeOr node)
    {
       node.left.accept(this);
-      print(" OR ");
+      print(" or ");
       node.right.accept(this);
    }
    
    @Override
    public void visit(NodeWhile node)
    {
-      print("WHILE");
+      print("while");
       node.condition.accept(this);
       print(" ");
       node.pass.accept(this);
       if (node.initialFail != null)
       {
          println();
-         tprint("ELSE ");
+         tprint("el ");
          node.initialFail.accept(this);
       }
    }
@@ -417,7 +409,7 @@ class ASTViewer
    public void visit(NodeMatch node)
    {
       node.match.accept(this);
-      println(" MATCH {");
+      println(" match {");
       tabs++;
       for (int i = 0; i < node.cases.size(); i++)
       {
@@ -434,14 +426,14 @@ class ASTViewer
    @Override
    public void visit(NodeReference node)
    {
-      print("REF ");
+      print("ref ");
       node.expression.accept(this);
    }
    
    @Override
    public void visit(NodeDereference node)
    {
-      print("DEREF ");
+      print("deref ");
       node.expression.accept(this);
    }
    
@@ -454,7 +446,7 @@ class ASTViewer
    @Override
    public void visit(NodeNewInstance node)
    {
-      print("NEW ");
+      print("new ");
       node.target.accept(this);
       if (node.ctor != null)
       {
@@ -484,6 +476,7 @@ class ASTViewer
    {
       println("{");
       tabs++;
+      
       if (data.privateFields.size() > 0)
       {
          tprint("PRIVATE ");
@@ -519,10 +512,10 @@ class ASTViewer
       }
       
       Set<Entry<String, Constructor>> ctors = data.publicCtors.entrySet();
-      Iterator<Entry<String, Constructor>> iter = ctors.iterator();
+      Iterator<Entry<String, Constructor>> ctorIter = ctors.iterator();
       for (int i = 0; i < ctors.size(); i++)
       {
-         Entry<String, Constructor> entry = iter.next();
+         Entry<String, Constructor> entry = ctorIter.next();
          
          String name = entry.getKey();
          Constructor ctor = entry.getValue();
@@ -532,7 +525,7 @@ class ASTViewer
             println();
          }
          
-         tprint("CTOR");
+         tprint("ctor");
          
          if (name != null)
          {
@@ -549,7 +542,7 @@ class ASTViewer
             }
             if (ctor.autos.contains(ctor.params.get(i)))
             {
-               print("@");
+               print("this.");
             }
             print(ctor.params.get(j));
          }
@@ -560,6 +553,29 @@ class ASTViewer
          print(") ");
          ctor.body.accept(this);
       }
+      if (ctors.size() > 0 && data.publicMethods.size() > 0)
+      {
+         println();
+      }
+      
+      Set<Entry<String, FunctionData>> methods = data.publicMethods.entrySet();
+      Iterator<Entry<String, FunctionData>> methodIter = methods.iterator();
+      for (int i = 0; i < methods.size(); i++)
+      {
+         Entry<String, FunctionData> entry = methodIter.next();
+         
+         String name = entry.getKey();
+         FunctionData method = entry.getValue();
+         
+         if (i > 0)
+         {
+            println();
+         }
+         
+         tprint(name);
+         handleFunction(method);
+      }
+      
       tabs--;
       println();
       print("}");
@@ -568,9 +584,15 @@ class ASTViewer
    @Override
    public void visit(NodeTypeDef node)
    {
-      print("TYPE ");
+      print("type ");
       print(node.name);
       print(" ");
       printTypeInfo(node.data);
+   }
+   
+   @Override
+   public void visit(NodeThis node)
+   {
+      print("this");
    }
 }

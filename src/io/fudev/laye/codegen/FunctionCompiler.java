@@ -563,6 +563,18 @@ class FunctionCompiler
          compiler.builder.opPop();
       });
       
+      data.publicMethods.forEach((name, method) ->
+      {
+         FunctionCompiler compiler = new FunctionCompiler(logger, builder);
+         method.params.forEach(param -> compiler.builder.addParameter(param));
+         compiler.builder.vargs = method.vargs;
+
+         method.body.accept(compiler);
+         
+         FunctionPrototype proto = compiler.builder.build();
+         typeBuilder.addPublicMethod(name, proto);
+      });
+      
       builder.opType(typeBuilder.build());
    }
    
@@ -574,5 +586,14 @@ class FunctionCompiler
 //      builder.opNLoad();
       builder.visitSetVariable(node.name);
       builder.opPop();
+   }
+   
+   @Override
+   public void visit(NodeThis node)
+   {
+      if (node.isResultRequired)
+      {
+         builder.opThis();
+      }
    }
 }
