@@ -236,7 +236,7 @@ class LayeVM
       
       StackFrame top = stack.getTop();
       
-      for (int c = 0; c < args.length; c++)
+      for (int c = 0; c < args.length && c < argc; c++)
       {
          final int index = c;
          LayeObject arg;
