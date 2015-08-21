@@ -26,6 +26,7 @@ package io.fudev.laye.vm;
 import java.util.HashMap;
 
 import io.fudev.laye.LayeException;
+import io.fudev.laye.struct.Identifier;
 import io.fudev.laye.struct.Operator;
 import io.fudev.laye.struct.TypePrototype;
 
@@ -37,7 +38,7 @@ class LayeTypeDef
    extends LayeObject
 {
    HashMap<String, LayeObject> methods = new HashMap<>();
-   HashMap<Operator, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
+   HashMap<String, LayeObject> prefix = new HashMap<>(), infix = new HashMap<>();
    
    LayeObject invoke = null;
    
@@ -52,11 +53,6 @@ class LayeTypeDef
    LayeTypeDef(LayeVM vm, TypePrototype proto, OuterValue[] openOuters)
    {
       this();
-      
-      for (String field : proto.publicFields)
-      {
-         setField(vm, field, NULL);
-      }
       
       // TODO(kai): separate public/private ctor access.
       proto.publicCtors.forEach((name, ctor) ->
@@ -162,6 +158,13 @@ class LayeTypeDef
       return true;
    }
 
+   // TODO(kai): Move this into LayeObject
+   private boolean isInvokable(LayeObject object)
+   {
+      return(object instanceof LayeComposable ||
+            (object.typedef != null && object.typedef.invoke != null));
+   }
+   
    @Override
    public LayeObject getField(LayeVM vm, String key)
    {
@@ -175,13 +178,60 @@ class LayeTypeDef
    @Override
    public void setField(LayeVM vm, String key, LayeObject object)
    {
-      if (object instanceof LayeComposable)
+      if (isInvokable(object))
       {
          methods.put(key, object);
       }
       else
       {
-         super.setField(vm, key, object);
+         // TODO(kai): more clarity?
+         throw new LayeException(vm,
+               "TypeDefs may only contain methods for objects to reference, cannot assign %s.",
+               object.getClass().getSimpleName());
+      }
+   }
+
+   @Override
+   public LayeObject getPrefix(LayeVM vm, String operator)
+   {
+      throw new LayeException(vm, "Prefix %s does not exist.", operator);
+   }
+
+   @Override
+   public void setPrefix(LayeVM vm, String operator, LayeObject object)
+   {
+      if (isInvokable(object))
+      {
+         prefix.put(operator, object);
+      }
+      else
+      {
+         // TODO(kai): more clarity?
+         throw new LayeException(vm,
+               "TypeDefs may only contain methods for objects to reference, cannot assign %s.",
+               object.getClass().getSimpleName());
+      }
+   }
+
+   @Override
+   public LayeObject getInfix(LayeVM vm, String operator)
+   {
+      throw new LayeException(vm, "Infix %s does not exist.", operator);
+   }
+
+   @Override
+   public void setInfix(LayeVM vm, String operator, LayeObject object)
+   {
+      if (isInvokable(object))
+      {
+         infix.put(operator, object);
+      }
+      else
+      {
+         // TODO(kai): more clarity?
+         throw new LayeException(vm,
+               "TypeDefs may only contain methods for objects to reference, cannot assign %s.",
+               object.getClass().getSimpleName());
       }
    }
 

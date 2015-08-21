@@ -25,9 +25,6 @@ package io.fudev.laye;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.channels.FileChannel;
-import java.nio.file.Paths;
 
 import io.fudev.laye.api.LayeScript;
 import io.fudev.laye.file.ScriptFile;

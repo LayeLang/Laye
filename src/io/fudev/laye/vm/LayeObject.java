@@ -194,7 +194,7 @@ class LayeObject
    
    public boolean hasField(LayeVM vm, String key)
    {
-      return(fields.containsKey(key) || (typedef != null ? typedef.methods.containsKey(key) : false));
+      return(fields.containsKey(key));
    }
    
    public LayeObject getField(LayeVM vm, String key)
@@ -202,17 +202,47 @@ class LayeObject
       LayeObject result = fields.get(key);
       if (result == null)
       {
-         if ((result = typedef.methods.get(key)) == null)
-         {
-            throw new  LayeException(vm, "Field '" + key + "' does not exist.");
-         }
+         throw new LayeException(vm, "Field '" + key + "' does not exist.");
       }
       return(result);
+   }
+   
+   public LayeObject getMethod(LayeVM vm, String key)
+   {
+      if (typedef != null)
+      {
+         LayeObject result = typedef.methods.get(key);
+         if (result != null)
+         {
+            return(result);
+         }
+      }
+      throw new LayeException(vm, "Method '" + key + "' does not exist.");
    }
    
    public void setField(LayeVM vm, String key, LayeObject object)
    {
       fields.put(key, object);
+   }
+   
+   public LayeObject getPrefix(LayeVM vm, String operator)
+   {
+      throw new LayeException(vm, "Cannot index %s with operators.", getClass().getSimpleName());
+   }
+   
+   public void setPrefix(LayeVM vm, String operator, LayeObject object)
+   {
+      throw new LayeException(vm, "Cannot index %s with operators.", getClass().getSimpleName());
+   }
+   
+   public LayeObject getInfix(LayeVM vm, String operator)
+   {
+      throw new LayeException(vm, "Cannot index %s with operators.", getClass().getSimpleName());
+   }
+   
+   public void setInfix(LayeVM vm, String operator, LayeObject object)
+   {
+      throw new LayeException(vm, "Cannot index %s with operators.", getClass().getSimpleName());
    }
    
    public LayeObject load(LayeVM vm, LayeObject index)
@@ -236,7 +266,7 @@ class LayeObject
    
    public LayeObject invokeMethod(LayeVM vm, String methodIndex, LayeObject... args)
    {
-      return vm.invoke(getField(vm, methodIndex), this, args);
+      return vm.invoke(getMethod(vm, methodIndex), this, args);
    }
 
    public LayeObject instantiate(LayeVM vm, String ctorName, LayeObject... args)
