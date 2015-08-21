@@ -171,56 +171,16 @@ class LayeVM
       return(stack);
    }
    
-   private LayeObject[] expandVargs(LayeObject[] args)
-   {
-      // TODO(kai): this vargs check might be really slow, fix it?
-      
-      int addArgsSize = 0;
-      for (LayeObject arg : args)
-      {
-         // make this arg.isVargs() or something?
-         if (arg instanceof LayeVargs)
-         {
-            addArgsSize += ((LayeVargs)arg).length() - 1;
-         }
-      }
-      
-      if (addArgsSize > 0)
-      {
-         LayeObject[] newArgs = new LayeObject[args.length + addArgsSize];
-         int index = 0;
-         for (LayeObject arg : args)
-         {
-            // make this arg.isVargs() or something?
-            if (arg instanceof LayeVargs)
-            {
-               LayeVargs vargs = (LayeVargs)arg;
-               for (LayeObject obj : vargs)
-               {
-                  newArgs[index++] = obj;
-               }
-            }
-            else
-            {
-               newArgs[index++] = arg;
-            }
-         }
-         return(newArgs);
-      }
-      
-      return(args);
-   }
-   
    // TODO(kai): invokeMethod and instantiate plz
    
    public LayeObject invokeMethod(LayeObject target, String methodIndex, LayeObject... args)
    {
-      return(target.invokeMethod(this, methodIndex, expandVargs(args)));
+      return(target.invokeMethod(this, methodIndex, args));
    }
 
    public LayeObject instantiate(LayeObject target, String ctorName, LayeObject... args)
    {
-      return(target.instantiate(this, ctorName, expandVargs(args)));
+      return(target.instantiate(this, ctorName, args));
    }
    
    /**
@@ -240,7 +200,7 @@ class LayeVM
    public LayeObject invoke(LayeObject target, LayeObject thisObject, LayeObject... args)
    {
       // This means that invocations that come BACK through the VM get args expanding called twice..
-      return(target.invoke(this, thisObject, expandVargs(args)));
+      return(target.invoke(this, thisObject, args));
    }
 
    /**
@@ -296,7 +256,7 @@ class LayeVM
          {
             if (c == argc - 1 && vargs)
             {
-               LayeList vargsList = new LayeVargs(Arrays.copyOfRange(args, c, args.length));
+               LayeList vargsList = new LayeList(Arrays.copyOfRange(args, c, args.length));
                arg = vargsList;
                c = args.length;
             }

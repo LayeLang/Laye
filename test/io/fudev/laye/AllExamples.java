@@ -36,7 +36,7 @@ import io.fudev.laye.vm.LayeClosure;
 public final 
 class AllExamples
 {
-   private static final boolean preCompile = false;
+   private static final boolean preCompile = true;
 
    public static void main(String[] unused) throws IOException
    {
