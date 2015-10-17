@@ -1,0 +1,13 @@
+var name = "Fully Anonymous Functions"
+
+fn acc(n) =
+   fn = n <; n+ = _
+` fn a(n)=fn=n<;n+ =_
+` That's pretty short, I like it
+
+fn main()
+{
+   var f = acc(4)
+   println("Counting by 3, starting at 4:")
+   println(iter (i = 0 to 10) f(3))
+}

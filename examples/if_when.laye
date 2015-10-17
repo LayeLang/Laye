@@ -1,0 +1,21 @@
+var name = "If/When"
+
+fn main()
+{
+   if (true or false) println("correct")
+   if (true and false) println("incorrect!")
+   if not (false and not true) println("correct")
+
+   if (true xor not false or true)
+      println("correct")
+   el println("incorrect!")
+   if (not false xor true)
+      println("incorrect!")
+   el println("correct")
+   if not (false or false)
+      println("correct")
+   el println("incorrect!")
+
+   println("correct") when false or true el println("incorrect!")
+   println("incorrect!") when false xor not true el println("correct")
+}

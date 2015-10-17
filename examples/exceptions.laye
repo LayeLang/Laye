@@ -1,0 +1,24 @@
+var name = "Exception Handling"
+
+fn main()
+{
+   var a = try
+      10 * 2
+   catch
+      println("Broken!") ; 0
+
+   var b = try
+      10 / 0
+   catch (e)
+      println(e) ; 0 ` "Attempt to divide by zero."
+
+   var c = try
+   {
+      println("I'mma throwin' mah errors!")
+      throw "This is an error!"
+   }
+   catch (e)
+      println("Error thrown:", e) ; -1
+
+   println(a, b, c)
+}

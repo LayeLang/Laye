@@ -1,0 +1,36 @@
+var name = "Loops"
+
+fn main()
+{
+   { ` We put this in a block so we can use 'i' elsewhere
+      var i = 0
+      var l0 = while (i < 10) i+ = 1
+      println(l0)
+   }
+
+   { ` We put this in a block so we can use 'i' elsewhere
+      println((var i = 0) ; while ((i+ = 1) <= 20)
+      {
+         var j = i - 1
+         if (j > 14) break
+         el if (j % 2 != 0) cont
+         j
+      })
+   }
+
+   var l1 = iter (i = 0 to 10) i + 1
+   println(l1)
+
+   println(iter (i = 0 to -10) i)
+
+   println(iter (i = 0 to 20)
+   {
+      if (i > 14) break
+      el if (i % 2 != 0) cont
+      i
+   })
+
+   var list = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+   println(each (v in list) v * 2)
+   println(ieach (i, v in list) i * v)
+}

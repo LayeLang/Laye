@@ -1,0 +1,20 @@
+` This file will load and execute the different example programs.
+
+use assign
+use closures
+use if_when
+use loops
+use lists
+use exceptions
+use recursion
+use full_anon
+use generators
+
+[ assign, closures, if_when, loops,
+  lists, exceptions, recursion, full_anon,
+  generators
+] forIEach fn {
+   println((_ + 1) <> ".", $1.name)
+   $1.main()
+   print(endl * 2)
+}

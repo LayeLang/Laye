@@ -1,0 +1,13 @@
+var name = "Lists"
+
+fn main()
+{
+   var i = 0, list = while (i < 10) i+ = 1
+
+   println(list)
+   list[6] = 11
+   list[+] = 0
+   println(list)
+   println(list[-], list[#list - 1])
+   println(list)
+}

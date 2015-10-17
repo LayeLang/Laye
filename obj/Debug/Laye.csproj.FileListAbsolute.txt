@@ -1,0 +1,4 @@
+C:\Users\sekai\Documents\Visual Studio 2015\Projects\Laye\Laye\bin\Debug\Laye.dll
+C:\Users\sekai\Documents\Visual Studio 2015\Projects\Laye\Laye\bin\Debug\Laye.pdb
+C:\Users\sekai\Documents\Visual Studio 2015\Projects\Laye\Laye\obj\Debug\Laye.dll
+C:\Users\sekai\Documents\Visual Studio 2015\Projects\Laye\Laye\obj\Debug\Laye.pdb

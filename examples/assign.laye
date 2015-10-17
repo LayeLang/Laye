@@ -1,0 +1,13 @@
+var name = "Assign"
+
+var kitVar = 10
+
+fn main()
+{
+   var locVar = 20
+
+   println(kitVar, locVar)
+   kitVar = 30
+   locVar = kitVar - locVar
+   println(kitVar, locVar)
+}

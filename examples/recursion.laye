@@ -1,0 +1,11 @@
+var name = "Recursion"
+
+fn fact(n, acc = 1) = acc when n == 0 el tailrec(n - 1, acc * n)
+fn sumTo(n, acc = 0) = acc when n == 0 el tailrec(n - 1, acc + n)
+
+fn main()
+{
+   println("4! =", fact(4))
+   println("10! =", fact(10))
+   println("sumTo(5) =", sumTo(5))
+}
