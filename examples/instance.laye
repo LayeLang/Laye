@@ -1,2 +1,0 @@
-println(new List)
-println(new List(1, 2, 3))

@@ -1,2 +1,0 @@
-var list = (1 -> 11)
-list forEach (println <| fn(value) list[value - 1])

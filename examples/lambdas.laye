@@ -1,1 +1,0 @@
-(1 -> 10) forEach (println <| fn(value) value ^ 2))

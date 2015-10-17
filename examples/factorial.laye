@@ -1,6 +1,0 @@
-fn factorial(n)
-   if n == 0
-      1
-   el n * factorial(n - 1)
-
-println(factorial(7))

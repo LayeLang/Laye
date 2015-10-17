@@ -1,7 +1,0 @@
-fn makeAdder(start)
-   fn(value) start + value
-
-var add5 = makeAdder(5)
-var add7 = makeAdder(7)
-
-println(add5(10), add7(10))

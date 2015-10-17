@@ -1,6 +1,0 @@
-type Comp(@first, @second)
-{
-   invoke(args..) @second(@first(args))
-}
-
-new Comp(fn(a, b) a + b, println)(1, 2)
