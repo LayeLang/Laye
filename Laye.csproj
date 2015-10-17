@@ -57,7 +57,6 @@
     <Compile Include="Compilation\ASTGen\Nodes\NodeFnDef.cs" />
     <Compile Include="Compilation\ASTGen\Nodes\NodeFnExpr.cs" />
     <Compile Include="Compilation\ASTGen\Nodes\NodeIdentifier.cs" />
-    <Compile Include="Compilation\ASTGen\Nodes\NodeIEach.cs" />
     <Compile Include="Compilation\ASTGen\Nodes\NodeIf.cs" />
     <Compile Include="Compilation\ASTGen\Nodes\NodeIndex.cs" />
     <Compile Include="Compilation\ASTGen\Nodes\NodeInfix.cs" />

@@ -14,10 +14,19 @@ namespace Laye.Compilation.TokenGen
     {
         internal enum Type
         {
-            DOT,
+            INT,
+            FLOAT,
+            STRING,
+
+            NULL,
+            TRUE,
+            FALSE,
+            ENDL,
+
+            SYMBOL,
+            WILDCARD,
+            PARAM_INDEX,
             VARGS,
-            COMMA,
-            COLON,
 
             OPEN_BRACE,
             CLOSE_BRACE,
@@ -26,38 +35,60 @@ namespace Laye.Compilation.TokenGen
             OPEN_CURLY_BRACE,
             CLOSE_CURLY_BRACE,
 
-            LINE_COMMENT,
+            DOT,
+            COMMA,
+            COLON,
 
             OPERATOR,
             ASSIGN,
 
-            STRING,
-            INT,
-            FLOAT,
-
-            WILDCARD,
-            PARAM_INDEX,
-            IDENTIFIER,
-            SYMBOL,
-
+            VAR,
+            LAZY,
+            TAKE,
             PRIVATE,
             STATIC,
             READONLY,
-            SEALED,
-            VAR,
-            GLOBAL,
-            LAZY,
-            NEW,
 
+            USE,
+            FROM,
+            KIT,
+            GLOBAL,
+
+            SELF,
+            TAILREC,
             FN,
             GEN,
             CTOR,
             INVOKE,
+
+            THIS,
+            BASE,
             TYPE,
-            PARTIAL,
             ENUM,
-            USE,
-            FROM,
+            SEALED,
+            PARTIAL,
+            GET,
+            SET,
+            NEW,
+
+            IF,
+            EL,
+            WHEN,
+            ITER,
+            TO,
+            BY,
+            EACH,
+            IN,
+            WHILE,
+            MATCH,
+            TRY,
+            CATCH,
+            RET,
+            BREAK,
+            CONT,
+            RES,
+            YIELD,
+            THROW,
 
             AND,
             OR,
@@ -69,41 +100,7 @@ namespace Laye.Compilation.TokenGen
             REF,
             DEREF,
 
-            IF,
-            EL,
-            WHEN,
-            ITER,
-            EACH,
-            IEACH,
-            IN,
-            TO,
-            BY,
-            WHILE,
-            TAKE,
-            MATCH,
-            THROW,
-            TRY,
-            CATCH,
-
-            RET,
-            BREAK,
-            CONT,
-            RES,
-            YIELD,
-
-            GET,
-            SET,
-            THIS,
-            SELF,
-            BASE,
-            KIT,
-
-            NULL,
-            TRUE,
-            FALSE,
-            ENDL,
-
-            TAILREC,
+            IDENTIFIER,
         }
 
         /// <summary>
@@ -209,8 +206,6 @@ namespace Laye.Compilation.TokenGen
                 return image + " (" + intValue + ")";
             else if (type == Type.FLOAT)
                 return image + " (" + floatValue + ")";
-            else if (type == Type.LINE_COMMENT)
-                return "`" + image;
             return image;
         }
     }

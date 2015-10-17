@@ -1,7 +1,7 @@
 var name = "Closures"
 
 fn makeAdder(add) =
-   fn(value) = add + value
+   fn = add + _
 
 var add5 = makeAdder(5)
 var add7 = makeAdder(7)

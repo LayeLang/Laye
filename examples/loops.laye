@@ -32,5 +32,5 @@ fn main()
 
    var list = [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
    println(each (v in list) v * 2)
-   println(ieach (i, v in list) i * v)
+   println(each (i, v in list) i * v)
 }

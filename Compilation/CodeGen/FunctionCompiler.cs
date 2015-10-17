@@ -126,6 +126,7 @@ namespace Laye.Compilation.CodeGen
         void ASTVisitor.Accept(NodeEach value) { Accept(value); }
         internal void Accept(NodeEach each)
         {
+            var isIEach = each.eachIndexName != null;
             var isResultRequired = each.isResultRequired;
 
             if (each.body is NodeBlock)
@@ -135,13 +136,27 @@ namespace Laye.Compilation.CodeGen
 
             builder.StartScope();
 
-            uint eachVarLocal;
-            if (!builder.AddLocal(each.eachVarName, out eachVarLocal))
-                log.Error(each.location, "Duplicate local variable '{0}'.", each.eachVarName);
-            uint genLocal = builder.ReseveLocal();
+            uint eachIndexLocal = 0, eachVarLocal;
+            if (isIEach)
+            {
+                if (!builder.AddLocal(each.eachIndexName, out eachIndexLocal))
+                    log.Error(each.location, "Duplicate local variable '{0}'.", each.eachVarName);
+                builder.ReseveLocal();
+                if (!builder.AddLocal(each.eachVarName, out eachVarLocal))
+                    log.Error(each.location, "Duplicate local variable '{0}'.", each.eachVarName);
+                builder.ReseveLocal();
+            }
+            else
+            {
+                if (!builder.AddLocal(each.eachVarName, out eachVarLocal))
+                    log.Error(each.location, "Duplicate local variable '{0}'.", each.eachVarName);
+                builder.ReseveLocal();
+            }
 
             each.value.Visit(this);
-            builder.OpEachPrep(eachVarLocal);
+            if (isIEach)
+                builder.OpIEachPrep(eachIndexLocal);
+            else builder.OpEachPrep(eachVarLocal);
 
             if (isResultRequired)
                 builder.OpList(0);
@@ -154,7 +169,10 @@ namespace Laye.Compilation.CodeGen
                 builder.OpPop(false);
             // END Handle cont
 
-            uint loopPos = builder.OpEachLoop(eachVarLocal, 0);
+            uint loopPos;
+            if (isIEach)
+                loopPos = builder.OpIEachLoop(eachIndexLocal, 0);
+            else loopPos = builder.OpEachLoop(eachVarLocal, 0);
             if (isResultRequired)
                 builder.OpDup();
             each.body.Visit(this);
@@ -330,63 +348,6 @@ namespace Laye.Compilation.CodeGen
         {
             builder.currentLineNumber = ident.EndLine;
             builder.Load(ident.image);
-        }
-
-        void ASTVisitor.Accept(NodeIEach value) { Accept(value); }
-        internal void Accept(NodeIEach ieach)
-        {
-            var isResultRequired = ieach.isResultRequired;
-
-            if (ieach.body is NodeBlock)
-                (ieach.body as NodeBlock).createScope = false;
-            ieach.body.isResultRequired = isResultRequired;
-            ieach.body.inTailPosition = ieach.inTailPosition;
-
-            builder.StartScope();
-
-            uint eachIndexLocal;
-            if (!builder.AddLocal(ieach.eachIndexName, out eachIndexLocal))
-                log.Error(ieach.location, "Duplicate local variable '{0}'.", ieach.eachVarName);
-            uint tempIndexLocal = builder.ReseveLocal();
-            uint eachVarLocal;
-            if (!builder.AddLocal(ieach.eachVarName, out eachVarLocal))
-                log.Error(ieach.location, "Duplicate local variable '{0}'.", ieach.eachVarName);
-            uint genLocal = builder.ReseveLocal();
-
-            ieach.value.Visit(this);
-            builder.OpIEachPrep(eachIndexLocal);
-
-            if (isResultRequired)
-                builder.OpList(0);
-
-            // Handle cont
-            if (isResultRequired)
-                builder.OpJump(builder.InsnCount + 2);
-            builder.StartFlowBlock(ieach.label);
-            if (isResultRequired)
-                builder.OpPop(false);
-            // END Handle cont
-
-            uint loopPos = builder.OpIEachLoop(eachIndexLocal, 0);
-            if (isResultRequired)
-                builder.OpDup();
-            ieach.body.Visit(this);
-            if (isResultRequired)
-            {
-                builder.OpOIStore("+");
-                builder.OpPop();
-            }
-            builder.OpJump(loopPos);
-            builder.SetOpB(loopPos, builder.InsnCount);
-
-            // Handle break
-            if (isResultRequired)
-                builder.OpJump(builder.InsnCount + 2);
-            builder.EndFlowBlock();
-            if (isResultRequired)
-                builder.OpPop(false);
-            // END Handle break
-            builder.EndScope();
         }
 
         void ASTVisitor.Accept(NodeIndex value) { Accept(value); }

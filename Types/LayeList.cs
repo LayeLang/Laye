@@ -40,7 +40,6 @@ namespace Laye
             type.PutInstanceOperatorIndex("+", new LayeProperty(null, (LayeCallback)IOperatorIndex__push));
             type.PutInstanceOperatorIndex("-", new LayeProperty((LayeCallback)IOperatorIndex__pop, null));
             type.PutInstanceMethod("forEach", (LayeCallback)IMethod__forEach);
-            type.PutInstanceMethod("forIEach", (LayeCallback)IMethod__forIEach);
         }
 
         protected override LayeObject IPropertyGet__hashCode(LayeState state, LayeObject ths, params LayeObject[] args)
@@ -86,20 +85,10 @@ namespace Laye
         {
             if (args.Length == 0)
                 return NULL;
-            var each = args[0];
-            foreach (var value in (ths as LayeList))
-                each.Invoke(state, value);
-            return NULL;
-        }
-
-        private LayeObject IMethod__forIEach(LayeState state, LayeObject ths, params LayeObject[] args)
-        {
-            if (args.Length == 0)
-                return NULL;
             var i = 0;
             var each = args[0];
             foreach (var value in (ths as LayeList))
-                each.Invoke(state, LayeInt.ValueOf(i++), value);
+                each.Invoke(state, value, LayeInt.ValueOf(i++));
             return NULL;
         }
 

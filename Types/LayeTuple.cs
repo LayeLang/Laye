@@ -14,8 +14,7 @@ namespace Laye
             type.PutPrefix("#", (LayeCallback)Prefix__count);
             // This uses the same enumerator as List, so we just steal it.
             type.PutInstanceProperty("enumerator", new LayeProperty((LayeCallback)((state, ths, args) => new ListEnumerator((ths as LayeTuple).values.GetEnumerator())), null));
-            type.PutInstanceMethod("forEach", (LayeCallback)IMethod__each);
-            type.PutInstanceMethod("forIEach", (LayeCallback)IMethod__forIEach);
+            type.PutInstanceMethod("forEach", (LayeCallback)IMethod__forEach);
         }
 
         protected override LayeObject IPropertyGet__hashCode(LayeState state, LayeObject ths, params LayeObject[] args)
@@ -42,24 +41,14 @@ namespace Laye
             return LayeInt.ValueOf((ths as LayeList).Count);
         }
 
-        private LayeObject IMethod__each(LayeState state, LayeObject ths, params LayeObject[] args)
-        {
-            if (args.Length == 0)
-                return NULL;
-            var each = args[0];
-            foreach (var value in (ths as LayeTuple))
-                each.Invoke(state, value);
-            return NULL;
-        }
-
-        private LayeObject IMethod__forIEach(LayeState state, LayeObject ths, params LayeObject[] args)
+        private LayeObject IMethod__forEach(LayeState state, LayeObject ths, params LayeObject[] args)
         {
             if (args.Length == 0)
                 return NULL;
             var i = 0;
             var each = args[0];
             foreach (var value in (ths as LayeTuple))
-                each.Invoke(state, LayeInt.ValueOf(i++), value);
+                each.Invoke(state, value, LayeInt.ValueOf(i++));
             return NULL;
         }
 

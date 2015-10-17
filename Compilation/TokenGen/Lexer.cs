@@ -84,8 +84,6 @@ namespace Laye.Compilation.TokenGen
                 var token = GetNextToken();
                 // Will be EOF anyway
                 if (token == null)
-                    break;
-                if (token.type == Token.Type.LINE_COMMENT)
                     continue;
                 tokens.Add(token);
             }
@@ -174,7 +172,7 @@ namespace Laye.Compilation.TokenGen
                 case '{': Read(); result = new Token(Token.Type.OPEN_CURLY_BRACE, new Location(file, line, col - 1, line, col)); break;
                 case '}': Read(); result = new Token(Token.Type.CLOSE_CURLY_BRACE, new Location(file, line, col - 1, line, col)); break;
 
-                case '`': result = ReadLineComment(); break;
+                case '`': ReadLineComment(); result = null; break;
 
                 case '~': case '!': case '@': case '#':
                 case '%': case '^': case '&': case '*':
@@ -215,37 +213,28 @@ namespace Laye.Compilation.TokenGen
                     break;
             }
 
+            EatWhitespaceSansNewline();
             if (result != null)
             {
-                // Add the whitespace to the token.
-                EatWhitespaceSansNewline();
+            // Add the whitespace to the token.
                 result.PreWhitespace = preWhitespace;
                 result.PostWhitespace = whitespace.ToString();
-
-                // Once the token has its whitespace, make sure we've handled newlines now.
-                // If the tokens are on the same line, this does nothing so that's good.
-                EatWhitespace();
             }
+            // Once the token has its whitespace, make sure we've handled newlines now.
+            // If the tokens are on the same line, this does nothing so that's good.
+            EatWhitespace();
 
             // That's it!
             return result;
         }
 
-        private Token ReadLineComment()
+        private void ReadLineComment()
         {
-            var builder = new StringBuilder();
-            var initCol = col;
-
             Read(); // `
 
             // the newline is nom'd after the token is returned.
             while (!eof && currentChar != '\n')
-            {
-                builder.Append(char.ConvertFromUtf32(currentChar));
                 Read();
-            }
-
-            return new Token(Token.Type.LINE_COMMENT, new Location(file, line, initCol, line, col), builder.ToString());
         }
 
         private Token ReadOperator()
@@ -412,24 +401,58 @@ namespace Laye.Compilation.TokenGen
             {
                 switch (word)
                 {
+                    case "null": return new Token(Token.Type.NULL, loc, word);
+                    case "true": return new Token(Token.Type.TRUE, loc, word);
+                    case "false": return new Token(Token.Type.FALSE, loc, word);
+                    case "endl": return new Token(Token.Type.ENDL, loc, word);
+
+                    case "var": return new Token(Token.Type.VAR, loc, word);
+                    case "lazy": return new Token(Token.Type.LAZY, loc, word);
+                    case "take": return new Token(Token.Type.TAKE, loc, word);
                     case "private": return new Token(Token.Type.PRIVATE, loc, word);
                     case "static": return new Token(Token.Type.STATIC, loc, word);
                     case "readonly": return new Token(Token.Type.READONLY, loc, word);
-                    case "sealed": return new Token(Token.Type.SEALED, loc, word);
-                    case "var": return new Token(Token.Type.VAR, loc, word);
-                    case "global": return new Token(Token.Type.GLOBAL, loc, word);
-                    case "lazy": return new Token(Token.Type.LAZY, loc, word);
-                    case "new": return new Token(Token.Type.NEW, loc, word);
 
+                    case "use": return new Token(Token.Type.USE, loc, word);
+                    case "from": return new Token(Token.Type.FROM, loc, word);
+                    case "kit": return new Token(Token.Type.KIT, loc, word);
+                    case "global": return new Token(Token.Type.GLOBAL, loc, word);
+
+                    case "self": return new Token(Token.Type.SELF, loc, word);
+                    case "tailrec": return new Token(Token.Type.TAILREC, loc, word);
                     case "fn": return new Token(Token.Type.FN, loc, word);
                     case "gen": return new Token(Token.Type.GEN, loc, word);
                     case "ctor": return new Token(Token.Type.CTOR, loc, word);
                     case "invoke": return new Token(Token.Type.INVOKE, loc, word);
+
+                    case "this": return new Token(Token.Type.THIS, loc, word);
+                    case "base": return new Token(Token.Type.BASE, loc, word);
                     case "type": return new Token(Token.Type.TYPE, loc, word);
-                    case "partial": return new Token(Token.Type.PARTIAL, loc, word);
                     case "enum": return new Token(Token.Type.ENUM, loc, word);
-                    case "use": return new Token(Token.Type.USE, loc, word);
-                    case "from": return new Token(Token.Type.FROM, loc, word);
+                    case "sealed": return new Token(Token.Type.SEALED, loc, word);
+                    case "partial": return new Token(Token.Type.PARTIAL, loc, word);
+                    case "get": return new Token(Token.Type.GET, loc, word);
+                    case "set": return new Token(Token.Type.SET, loc, word);
+                    case "new": return new Token(Token.Type.NEW, loc, word);
+
+                    case "if": return new Token(Token.Type.IF, loc, word);
+                    case "el": return new Token(Token.Type.EL, loc, word);
+                    case "when": return new Token(Token.Type.WHEN, loc, word);
+                    case "iter": return new Token(Token.Type.ITER, loc, word);
+                    case "in": return new Token(Token.Type.IN, loc, word);
+                    case "to": return new Token(Token.Type.TO, loc, word);
+                    case "each": return new Token(Token.Type.EACH, loc, word);
+                    case "by": return new Token(Token.Type.BY, loc, word);
+                    case "while": return new Token(Token.Type.WHILE, loc, word);
+                    case "match": return new Token(Token.Type.MATCH, loc, word);
+                    case "try": return new Token(Token.Type.TRY, loc, word);
+                    case "catch": return new Token(Token.Type.CATCH, loc, word);
+                    case "ret": return new Token(Token.Type.RET, loc, word);
+                    case "break": return new Token(Token.Type.BREAK, loc, word);
+                    case "cont": return new Token(Token.Type.CONT, loc, word);
+                    case "res": return new Token(Token.Type.RES, loc, word);
+                    case "yield": return new Token(Token.Type.YIELD, loc, word);
+                    case "throw": return new Token(Token.Type.THROW, loc, word);
 
                     case "and": return new Token(Token.Type.AND, loc, word);
                     case "or": return new Token(Token.Type.OR, loc, word);
@@ -440,42 +463,6 @@ namespace Laye.Compilation.TokenGen
                     case "as": return new Token(Token.Type.AS, loc, word);
                     case "ref": return new Token(Token.Type.REF, loc, word);
                     case "deref": return new Token(Token.Type.DEREF, loc, word);
-
-                    case "if": return new Token(Token.Type.IF, loc, word);
-                    case "el": return new Token(Token.Type.EL, loc, word);
-                    case "when": return new Token(Token.Type.WHEN, loc, word);
-                    case "iter": return new Token(Token.Type.ITER, loc, word);
-                    case "each": return new Token(Token.Type.EACH, loc, word);
-                    case "ieach": return new Token(Token.Type.IEACH, loc, word);
-                    case "in": return new Token(Token.Type.IN, loc, word);
-                    case "to": return new Token(Token.Type.TO, loc, word);
-                    case "by": return new Token(Token.Type.BY, loc, word);
-                    case "while": return new Token(Token.Type.WHILE, loc, word);
-                    case "take": return new Token(Token.Type.TAKE, loc, word);
-                    case "match": return new Token(Token.Type.MATCH, loc, word);
-                    case "throw": return new Token(Token.Type.THROW, loc, word);
-                    case "try": return new Token(Token.Type.TRY, loc, word);
-                    case "catch": return new Token(Token.Type.CATCH, loc, word);
-
-                    case "ret": return new Token(Token.Type.RET, loc, word);
-                    case "break": return new Token(Token.Type.BREAK, loc, word);
-                    case "cont": return new Token(Token.Type.CONT, loc, word);
-                    case "res": return new Token(Token.Type.RES, loc, word);
-                    case "yield": return new Token(Token.Type.YIELD, loc, word);
-
-                    case "get": return new Token(Token.Type.GET, loc, word);
-                    case "set": return new Token(Token.Type.SET, loc, word);
-                    case "this": return new Token(Token.Type.THIS, loc, word);
-                    case "self": return new Token(Token.Type.SELF, loc, word);
-                    case "base": return new Token(Token.Type.BASE, loc, word);
-                    case "kit": return new Token(Token.Type.KIT, loc, word);
-
-                    case "true": return new Token(Token.Type.TRUE, loc, word);
-                    case "false": return new Token(Token.Type.FALSE, loc, word);
-                    case "null": return new Token(Token.Type.NULL, loc, word);
-                    case "endl": return new Token(Token.Type.ENDL, loc, word);
-
-                    case "tailrec": return new Token(Token.Type.TAILREC, loc, word);
 
                     default: return new Token(Token.Type.IDENTIFIER, loc, word);
                 }

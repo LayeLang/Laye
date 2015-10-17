@@ -2,7 +2,7 @@
 {
     internal sealed class NodeEach : Node
     {
-        internal string eachVarName;
+        internal string eachIndexName, eachVarName;
         internal Node value, body;
         internal string label;
 

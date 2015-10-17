@@ -13,8 +13,8 @@ use generators
 [ assign, closures, if_when, loops,
   lists, exceptions, recursion, full_anon,
   generators
-] forIEach fn {
-   println((_ + 1) <> ".", $1.name)
-   $1.main()
+] forEach fn {
+   println(($1 + 1) <> ".", _.name)
+   _.main()
    print(endl * 2)
 }

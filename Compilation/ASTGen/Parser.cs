@@ -371,7 +371,6 @@ namespace Laye.Compilation.ASTGen
                 case TRY: return ParseTry();
                 case ITER: return ParseIter();
                 case EACH: return ParseEach();
-                case IEACH: return ParseIEach();
                 // And here, we don't know what they want... oops.
                 default:
                     log.Error(Location, "Unexpected token '{0}', skipping...", Current.ToString());
@@ -857,8 +856,10 @@ namespace Laye.Compilation.ASTGen
 
         private Node ParseEach()
         {
-            var each = new NodeEach(Location);
+            var loc = Location;
             Advance();
+
+            var each = new NodeEach(loc);
 
             if (Check(COLON))
             {
@@ -868,6 +869,12 @@ namespace Laye.Compilation.ASTGen
 
             Expect(OPEN_BRACE, "Expected an open brace ('(') to start each initialization.");
             ExpectIdentifier(out each.eachVarName, "Expected an identifier for each value variable name.");
+            if (Check(COMMA))
+            {
+                each.eachIndexName = each.eachVarName;
+                Advance();
+                ExpectIdentifier(out each.eachVarName, "Expected an identifier for each value variable name.");
+            }
             Expect(IN, "Expected 'in' after each variable declaration to define the enumerator target.");
             if (TokensRemain)
                 each.value = Expression();
@@ -883,38 +890,6 @@ namespace Laye.Compilation.ASTGen
             else log.Error(tokens[-1].location, "Expected expression for each body, but the end of the file was reached.");
 
             return each;
-        }
-
-        private Node ParseIEach()
-        {
-            var ieach = new NodeIEach(Location);
-            Advance();
-
-            if (Check(COLON))
-            {
-                Advance();
-                ExpectIdentifier(out ieach.label, "Expected an identifier for loop label.");
-            }
-
-            Expect(OPEN_BRACE, "Expected an open brace ('(') to start each initialization.");
-            ExpectIdentifier(out ieach.eachIndexName, "Expected an identifier for each index variable name.");
-            Expect(COMMA, "Comma expected to separate each variable names.");
-            ExpectIdentifier(out ieach.eachVarName, "Expected an identifier for each value variable name.");
-            Expect(IN, "Expected 'in' after each variable declaration to define the enumerator target.");
-            if (TokensRemain)
-                ieach.value = Expression();
-            else
-            {
-                log.Error(tokens[-1].location, "Expected expression for each enumerator target, but the end of the file was reached.");
-                return ieach;
-            }
-            Expect(CLOSE_BRACE, "Expected a close brace (')') to end each initialization.");
-
-            if (TokensRemain)
-                ieach.body = Expression();
-            else log.Error(tokens[-1].location, "Expected expression for each body, but the end of the file was reached.");
-
-            return ieach;
         }
     }
 }

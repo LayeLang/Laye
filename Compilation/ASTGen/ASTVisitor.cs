@@ -19,7 +19,6 @@
         void Accept(NodeFnDef fn);
         void Accept(NodeFnExpr fn);
         void Accept(NodeIdentifier ident);
-        void Accept(NodeIEach ieach);
         void Accept(NodeIf expr);
         void Accept(NodeIndex index);
         void Accept(NodeInfix infix);
